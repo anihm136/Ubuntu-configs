@@ -1,0 +1,16 @@
+{
+  "suggest.snippetIndicator": "<s>",
+  "suggest.maxCompleteItemCount": 8,
+  "suggest.maxPreviewWidth": 50,
+  "coc.preferences.formatOnSaveFiletypes": ["html", "css", "javascript",
+    "Markdown", "vim"],
+  "signature.enable": true,
+  "signature.target": "float",
+  "diagnostic.checkCurrentLine": true,
+  "python.linting.pylintEnabled": true,
+  "python.linting.flake8Enabled": true,
+  "diagnostic.warningSign": "⚠",
+  "diagnostic.errorSign": "❌",
+  "suggest.removeDuplicateItems": true,
+  "coc.source.omni.filetypes": ["verilog", "Markdown", "vim"]
+}

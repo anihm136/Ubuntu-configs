@@ -1,0 +1,20 @@
+super + b
+  $BROWSER
+
+super + F9
+  mnt
+
+super + F10
+  umt
+
+super + BackSpace
+  power
+
+super + e
+  $GUIEDITOR
+
+super + f
+  $FILE
+
+super + Return
+  $TERMINAL

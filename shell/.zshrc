@@ -106,7 +106,7 @@ antigen apply
 
 NUMTERM=$(pgrep -fc sakura)
 if (( NUMTERM == 1));then
-  pfetch
+  ufetch-ubuntu
 fi
 
 # >>> conda initialize >>>

@@ -17,7 +17,7 @@ local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
 
 local theme                                     = {}
 theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/mycop"
-theme.wallpaper                                 = theme.dir .. "/wall.jpg"
+theme.wallpaper                                 = theme.dir .. "/wall.png"
 theme.font                                      = "System San Francisco Display Regular 13"
 theme.taglist_font                              = "Heavy Data Nerd Font 13"
 theme.fg_normal                                 = "#BBBBBB"

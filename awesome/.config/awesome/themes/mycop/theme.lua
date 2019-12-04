@@ -299,7 +299,7 @@ net_internet = net_widgets.internet({indent = 0, timeout = 1})
 -- Cmus widget
 local cmus, cmus_timer = awful.widget.watch(
     "cmus-remote -Q",
-    2,
+    1,
     function(widget, stdout)
         local cmus_now = {
             state   = "N/A",
@@ -312,9 +312,13 @@ local cmus, cmus_timer = awful.widget.watch(
             a, b = w:match("(%w+) (.*)\n")
             cmus_now[a] = b
         end
-        
-        cmus_now["title"] = string.match(stdout, "tag title (.+)\n")
-        cmus_now["state"] = string.match(stdout, "status (%a+)")
+       
+        if string.match(stdout, "tag title (.+)\n") then
+          cmus_now["title"] = string.match(stdout, "tag title (.+)\n")
+        end
+        if string.match(stdout, "status (%a+)\n") then
+          cmus_now["state"] = string.match(stdout, "status (%a+)")
+        end
 
         -- customize here
         local wistring = " " .. cmus_now.artist .. " - " .. cmus_now.title .. " " 

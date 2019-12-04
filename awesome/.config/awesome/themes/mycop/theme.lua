@@ -309,16 +309,18 @@ local cmus, cmus_timer = awful.widget.watch(
         }
 
         for w in string.gmatch(stdout, "(.-)tag") do
-            a, b = w:match("(%w+) (.-)\n")
+            a, b = w:match("(%w+) (.*)\n")
             cmus_now[a] = b
         end
-        local str = string.match(stdout, "status (%a+)")
+        
+        cmus_now["title"] = string.match(stdout, "tag title (.+)\n")
+        cmus_now["state"] = string.match(stdout, "status (%a+)")
 
         -- customize here
         local wistring = " " .. cmus_now.artist .. " - " .. cmus_now.title .. " " 
-        if str == "paused" then
+        if cmus_now.state == "paused" then
           wistring = " ⏸ " .. wistring
-        elif str == "playing"
+        elseif cmus_now.state == "playing" then
           wistring = " ▶ " .. wistring
         end
         widget:set_text(wistring)

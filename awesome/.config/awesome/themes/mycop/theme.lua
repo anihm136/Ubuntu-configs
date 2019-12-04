@@ -11,6 +11,7 @@ local awful = require("awful")
 local wibox = require("wibox")
 local dpi   = require("beautiful.xresources").apply_dpi
 local net_widgets   = require("net_widgets")
+local beautiful = require("beautiful")
 
 local awesome, client, os = awesome, client, os
 local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
@@ -295,6 +296,35 @@ net_internet = net_widgets.internet({indent = 0, timeout = 1})
 --    timeout     = 3
 --})
 
+-- Cmus widget
+local cmus, cmus_timer = awful.widget.watch(
+    "cmus-remote -Q",
+    2,
+    function(widget, stdout)
+        local cmus_now = {
+            state   = "N/A",
+            artist  = "N/A",
+            title   = "N/A",
+            album   = "N/A"
+        }
+
+        for w in string.gmatch(stdout, "(.-)tag") do
+            a, b = w:match("(%w+) (.-)\n")
+            cmus_now[a] = b
+        end
+        local str = string.match(stdout, "status (%a+)")
+
+        -- customize here
+        local wistring = " " .. cmus_now.artist .. " - " .. cmus_now.title .. " " 
+        if str == "paused" then
+          wistring = " ⏸ " .. wistring
+        elif str == "playing"
+          wistring = " ▶ " .. wistring
+        end
+        widget:set_text(wistring)
+    end
+)
+
 -- Separators
 local first     = wibox.widget.textbox(markup.font("Misc Tamsyn 3", " "))
 local spr       = wibox.widget.textbox(' ')
@@ -364,9 +394,9 @@ function theme.at_screen_connect(s)
             layout = wibox.layout.fixed.horizontal,
             wibox.widget.systray(),
             small_spr,
-            net_internet,
-            bar_spr,
             net_wireless,
+            bar_spr,
+            cmus,
             --theme.mail.widget,
 --            mpdicon,
 --            theme.mpd.widget,

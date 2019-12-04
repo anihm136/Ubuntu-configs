@@ -18,3 +18,12 @@ super + f
 
 super + Return
   $TERMINAL
+
+XF86AudioNext
+  cmus-remote -n
+
+XF86AudioPrev
+  cmus-remote -r
+
+XF86AudioPlay
+  cmus-remote -u

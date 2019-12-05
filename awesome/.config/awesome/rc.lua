@@ -57,10 +57,7 @@ local function run_once(cmd_arr)
   end
 end
 
-run_once({"compton","tilda","addfonts.sh","unclutter --root"}) -- entries must be separated by commas
-awful.spawn("sakura -e cmus",{
-  tag = "Media |"
-})
+run_once({"compton","tilda"}) -- entries must be separated by commas
 
 -- This function implements the XDG autostart specification
 --[[

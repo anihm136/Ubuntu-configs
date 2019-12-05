@@ -326,6 +326,8 @@ local cmus, cmus_timer = awful.widget.watch(
           wistring = " ⏸ " .. wistring
         elseif cmus_now.state == "playing" then
           wistring = " ▶ " .. wistring
+        elseif cmus_now.state == "stopped" then
+          wistring = " ■ " .. wistring
         end
         widget:set_text(wistring)
     end

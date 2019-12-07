@@ -54,6 +54,10 @@ nmap <silent> gr <Plug>(coc-references)
 command! -nargs=0 Format :call CocAction('format')
 command! -nargs=0 Prettier :CocCommand prettier.formatFile
 
+" Fugitive
+nmap <leader>gg :G<cr>
+nmap <leader>gp :Gpush<cr>
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => General
@@ -64,8 +68,6 @@ so ~/.config/nvim/plugged/plugins.vim
 set splitbelow splitright   
 
 set confirm
-
-set hidden
 
 set mouse=a
 
@@ -136,11 +138,7 @@ set wildmode=full
 
 " Ignore compiled files
 set wildignore=*.o,*~,*.pyc
-if has("win16") || has("win32")
-    set wildignore+=.git\*,.hg\*,.svn\*
-else
-    set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store
-endif
+set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store
 
 "Always show current position
 set ruler
@@ -152,7 +150,7 @@ set rnu nu
 set cmdheight=1
 
 " A buffer becomes hidden when it is abandoned
-set hid
+set hidden
 
 " Configure backspace so it acts as it should act
 set backspace=eol,start,indent
@@ -241,6 +239,7 @@ set smarttab
 " 1 tab == 2 spaces
 set shiftwidth=2
 set tabstop=2
+set softtabstop=2
 
 " Linebreak on 500 characters
 set lbr

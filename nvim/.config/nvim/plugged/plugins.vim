@@ -21,6 +21,8 @@ call plug#begin('~/.config/nvim/plugged')
     Plug 'haya14busa/is.vim'
     Plug 'vim-scripts/auto-pairs-gentle'
     Plug 'mhinz/vim-grepper'
+    Plug 'wellle/targets.vim'
+    Plug 'tpope/vim-fugitive'
 call plug#end()
 
 runtime macros/matchit.vim

@@ -116,7 +116,7 @@ augroup custom_commands
   au FileType * set fo-=c fo-=r fo-=o
   " Update a buffer's contents on focus if it changed outside of Vim.
   au FocusGained,BufEnter * :checktime
-  autocmd FileType qf,help,plugins nnoremap q :q<cr>
+  autocmd FileType qf,help,plugins,fugitive nnoremap q :q<cr>
   au BufWritePost init.vim,plugins.vim nested source %
 augroup END
 

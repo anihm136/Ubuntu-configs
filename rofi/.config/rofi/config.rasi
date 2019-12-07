@@ -25,19 +25,19 @@
 
   spacing: 0;
   background-color: transparent;
-  lines:4;
+  lines:5;
   font: "Heavy Data Nerd Font 15";
   text-color: @text-alt;
 }
 
 window {
   transparency: "real";
-  fullscreen: true;
+  width: 100%;
   background-color: #282c34aa;
 }
 
 mainbox {
-  padding: 30% 30%;
+  padding: 50% 30%;
 }
 
 inputbar {

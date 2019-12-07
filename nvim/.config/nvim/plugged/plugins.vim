@@ -12,7 +12,6 @@ call plug#begin('~/.config/nvim/plugged')
     Plug 'tpope/vim-eunuch'
     Plug 'tpope/vim-surround'
     Plug 'psliwka/vim-smoothie'
-    " Plug 'terryma/vim-smooth-scroll'
     Plug 'sickill/vim-pasta'
     Plug 'honza/vim-snippets'
     Plug 'elzr/vim-json'
@@ -27,17 +26,17 @@ call plug#end()
 runtime macros/matchit.vim
 
 " Airline customization
-let g:airline_extensions#enabled = ['branch', 'coc']
 let g:airline_skip_empty_sections = 1
 let g:airline_section_error = '%{airline#util#wrap(airline#extensions#coc#get_error(),0)}'
 let g:airline_section_warning = '%{airline#util#wrap(airline#extensions#coc#get_warning(),0)}'
 let airline#extensions#coc#stl_format_err = '%E{[%e(#%fe)]}'
 let airline#extensions#coc#stl_format_warn = '%W{[%w(#%fw)]}'
 let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#formatter = 'unique_tail'
+let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
 let g:airline#extensions#tabline#tab_nr_type= 2
 let g:airline_theme='onedark'
 let g:airline_powerline_fonts = 1
+let g:airline#extensions#tabline#left_sep = ' '
 
 " NERDCommenter customization
 let g:NERDSpaceDelims = 1
@@ -65,7 +64,7 @@ let g:fzf_action = {
   \ 'ctrl-t': 'tab split',
   \ 'ctrl-s': 'split',
   \ 'ctrl-v': 'vsplit' }
-let g:fzf_layout = { 'down': '~30%' }
+let g:fzf_layout = { 'down': '~20%' }
 let g:fzf_buffers_jump = 1
 let g:fzf_command_prefix = 'Fzf'
 
@@ -84,7 +83,7 @@ inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() :
                                            \"\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
 autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
-let g:coc_snippet_next = '..'
+let g:coc_snippet_next = '  '
 
 nnoremap <silent> <leader>k :call <SID>show_documentation()<CR>
 
@@ -131,3 +130,7 @@ xmap <F2>
     \ gvgr
     \ :cfdo %s/<C-r>s//g \| update
      \<Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left>
+
+" Gitgutter
+let g:gitgutter_map_keys=0
+map <Leader>gf :GitGutterFold<cr>

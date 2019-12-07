@@ -34,20 +34,12 @@ let mapleader = " "
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Plugin mappings
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-" Goyo
-nmap <leader>g :Goyo<cr>
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => General
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-so ~/.vim/plugged/plugins.vim
+so ~/.vim/plugged/plug_vim.vim
 
-set splitbelow splitright   
+set splitbelow splitright
 
 set confirm
 
@@ -65,27 +57,31 @@ filetype indent on
 " Set to auto read when a file is changed from the outside
 set autoread
 
+set noshowmode
+
 set mouse+=a
 
 " Fast saving
 nmap <leader>w :w!<cr>
 
-" :W sudo saves the file 
+" :W sudo saves the file
 " (useful for handling the permission-denied error)
 map W :SudoWrite<cr>
 nmap <leader>W :W<cr>
 
-au FileType * set fo-=c fo-=r fo-=o
-
-au FileType qf,help,plugins nnoremap q :q<cr>
-
+augroup custom_commands 
+  autocmd!
+  autocmd FileType * set fo-=c fo-=r fo-=o
+  autocmd FileType qf,help,plugins nnoremap q :q<cr>
+  autocmd BufWritePost vimrc,plug_vim.vim nested source %
+augroup END
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Avoid garbled characters in Chinese language windows OS
-let $LANG='en' 
+let $LANG='en'
 set langmenu=en
 source $VIMRUNTIME/delmenu.vim
 source $VIMRUNTIME/menu.vim
@@ -95,11 +91,7 @@ set wildmenu
 
 " Ignore compiled files
 set wildignore=*.o,*~,*.pyc
-if has("win16") || has("win32")
-    set wildignore+=.git\*,.hg\*,.svn\*
-else
-    set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store
-endif
+set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store
 
 "Always show current position
 set ruler
@@ -120,23 +112,23 @@ set whichwrap+=<,>,h,l
 " Ignore case when searching
 set ignorecase
 
-" When searching try to be smart about cases 
+" When searching try to be smart about cases
 set smartcase
 
 " Highlight search results
 set hlsearch
 
 " Makes search act like search in modern browsers
-set incsearch 
+set incsearch
 
 " Don't redraw while executing macros (good performance config)
-set lazyredraw 
+set lazyredraw
 
 " For regular expressions turn magic on
 set magic
 
 " Show matching brackets when text indicator is over them
-set showmatch 
+set showmatch
 " How many tenths of a second to blink when matching brackets
 set mat=2
 
@@ -155,7 +147,7 @@ set foldcolumn=1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Enable syntax highlighting
-syntax enable 
+syntax enable
 
 " Enable 256 colors palette in Gnome Terminal
 if $COLORTERM == 'gnome-terminal'
@@ -205,7 +197,6 @@ set lbr
 set tw=500
 
 set ai "Auto indent
-set si "Smart indent
 set wrap! "Unwrap lines
 
 
@@ -271,7 +262,7 @@ map <leader>te :tabedit <c-r>=expand("%:p:h")<cr>/
 " Switch CWD to the directory of the open buffer
 map <leader>cd :cd %:p:h<cr>:pwd<cr>
 
-" Specify the behavior when switching between buffers 
+" Specify the behavior when switching between buffers
 try
   set switchbuf=useopen,usetab,newtab
   set stal=2
@@ -279,8 +270,10 @@ catch
 endtry
 
 " Return to last edit position when opening files (You want this!)
-au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
-
+augroup edit_save
+  autocmd!
+  autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+augroup END
 
 """"""""""""""""""""""""""""""
 " => Status line
@@ -316,10 +309,10 @@ fun! CleanExtraSpaces()
     call setreg('/', old_query)
 endfun
 
-if has("autocmd")
-    autocmd BufWritePre *.txt,*.js,*.py,*.wiki,*.sh,*.coffee,*.c,*.java,*.cpp :call CleanExtraSpaces()
-endif
-
+augroup clean_spaces
+  autocmd!
+  autocmd BufWritePre *.txt,*.js,*.py,*.wiki,*.sh,*.coffee,*.c,*.java,*.cpp :call CleanExtraSpaces()
+augroup END
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Spell checking
@@ -373,7 +366,7 @@ endfunction
 
 function! CmdLine(str)
     call feedkeys(":" . a:str)
-endfunction 
+endfunction
 
 function! VisualSelection(direction, extra_filter) range
     let l:saved_reg = @"

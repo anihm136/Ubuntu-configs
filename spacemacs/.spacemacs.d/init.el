@@ -69,9 +69,10 @@ This function should only modify configuration layer settings."
             shell-default-position 'bottom)
      spell-checking
      syntax-checking
+     (shell-scripts :variables
+                    shell-scripts-backend 'lsp)
      ;; semantic
      treemacs
-     themes-megapack
      ;; version-control
      )
 
@@ -82,13 +83,13 @@ This function should only modify configuration layer settings."
    ;; To use a local version of a package, use the `:location' property:
    ;; '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
-   dotspacemacs-additional-packages '(company-tabnine)
+   dotspacemacs-additional-packages '(company-tabnine doom-themes)
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
 
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages '()
+   dotspacemacs-excluded-packages '(dap-mode)
 
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
@@ -217,8 +218,8 @@ It should only modify the values of Spacemacs settings."
 ;; refer to the DOCUMENTATION.org for more info on how to create your own
    ;; spaceline theme. Value can be a symbol or list with additional properties.
    ;; (default '(spacemacs :separator wave :separator-scale 1.5))
-   dotspacemacs-mode-line-theme '(spacemacs :separator arrow-fade :separator-scale 1)
-   
+   dotspacemacs-mode-line-theme '(all-the-icons :separator wave :separator-scale 1);
+
    ;; If non-nil the cursor color matches the state color in GUI Emacs.
    ;; (default t)
    dotspacemacs-colorize-cursor-according-to-state t
@@ -336,12 +337,12 @@ It should only modify the values of Spacemacs settings."
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's active or selected.
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
-   dotspacemacs-active-transparency 90
+   dotspacemacs-active-transparency 100
 
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's inactive or deselected.
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
-   dotspacemacs-inactive-transparency 90
+   dotspacemacs-inactive-transparency 100
 
    ;; If non-nil show the titles of transient states. (default t)
    dotspacemacs-show-transient-state-title t
@@ -485,10 +486,16 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
-  (spacemacs/toggle-golden-ratio-on)
+  ;; (spacemacs/toggle-golden-ratio-on)
   (spacemacs/toggle-truncate-lines-off)
-  (spacemacs/load-theme 'kaolin-temple :disable t)
+  (spacemacs/load-theme 'doom-one :disable t)
   (global-company-mode)
+  (spacemacs/toggle-golden-ratio-on)
+  ;; (setq treemacs--width-is-locked 35
+  ;;       window-size-fixed (when treemacs--width-is-locked 'width))
+  (setq doom-themes-treemacs-theme "doom-atom")
+  (doom-themes-treemacs-config)
+  (doom-themes-org-config)
   (add-to-list 'company-backends 'company-tabnine)
   (setq projectile-project-search-path '("~/Projects"))
   (setq-default evil-escape-delay 0.3)
@@ -511,12 +518,94 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ansi-color-faces-vector
+   [default bold shadow italic underline bold bold-italic bold])
  '(ansi-color-names-vector
    ["#282c34" "#ff6c6b" "#98be65" "#ECBE7B" "#51afef" "#c678dd" "#46D9FF" "#bbc2cf"])
+ '(ansi-term-color-vector
+   [unspecified "#14191f" "#d15120" "#81af34" "#deae3e" "#7e9fc9" "#a878b5" "#7e9fc9" "#dcdddd"])
  '(company-quickhelp-color-background "#4F4F4F")
  '(company-quickhelp-color-foreground "#DCDCCC")
+ '(compilation-message-face (quote default))
+ '(cua-global-mark-cursor-color "#7ec98f")
+ '(cua-normal-cursor-color "#8c8a85")
+ '(cua-overwrite-cursor-color "#e5c06d")
+ '(cua-read-only-cursor-color "#8ac6f2")
+ '(diary-entry-marker (quote font-lock-variable-name-face))
+ '(doom-one-brighter-modeline t)
+ '(emms-mode-line-icon-image-cache
+   (quote
+    (image :type xpm :ascent center :data "/* XPM */
+static char *note[] = {
+/* width height num_colors chars_per_pixel */
+\"    10   11        2            1\",
+/* colors */
+\". c #1fb3b3\",
+\"# c None s None\",
+/* pixels */
+\"###...####\",
+\"###.#...##\",
+\"###.###...\",
+\"###.#####.\",
+\"###.#####.\",
+\"#...#####.\",
+\"....#####.\",
+\"#..######.\",
+\"#######...\",
+\"######....\",
+\"#######..#\" };")))
  '(evil-want-Y-yank-to-eol nil)
+ '(fci-rule-character-color "#192028")
  '(fci-rule-color "#5B6268")
+ '(frame-brackground-mode (quote dark))
+ '(gnus-logo-colors (quote ("#528d8d" "#c0c0c0")) t)
+ '(gnus-mode-line-image-cache
+   (quote
+    (image :type xpm :ascent center :data "/* XPM */
+static char *gnus-pointer[] = {
+/* width height num_colors chars_per_pixel */
+\"    18    13        2            1\",
+/* colors */
+\". c #1fb3b3\",
+\"# c None s None\",
+/* pixels */
+\"##################\",
+\"######..##..######\",
+\"#####........#####\",
+\"#.##.##..##...####\",
+\"#...####.###...##.\",
+\"#..###.######.....\",
+\"#####.########...#\",
+\"###########.######\",
+\"####.###.#..######\",
+\"######..###.######\",
+\"###....####.######\",
+\"###..######.######\",
+\"###########.######\" };")) t)
+ '(highlight-changes-colors (quote ("#e5786d" "#834c98")))
+ '(highlight-symbol-colors
+   (--map
+    (solarized-color-blend it "#292928" 0.25)
+    (quote
+     ("#e5c06d" "#7ec98f" "#ffb4ac" "#834c98" "#8ac6f2" "#ddaa6f" "#a4b5e6"))))
+ '(highlight-symbol-foreground-color "#989790")
+ '(highlight-tail-colors
+   (quote
+    (("#2e2e2d" . 0)
+     ("#3d454b" . 20)
+     ("#3a463b" . 30)
+     ("#404249" . 50)
+     ("#4b4436" . 60)
+     ("#4a4036" . 70)
+     ("#4c3935" . 85)
+     ("#2e2e2d" . 100))))
+ '(hl-bg-colors
+   (quote
+    ("#4b4436" "#4a4036" "#4f4240" "#4c3935" "#3b313d" "#404249" "#3a463b" "#3d454b")))
+ '(hl-fg-colors
+   (quote
+    ("#292928" "#292928" "#292928" "#292928" "#292928" "#292928" "#292928" "#292928")))
+ '(hl-sexp-background-color "#1c1f26")
  '(hl-todo-keyword-faces
    (quote
     (("TODO" . "#dc752f")
@@ -544,11 +633,18 @@ This function is called at the very end of Spacemacs initialization."
  '(objed-cursor-color "#ff6c6b")
  '(package-selected-packages
    (quote
-    (company-tabnine unicode-escape names dap-mode bui tree-mode lsp-ui lsp-treemacs lsp-python-ms lsp-java helm-lsp cquery company-lsp ccls lsp-mode xterm-color vterm shell-pop multi-term mmm-mode markdown-toc markdown-mode gh-md eshell-z eshell-prompt-extras esh-help csv-mode stickyfunc-enhance srefactor zenburn-theme zen-and-art-theme yasnippet-snippets yapfify white-sand-theme web-mode web-beautify underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme toxi-theme tao-theme tangotango-theme tango-plus-theme tango-2-theme tagedit sunny-day-theme sublime-themes subatomic256-theme subatomic-theme spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme slim-mode seti-theme scss-mode sass-mode reverse-theme rebecca-theme railscasts-theme pytest pyenv-mode py-isort purple-haze-theme pug-mode professional-theme prettier-js planet-theme pippel pipenv pyvenv pip-requirements phoenix-dark-pink-theme phoenix-dark-mono-theme organic-green-theme org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download org-cliplink org-brain omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme nodejs-repl noctilux-theme naquadah-theme mvn mustang-theme monokai-theme monochrome-theme molokai-theme moe-theme minimal-theme meghanada maven-test-mode material-theme majapahit-theme madhat2r-theme lush-theme livid-mode skewer-mode live-py-mode light-soap-theme kaolin-themes json-navigator hierarchy json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc jbeans-theme jazz-theme ir-black-theme inkpot-theme importmagic epc ctable concurrent deferred impatient-mode simple-httpd htmlize heroku-theme hemisu-theme helm-rtags helm-pydoc helm-org-rifle helm-org helm-css-scss helm-company helm-c-yasnippet hc-zenburn-theme haml-mode gruvbox-theme gruber-darker-theme groovy-mode groovy-imports pcache grandshell-theme gradle-mode gotham-theme google-c-style gnuplot gandalf-theme fuzzy flyspell-correct-helm flyspell-correct flycheck-rtags flycheck-pos-tip pos-tip flatui-theme flatland-theme farmhouse-theme eziam-theme exotica-theme evil-org evil-commentary espresso-theme ensime sbt-mode scala-mode emmet-mode dracula-theme doom-themes django-theme disaster darktooth-theme darkokai-theme darkmine-theme darkburn-theme dakrone-theme cython-mode cyberpunk-theme cpp-auto-include company-web web-completion-data company-tern dash-functional tern company-statistics company-rtags rtags company-emacs-eclim eclim company-c-headers company-anaconda company color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized clues-theme clang-format chocolate-theme autothemer cherry-blossom-theme busybee-theme bubbleberry-theme blacken birds-of-paradise-plus-theme badwolf-theme auto-yasnippet yasnippet auto-dictionary apropospriate-theme anti-zenburn-theme anaconda-mode pythonic ample-zen-theme ample-theme alect-themes afternoon-theme ac-ispell auto-complete ws-butler writeroom-mode visual-fill-column winum volatile-highlights vi-tilde-fringe uuidgen treemacs-projectile treemacs-evil treemacs ht pfuture toc-org symon symbol-overlay string-inflection spaceline-all-the-icons spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode password-generator paradox spinner overseer org-bullets open-junk-file nameless move-text macrostep lorem-ipsum link-hint indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-xref helm-themes helm-swoop helm-purpose window-purpose imenu-list helm-projectile projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flycheck-package package-lint flycheck pkg-info epl flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-line evil-surround evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state iedit evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens smartparens paredit evil-args evil-anzu anzu eval-sexp-fu elisp-slime-nav editorconfig dumb-jump doom-modeline shrink-path all-the-icons memoize f dash s devdocs define-word column-enforce-mode clean-aindent-mode centered-cursor-mode auto-highlight-symbol auto-compile packed aggressive-indent ace-window ace-link ace-jump-helm-line helm avy helm-core popup which-key use-package pcre2el org-plus-contrib hydra lv font-lock+ evil goto-chg undo-tree dotenv-mode diminish bind-map bind-key async)))
+    (insert-shebang flycheck-bashate fish-mode company-shell solaire-mode company-tabnine unicode-escape names dap-mode bui tree-mode lsp-ui lsp-treemacs lsp-python-ms lsp-java helm-lsp cquery company-lsp ccls lsp-mode xterm-color vterm shell-pop multi-term mmm-mode markdown-toc markdown-mode gh-md eshell-z eshell-prompt-extras esh-help csv-mode stickyfunc-enhance srefactor zenburn-theme zen-and-art-theme yasnippet-snippets yapfify white-sand-theme web-mode web-beautify underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme toxi-theme tao-theme tangotango-theme tango-plus-theme tango-2-theme tagedit sunny-day-theme sublime-themes subatomic256-theme subatomic-theme spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme slim-mode seti-theme scss-mode sass-mode reverse-theme rebecca-theme railscasts-theme pytest pyenv-mode py-isort purple-haze-theme pug-mode professional-theme prettier-js planet-theme pippel pipenv pyvenv pip-requirements phoenix-dark-pink-theme phoenix-dark-mono-theme organic-green-theme org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download org-cliplink org-brain omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme nodejs-repl noctilux-theme naquadah-theme mvn mustang-theme monokai-theme monochrome-theme molokai-theme moe-theme minimal-theme meghanada maven-test-mode material-theme majapahit-theme madhat2r-theme lush-theme livid-mode skewer-mode live-py-mode light-soap-theme kaolin-themes json-navigator hierarchy json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc jbeans-theme jazz-theme ir-black-theme inkpot-theme importmagic epc ctable concurrent deferred impatient-mode simple-httpd htmlize heroku-theme hemisu-theme helm-rtags helm-pydoc helm-org-rifle helm-org helm-css-scss helm-company helm-c-yasnippet hc-zenburn-theme haml-mode gruvbox-theme gruber-darker-theme groovy-mode groovy-imports pcache grandshell-theme gradle-mode gotham-theme google-c-style gnuplot gandalf-theme fuzzy flyspell-correct-helm flyspell-correct flycheck-rtags flycheck-pos-tip pos-tip flatui-theme flatland-theme farmhouse-theme eziam-theme exotica-theme evil-org evil-commentary espresso-theme ensime sbt-mode scala-mode emmet-mode dracula-theme doom-themes django-theme disaster darktooth-theme darkokai-theme darkmine-theme darkburn-theme dakrone-theme cython-mode cyberpunk-theme cpp-auto-include company-web web-completion-data company-tern dash-functional tern company-statistics company-rtags rtags company-emacs-eclim eclim company-c-headers company-anaconda company color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized clues-theme clang-format chocolate-theme autothemer cherry-blossom-theme busybee-theme bubbleberry-theme blacken birds-of-paradise-plus-theme badwolf-theme auto-yasnippet yasnippet auto-dictionary apropospriate-theme anti-zenburn-theme anaconda-mode pythonic ample-zen-theme ample-theme alect-themes afternoon-theme ac-ispell auto-complete ws-butler writeroom-mode visual-fill-column winum volatile-highlights vi-tilde-fringe uuidgen treemacs-projectile treemacs-evil treemacs ht pfuture toc-org symon symbol-overlay string-inflection spaceline-all-the-icons spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode password-generator paradox spinner overseer org-bullets open-junk-file nameless move-text macrostep lorem-ipsum link-hint indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-xref helm-themes helm-swoop helm-purpose window-purpose imenu-list helm-projectile projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flycheck-package package-lint flycheck pkg-info epl flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-line evil-surround evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state iedit evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens smartparens paredit evil-args evil-anzu anzu eval-sexp-fu elisp-slime-nav editorconfig dumb-jump doom-modeline shrink-path all-the-icons memoize f dash s devdocs define-word column-enforce-mode clean-aindent-mode centered-cursor-mode auto-highlight-symbol auto-compile packed aggressive-indent ace-window ace-link ace-jump-helm-line helm avy helm-core popup which-key use-package pcre2el org-plus-contrib hydra lv font-lock+ evil goto-chg undo-tree dotenv-mode diminish bind-map bind-key async)))
  '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
+ '(pos-tip-background-color "#2e2e2d")
+ '(pos-tip-foreground-color "#989790")
  '(python-indent-guess-indent-offset t)
- '(python-shell-interpreter "python")
+ '(python-shell-interpreter "python" t)
+ '(smartrep-mode-line-active-bg (solarized-color-blend "#8ac6f2" "#2e2e2d" 0.2))
+ '(spaceline-all-the-icons-separator-type (quote slant) t)
+ '(term-default-bg-color "#292928")
+ '(term-default-fg-color "#8c8a85")
  '(vc-annotate-background "#282c34")
+ '(vc-annotate-background-mode nil)
  '(vc-annotate-color-map
    (list
     (cons 20 "#98be65")
@@ -569,7 +665,14 @@ This function is called at the very end of Spacemacs initialization."
     (cons 320 "#6f4e52")
     (cons 340 "#5B6268")
     (cons 360 "#5B6268")))
- '(vc-annotate-very-old-color nil))
+ '(vc-annotate-very-old-color nil)
+ '(weechat-color-list
+   (quote
+    (unspecified "#292928" "#2e2e2d" "#4f4240" "#ffb4ac" "#3d454b" "#8ac6f2" "#4b4436" "#e5c06d" "#404249" "#a4b5e6" "#4c3935" "#e5786d" "#3a463b" "#7ec98f" "#8c8a85" "#73726e")))
+ '(xterm-color-names
+   ["#2e2e2d" "#ffb4ac" "#8ac6f2" "#e5c06d" "#a4b5e6" "#e5786d" "#7ec98f" "#e7e4da"])
+ '(xterm-color-names-bright
+   ["#292928" "#ddaa6f" "#6a6965" "#73726e" "#8c8a85" "#834c98" "#989790" "#f5f2e7"]))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

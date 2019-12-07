@@ -16,14 +16,10 @@ call plug#end()
 runtime macros/matchit.vim
 
 " Airline customization
-let g:airline_extensions#enabled = ['branch', 'coc']
+" let g:airline_extensions#enabled = ['branch']
 let g:airline_skip_empty_sections = 1
-let g:airline_section_error = '%{airline#util#wrap(airline#extensions#coc#get_error(),0)}'
-let g:airline_section_warning = '%{airline#util#wrap(airline#extensions#coc#get_warning(),0)}'
-let airline#extensions#coc#stl_format_err = '%E{[%e(#%fe)]}'
-let airline#extensions#coc#stl_format_warn = '%W{[%w(#%fw)]}'
 let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#formatter = 'unique_tail'
+let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
 let g:airline#extensions#tabline#tab_nr_type= 2
 let g:airline_theme='deus'
 let g:airline_powerline_fonts = 1
@@ -46,4 +42,3 @@ augroup END
 
 " Auto Pairs Gentle
 let g:AutoPairsUseInsertedCount = 1
-

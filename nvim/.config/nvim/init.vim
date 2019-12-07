@@ -45,12 +45,6 @@ nmap <leader>ff :FzfFiles<cr>
 nmap <leader>bb :FzfBuffers<cr>
 nmap <leader>rg :FzfRg<space>
 
-" " Smooth scroll
-" noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 4, 1)<CR>
-" noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 4, 1)<CR>
-" noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 4, 2)<CR>
-" noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 4, 2)<CR>
-
 " coc.nvim
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
@@ -89,9 +83,13 @@ filetype indent on
 " Set to auto read when a file is changed from the outside
 set autoread
 
+set noshowmode
+
 set clipboard=unnamedplus
 
 set completeopt=menuone,preview
+
+set signcolumn=yes
 
 " Fast saving
 nmap <leader>w :w!<cr>
@@ -100,21 +98,23 @@ nmap <leader>w :w!<cr>
 " (useful for handling the permission-denied error)
 nmap <leader>W :SudoWrite<cr>
 
-au FileType * set fo-=c fo-=r fo-=o
-
 map [<Space> O<Esc>j
 map ]<Space> o<Esc>k
 
 " Keep cursor at the bottom of the visual selection after you yank it.
 vmap y ygv<Esc>
 
-" Auto-resize splits when Vim gets resized.
-autocmd VimResized * wincmd =
-
-" Update a buffer's contents on focus if it changed outside of Vim.
-au FocusGained,BufEnter * :checktime
-
-autocmd FileType qf,help,plugins nnoremap q :q<cr>
+augroup custom_commands
+  autocmd!
+  " Auto-resize splits when Vim gets resized.
+  autocmd VimResized * wincmd =
+  " Prevent automatic commentingof next line in insert mode
+  au FileType * set fo-=c fo-=r fo-=o
+  " Update a buffer's contents on focus if it changed outside of Vim.
+  au FocusGained,BufEnter * :checktime
+  autocmd FileType qf,help,plugins nnoremap q :q<cr>
+  au BufWritePost init.vim,plugins.vim nested source %
+augroup END
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -243,7 +243,6 @@ set lbr
 set tw=500
 
 set ai "Auto indent
-set si "Smart indent
 set wrap! "Unwrap lines
 
 
@@ -289,13 +288,6 @@ map <leader>to :tab sp<cr>
 map <leader>tc :Bclose<cr> :tabclose<cr>
 map <leader>tm :tabmove 
 
-" Let 'tl' toggle between this and the last accessed tab
-let g:lasttab = 1
-let g:airline#extensions#tabline#left_sep = ' '
-nmap <S-Tab> :exe "tabn ".g:lasttab<CR>
-au TabLeave * let g:lasttab = tabpagenr()
-
-
 " Opens a new tab with the current buffer's path
 " Super useful when editing files in the same directory
 map <leader>e :edit <c-r>=expand("%:p:h")<cr>/
@@ -311,7 +303,10 @@ catch
 endtry
 
 " Return to last edit position when opening files (You want this!)
-au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+augroup edit_save
+  autocmd!
+  au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+augroup END
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -337,9 +332,9 @@ fun! CleanExtraSpaces()
     call setreg('/', old_query)
 endfun
 
-if has("autocmd")
-    autocmd BufWritePre *.txt,*.js,*.py,*.wiki,*.sh,*.coffee,*.c,*.cpp,*.java :call CleanExtraSpaces()
-endif
+augroup clean_spaces
+  autocmd BufWritePre *.txt,*.js,*.py,*.wiki,*.sh,*.coffee,*.c,*.cpp,*.java :call CleanExtraSpaces()
+augroup END
 
 " Press * to search for the term under the cursor or a visual selection and
 " then press a key below to replace all instances of it in the current file.

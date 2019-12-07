@@ -1,0 +1,36 @@
+set statusbar-h-padding 0
+set statusbar-v-padding 0
+set page-padding 3
+map u scroll half-up
+map d scroll half-down
+map D toggle_page_mode
+map r reload
+map R rotate
+set guioptions ''
+set window-title-basename true
+set font "Iosevka 11"
+set selection-notification false
+set vertical-center true
+set n-completion-items 5
+set scroll-page-aware true
+
+# Colors
+set inputbar-bg "#111111"
+set inputbar-fg "#9fbc00"
+set statusbar-bg "#111111"
+set statusbar-fg "#9fbc00"
+set completion-bg "#111111"
+set completion-fg "#eeeeee"
+set completion-highlight-fg "#9fbc00"
+set completion-highlight-bg "#111111"
+set index-fg "#eeeeee"
+set index-bg "#111111"
+set index-active-fg "#9fbc00"
+set index-active-bg "#111111"
+set highlight-transparency 0.15
+set notification-bg "#111111"
+set notification-fg "#9fbc00"
+set notification-error-bg "#111111"
+set notification-error-fg "#9fbc00"
+set notification-warning-bg "#111111"
+set notification-warning-fg "#9fbc00"

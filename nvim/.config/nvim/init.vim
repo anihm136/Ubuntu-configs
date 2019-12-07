@@ -91,6 +91,10 @@ set completeopt=menuone,preview
 
 set signcolumn=yes
 
+set updatetime=100
+
+set inccommand=nosplit
+
 " Fast saving
 nmap <leader>w :w!<cr>
 

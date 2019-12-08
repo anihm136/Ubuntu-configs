@@ -10,7 +10,7 @@ call plug#begin('~/.config/nvim/plugged')
     Plug 'junegunn/fzf.vim'
     Plug 'mattn/emmet-vim'
     Plug 'tpope/vim-eunuch'
-    Plug 'tpope/vim-surround'
+    Plug 'machakann/vim-sandwich'
     Plug 'psliwka/vim-smoothie'
     Plug 'sickill/vim-pasta'
     Plug 'honza/vim-snippets'
@@ -26,6 +26,7 @@ call plug#begin('~/.config/nvim/plugged')
 call plug#end()
 
 runtime macros/matchit.vim
+runtime macros/sandwich/keymap/surround.vim
 
 " Airline customization
 let g:airline_skip_empty_sections = 1

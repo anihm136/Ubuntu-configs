@@ -55,8 +55,11 @@ command! -nargs=0 Format :call CocAction('format')
 command! -nargs=0 Prettier :CocCommand prettier.formatFile
 
 " Fugitive
-nmap <leader>gg :G<cr>
+nmap <leader>gs :G<cr>
 nmap <leader>gp :Gpush<cr>
+
+" Sandwich
+map s <NOP>
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""

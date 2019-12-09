@@ -43,4 +43,5 @@ export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:hidden:wrap 
 export FZF_ALT_C_COMMAND="fda"
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 export FZF_DEFAULT_COMMAND="rg --files --hidden --follow --glob '!.git' 2>/dev/null"
+export FZF_CTRL_T_COMMAND="fdfind --hidden --follow --exclude .git"
 export SUDO_ASKPASS="$HOME/.scripts/dmenupass"

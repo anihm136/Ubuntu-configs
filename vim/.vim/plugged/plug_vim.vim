@@ -13,6 +13,7 @@ call plug#begin('~/.vim/plugged')
     Plug 'vim-scripts/auto-pairs-gentle'
     Plug 'anihm136/vim-unimpaired'
     Plug 'jorengarenar/fauxClip'
+    Plug 'ervandew/supertab'
 call plug#end()
 runtime macros/matchit.vim
 

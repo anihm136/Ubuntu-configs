@@ -59,9 +59,19 @@ e() {
   if [[ -n "$@" ]]; then
     nvim $@
   else
-    local files=$(find -L . -maxdepth 1 -type f 2>/dev/null | fzf -m | cut -d '/' -f 2 )
+    local files=$(fzf -m)
     local args=(`echo $files`)
     [ -n "$args" ] && nvim "${args[@]}"
+  fi
+}
+
+v() {
+  if [[ -n "$@" ]]; then
+    vim $@
+  else
+    local files=$(fzf -m)
+    local args=(`echo $files`)
+    [ -n "$args" ] && vim "${args[@]}"
   fi
 }
 

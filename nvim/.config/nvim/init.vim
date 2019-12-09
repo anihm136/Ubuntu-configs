@@ -105,7 +105,7 @@ nmap <leader>w :w!<cr>
 
 " :W sudo saves the file 
 " (useful for handling the permission-denied error)
-nmap <leader>W :SudoWrite<cr>
+nmap <leader>W :w !sudo tee %<cr>
 
 map [<Space> O<Esc>j
 map ]<Space> o<Esc>k

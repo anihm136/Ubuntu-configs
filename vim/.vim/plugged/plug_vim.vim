@@ -3,7 +3,6 @@ call plug#begin('~/.vim/plugged')
     Plug 'scrooloose/nerdcommenter'
     Plug 'vim-airline/vim-airline'
     Plug 'vim-airline/vim-airline-themes'
-    Plug 'tpope/vim-eunuch'
     Plug 'psliwka/vim-smoothie'
     Plug 'haya14busa/is.vim'
     Plug 'sickill/vim-pasta'
@@ -12,6 +11,7 @@ call plug#begin('~/.vim/plugged')
     Plug 'vhda/verilog_systemverilog.vim'
     Plug 'vim-scripts/auto-pairs-gentle'
     Plug 'anihm136/vim-unimpaired'
+    Plug 'tpope/vim-repeat'
     Plug 'jorengarenar/fauxClip'
     Plug 'ervandew/supertab'
 call plug#end()

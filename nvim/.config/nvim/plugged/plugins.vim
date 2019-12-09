@@ -9,7 +9,6 @@ call plug#begin('~/.config/nvim/plugged')
     Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
     Plug 'junegunn/fzf.vim'
     Plug 'mattn/emmet-vim'
-    Plug 'tpope/vim-eunuch'
     Plug 'machakann/vim-sandwich'
     Plug 'psliwka/vim-smoothie'
     Plug 'sickill/vim-pasta'
@@ -24,6 +23,7 @@ call plug#begin('~/.config/nvim/plugged')
     Plug 'wellle/targets.vim'
     Plug 'tpope/vim-fugitive'
     Plug 'anihm136/vim-unimpaired'
+    Plug 'tpope/vim-repeat'
 call plug#end()
 
 runtime macros/matchit.vim

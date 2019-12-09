@@ -66,8 +66,7 @@ nmap <leader>w :w!<cr>
 
 " :W sudo saves the file
 " (useful for handling the permission-denied error)
-map W :SudoWrite<cr>
-nmap <leader>W :W<cr>
+map <leader>W :w !sudo tee %<cr>
 
 augroup custom_commands 
   autocmd!

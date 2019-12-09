@@ -6,8 +6,9 @@ map d scroll half-down
 map D toggle_page_mode
 map r reload
 map R rotate
-set guioptions ''
+set guioptions 's'
 set window-title-basename true
+set statusbar-home-tilde true
 set font "Iosevka 11"
 set selection-notification false
 set vertical-center true

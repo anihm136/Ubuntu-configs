@@ -23,6 +23,7 @@ call plug#begin('~/.config/nvim/plugged')
     Plug 'mhinz/vim-grepper'
     Plug 'wellle/targets.vim'
     Plug 'tpope/vim-fugitive'
+    Plug 'anihm136/vim-unimpaired'
 call plug#end()
 
 runtime macros/matchit.vim

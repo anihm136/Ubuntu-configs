@@ -11,6 +11,8 @@ call plug#begin('~/.vim/plugged')
     Plug 'ryanoasis/vim-devicons'
     Plug 'vhda/verilog_systemverilog.vim'
     Plug 'vim-scripts/auto-pairs-gentle'
+    Plug 'anihm136/vim-unimpaired'
+    Plug 'jorengarenar/fauxClip'
 call plug#end()
 runtime macros/matchit.vim
 
@@ -41,3 +43,9 @@ augroup END
 
 " Auto Pairs Gentle
 let g:AutoPairsUseInsertedCount = 1
+
+" fauxClip
+let g:fauxClip_copy_cmd         = 'xsel -ib'
+let g:fauxClip_copy_primary_cmd = 'xsel -ip'
+let g:fauxClip_paste_cmd         = 'xsel -ob'
+let g:fauxClip_paste_primary_cmd = 'xsel -op'

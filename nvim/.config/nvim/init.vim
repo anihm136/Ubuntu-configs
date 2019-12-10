@@ -323,12 +323,6 @@ augroup END
 map 0 ^
 map Y y$
 
-" Move a line of text using ALT+[jk] or Command+[jk] on mac
-nmap J mz:m+<cr>`z
-nmap K mz:m-2<cr>`z
-vmap J :m'>+<cr>`<my`>mzgv`yo`z
-vmap K :m'<-2<cr>`>my`<mzgv`yo`z
-
 " Delete trailing white space on save, useful for some filetypes ;)
 fun! CleanExtraSpaces()
     let save_cursor = getpos(".")

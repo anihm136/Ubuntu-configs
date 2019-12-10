@@ -75,6 +75,7 @@ augroup custom_commands
   autocmd BufWritePost vimrc,plug_vim.vim nested source %
 augroup END
 
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -288,12 +289,6 @@ augroup END
 " Remap VIM 0 to first non-blank character
 map 0 ^
 map Y y$
-
-" Move a line of text using ALT+[jk] or Command+[jk] on mac
-nmap J mz:m+<cr>`z
-nmap K mz:m-2<cr>`z
-vmap J :m'>+<cr>`<my`>mzgv`yo`z
-vmap K :m'<-2<cr>`>my`<mzgv`yo`z
 
 " Delete trailing white space on save, useful for some filetypes ;)
 fun! CleanExtraSpaces()

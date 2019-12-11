@@ -107,11 +107,11 @@ nmap <leader>w :w!<cr>
 " (useful for handling the permission-denied error)
 nmap <leader>W :w !sudo tee %<cr>
 
-map [<Space> O<Esc>j
-map ]<Space> o<Esc>k
-
 " Keep cursor at the bottom of the visual selection after you yank it.
-vmap y ygv<Esc>
+vmap y ygv<Esc> 
+
+" Reindent buffer
+nnoremap g= mmgg=G'm
 
 augroup custom_commands
   autocmd!
@@ -202,11 +202,11 @@ syntax enable
 
 " Enable 256 colors palette in Gnome Terminal
 if $COLORTERM == 'gnome-terminal'
-    set t_Co=256
+  set t_Co=256
 endif
 
 try
-    colorscheme onedark
+  colorscheme onedark
 catch
 endtry
 
@@ -266,9 +266,6 @@ vnoremap <silent> # :<C-u>call VisualSelection('', '')<CR>?<C-R>=@/<CR><CR>
 " => Moving around, tabs, windows and buffers
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" Map <Space> to / (search) and Ctrl-<Space> to ? (backwards search)
-map <C-space> /
-
 " Disable highlight when <leader><cr> is pressed
 map <silent> <leader><leader> :noh<cr>
 
@@ -325,14 +322,15 @@ map Y y$
 
 " Delete trailing white space on save, useful for some filetypes ;)
 fun! CleanExtraSpaces()
-    let save_cursor = getpos(".")
-    let old_query = getreg('/')
-    silent! %s/\s\+$//e
-    call setpos('.', save_cursor)
-    call setreg('/', old_query)
+  let save_cursor = getpos(".")
+  let old_query = getreg('/')
+  silent! %s/\s\+$//e
+  call setpos('.', save_cursor)
+  call setreg('/', old_query)
 endfun
 
 augroup clean_spaces
+  autocmd!
   autocmd BufWritePre *.txt,*.js,*.py,*.wiki,*.sh,*.coffee,*.c,*.cpp,*.java :call CleanExtraSpaces()
 augroup END
 
@@ -352,6 +350,23 @@ xnoremap <Leader>rc :s///gc<Left><Left><Left>
 " for replacing a few instances of the term (comparable to multiple cursors).
 nnoremap <silent> rn :let @/='\<'.expand('<cword>').'\>'<CR>cgn
 xnoremap <silent> rn "sy:let @/=@s<CR>cgn
+
+" After searching for text, press this mapping to do a project wide find and
+" replace. It's similar to <leader>r except this one applies to all matches
+" across all files instead of just the current file.
+nnoremap <F2>
+      \ :let @s='\<'.expand('<cword>').'\>'<CR>
+      \ :Grepper -cword -noprompt<CR>
+      \ :cfdo %s/<C-r>s//g \| update
+      \<Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left>
+
+" The same as above except it works with a visual selection.
+xmap <F2>
+      \ "sy
+      \ gvgr
+      \ :cfdo %s/<C-r>s//g \| update
+      \<Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left>
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Spell checking
@@ -385,41 +400,41 @@ map <leader>x :e ~/buffer.md<cr>
 " Don't close window, when deleting a buffer
 command! Bclose call <SID>BufcloseCloseIt()
 function! <SID>BufcloseCloseIt()
-    let l:currentBufNum = bufnr("%")
-    let l:alternateBufNum = bufnr("#")
+  let l:currentBufNum = bufnr("%")
+  let l:alternateBufNum = bufnr("#")
 
-    if buflisted(l:alternateBufNum)
-        buffer #
-    else
-        bnext
-    endif
+  if buflisted(l:alternateBufNum)
+    buffer #
+  else
+    bnext
+  endif
 
-    if bufnr("%") == l:currentBufNum
-        new
-    endif
+  if bufnr("%") == l:currentBufNum
+    new
+  endif
 
-    if buflisted(l:currentBufNum)
-        execute("bdelete! ".l:currentBufNum)
-    endif
+  if buflisted(l:currentBufNum)
+    execute("bdelete! ".l:currentBufNum)
+  endif
 endfunction
 
 function! CmdLine(str)
-    call feedkeys(":" . a:str)
+  call feedkeys(":" . a:str)
 endfunction 
 
 function! VisualSelection(direction, extra_filter) range
-    let l:saved_reg = @"
-    execute "normal! vgvy"
+  let l:saved_reg = @"
+  execute "normal! vgvy"
 
-    let l:pattern = escape(@", "\\/.*'$^~[]")
-    let l:pattern = substitute(l:pattern, "\n$", "", "")
+  let l:pattern = escape(@", "\\/.*'$^~[]")
+  let l:pattern = substitute(l:pattern, "\n$", "", "")
 
-    if a:direction == 'gv'
-        call CmdLine("Ack '" . l:pattern . "' " )
-    elseif a:direction == 'replace'
-        call CmdLine("%s" . '/'. l:pattern . '/')
-    endif
+  if a:direction == 'gv'
+    call CmdLine("Ack '" . l:pattern . "' " )
+  elseif a:direction == 'replace'
+    call CmdLine("%s" . '/'. l:pattern . '/')
+  endif
 
-    let @/ = l:pattern
-    let @" = l:saved_reg
+  let @/ = l:pattern
+  let @" = l:saved_reg
 endfunction

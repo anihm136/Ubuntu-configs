@@ -12,7 +12,6 @@ call plug#begin('~/.config/nvim/plugged')
   Plug 'mattn/emmet-vim'
   Plug 'machakann/vim-sandwich'
   Plug 'psliwka/vim-smoothie'
-  Plug 'sickill/vim-pasta'
   Plug 'honza/vim-snippets'
   Plug 'elzr/vim-json'
   Plug 'ryanoasis/vim-devicons'
@@ -123,10 +122,6 @@ let g:grepper.tools = ["rg"]
 " Gitgutter
 let g:gitgutter_map_keys=0
 map <Leader>gf :GitGutterFold<cr>
-
-" Pasta
-let g:pasta_paste_before_map = '[p'
-let g:pasta_paste_after_map  = ']p'
 
 " Easy-align
 xmap ga <Plug>(EasyAlign)

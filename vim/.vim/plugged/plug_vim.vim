@@ -5,7 +5,6 @@ call plug#begin('~/.vim/plugged')
   Plug 'vim-airline/vim-airline-themes'
   Plug 'psliwka/vim-smoothie'
   Plug 'haya14busa/is.vim'
-  Plug 'sickill/vim-pasta'
   Plug 'elzr/vim-json'
   Plug 'ryanoasis/vim-devicons'
   Plug 'vhda/verilog_systemverilog.vim'
@@ -52,10 +51,6 @@ let g:fauxClip_copy_cmd          = 'xsel -ib'
 let g:fauxClip_copy_primary_cmd  = 'xsel -ip'
 let g:fauxClip_paste_cmd         = 'xsel -ob'
 let g:fauxClip_paste_primary_cmd = 'xsel -op'
-
-" Pasta
-let g:pasta_paste_before_mapping = '[p'
-let g:pasta_paste_after_mapping  = ']p'
 
 " Easy-align
 xmap ga <Plug>(EasyAlign)

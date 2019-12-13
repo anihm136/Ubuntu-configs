@@ -35,3 +35,8 @@ set notification-error-bg "#111111"
 set notification-error-fg "#9fbc00"
 set notification-warning-bg "#111111"
 set notification-warning-fg "#9fbc00"
+set recolor-lightcolor "#111111"
+set recolor-darkcolor "#efefef"
+set default-bg "#111111"
+
+set recolor

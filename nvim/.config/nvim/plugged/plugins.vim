@@ -1,34 +1,33 @@
 call plug#begin('~/.config/nvim/plugged')
-Plug 'airblade/vim-gitgutter'
-Plug 'sheerun/vim-polyglot'
-Plug 'scrooloose/nerdcommenter'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-Plug 'neoclide/coc.nvim'
-Plug 'junegunn/goyo.vim'
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim'
-Plug 'junegunn/vim-easy-align'
-Plug 'mattn/emmet-vim'
-Plug 'machakann/vim-sandwich'
-Plug 'psliwka/vim-smoothie'
-Plug 'sickill/vim-pasta'
-Plug 'honza/vim-snippets'
-Plug 'elzr/vim-json'
-Plug 'ryanoasis/vim-devicons'
-Plug 'joshdick/onedark.vim'
-Plug 'vhda/verilog_systemverilog.vim'
-Plug 'haya14busa/is.vim'
-Plug 'vim-scripts/auto-pairs-gentle'
-Plug 'mhinz/vim-grepper'
-Plug 'wellle/targets.vim'
-Plug 'tpope/vim-fugitive'
-Plug 'anihm136/vim-unimpaired'
-Plug 'tpope/vim-repeat'
+  Plug 'airblade/vim-gitgutter'
+  Plug 'sheerun/vim-polyglot'
+  Plug 'scrooloose/nerdcommenter'
+  Plug 'vim-airline/vim-airline'
+  Plug 'vim-airline/vim-airline-themes'
+  Plug 'neoclide/coc.nvim'
+  Plug 'junegunn/goyo.vim'
+  Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+  Plug 'junegunn/fzf.vim'
+  Plug 'junegunn/vim-easy-align'
+  Plug 'mattn/emmet-vim'
+  Plug 'machakann/vim-sandwich'
+  Plug 'psliwka/vim-smoothie'
+  Plug 'sickill/vim-pasta'
+  Plug 'honza/vim-snippets'
+  Plug 'elzr/vim-json'
+  Plug 'ryanoasis/vim-devicons'
+  Plug 'joshdick/onedark.vim'
+  Plug 'vhda/verilog_systemverilog.vim'
+  Plug 'haya14busa/is.vim'
+  Plug 'vim-scripts/auto-pairs-gentle'
+  Plug 'mhinz/vim-grepper'
+  Plug 'wellle/targets.vim'
+  Plug 'tpope/vim-fugitive'
+  Plug 'anihm136/vim-unimpaired'
+  Plug 'tpope/vim-repeat'
 call plug#end()
 
 runtime macros/matchit.vim
-runtime macros/sandwich/keymap/surround.vim
 
 " Airline customization
 let g:airline_skip_empty_sections            = 1
@@ -132,3 +131,9 @@ let g:pasta_paste_after_map  = ']p'
 " Easy-align
 xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
+
+" Sandwich
+onoremap <SID>line :normal! ^vg_<CR>
+nmap <silent> saa <Plug>(operator-sandwich-add)<SID>line
+nmap <silent> sdd <Plug>(operator-sandwich-delete)<SID>line
+nmap <silent> srr <Plug>(operator-sandwich-replace)<SID>line

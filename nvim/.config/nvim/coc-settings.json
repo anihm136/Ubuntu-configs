@@ -12,5 +12,5 @@
   "diagnostic.warningSign": "⚠",
   "diagnostic.errorSign": "❌",
   "suggest.removeDuplicateItems": true,
-  "coc.source.omni.filetypes": ["verilog", "Markdown", "vim"]
+  "coc.source.omni.filetypes": ["verilog", "Markdown", "vim", "octave"]
 }

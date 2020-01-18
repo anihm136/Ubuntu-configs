@@ -125,6 +125,11 @@ augroup custom_commands
   au BufWritePost init.vim,plugins.vim nested source %
 augroup END
 
+augroup ftdetect
+  autocmd!
+  autocmd BufRead,BufNewFile *.m,*.oct setlocal filetype=octave
+augroup END
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface

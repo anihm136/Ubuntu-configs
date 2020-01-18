@@ -44,7 +44,6 @@ This function should only modify configuration layer settings."
      emacs-lisp
      (python :variables
              python-backend 'lsp
-             python-lsp-server 'pyls
              python-format-on-save t
              python-formatter 'black)
      (c-c++ :variables
@@ -59,11 +58,11 @@ This function should only modify configuration layer settings."
      lsp
      prettier
      git
-     helm
+     conda
+     ; helm
+     ivy
      markdown
-     ;; multiple-cursors
      org
-     ;; evil-commentary
      (shell :variables
             shell-default-width 30
             shell-default-position 'right
@@ -72,9 +71,9 @@ This function should only modify configuration layer settings."
      syntax-checking
      (shell-scripts :variables
                     shell-scripts-backend 'lsp)
-     ;; semantic
      treemacs
      (version-control :variables
+                      version-control-diff-side 'left
                       version-control-global-margin t)
      )
 
@@ -220,7 +219,7 @@ It should only modify the values of Spacemacs settings."
 ;; refer to the DOCUMENTATION.org for more info on how to create your own
    ;; spaceline theme. Value can be a symbol or list with additional properties.
    ;; (default '(spacemacs :separator wave :separator-scale 1.5))
-   dotspacemacs-mode-line-theme '(all-the-icons :separator wave :separator-scale 1);
+   dotspacemacs-mode-line-theme '(spacemacs :separator arrow :separator-scale 1);
 
    ;; If non-nil the cursor color matches the state color in GUI Emacs.
    ;; (default t)
@@ -316,7 +315,7 @@ It should only modify the values of Spacemacs settings."
    ;; If non-nil a progress bar is displayed when spacemacs is loading. This
    ;; may increase the boot time on some systems and emacs builds, set it to
    ;; nil to boost the loading time. (default t)
-   dotspacemacs-loading-progress-bar t
+   dotspacemacs-loading-progress-bar nil
 
    ;; If non-nil the frame is fullscreen when Emacs starts up. (default nil)
    ;; (Emacs 24.4+ only)
@@ -398,7 +397,7 @@ It should only modify the values of Spacemacs settings."
    ;; Select a scope to highlight delimiters. Possible values are `any',
    ;; `current', `all' or `nil'. Default is `all' (highlight any scope and
    ;; emphasis the current one). (default 'all)
-   dotspacemacs-highlight-delimiters 'all
+   dotspacemacs-highlight-delimiters 'current
 
    ;; If non-nil, start an Emacs server if one is not already running.
    ;; (default nil)
@@ -473,6 +472,8 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
+  (custom-set-variables
+   '(conda-anaconda-home "/home/anirudh/miniconda3"))
   )
 
 (defun dotspacemacs/user-load ()
@@ -493,6 +494,8 @@ before packages are loaded."
   (spacemacs/load-theme 'doom-one :disable t)
   (global-company-mode)
   (spacemacs/toggle-golden-ratio-on)
+  (setq treemacs-lock-width t)
+  (setq treemacs-use-follow-mode nil)
   (setq doom-themes-treemacs-theme "doom-atom")
   (doom-themes-treemacs-config)
   (doom-themes-org-config)

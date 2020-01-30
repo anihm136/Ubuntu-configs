@@ -21,7 +21,7 @@ require("awful.hotkeys_popup.keys")
 local my_table      = awful.util.table or gears.table -- 4.{0,1} compatibility
 local dpi           = require("beautiful.xresources").apply_dpi
 local debian        = require("debian.menu")
-local net_widgets   = require("net_widgets")
+-- local net_widgets   = require("net_widgets")
 -- }}}
 
 -- {{{ Error handling
@@ -57,7 +57,7 @@ local function run_once(cmd_arr)
   end
 end
 
-run_once({"compton","tilda"}) -- entries must be separated by commas
+run_once({"compton"}) -- entries must be separated by commas
 
 -- This function implements the XDG autostart specification
 --[[
@@ -92,7 +92,6 @@ local modkey       = "Mod4"
 local altkey       = "Mod1"
 local terminal     = "sakura"
 local editor       = os.getenv("EDITOR") or "vim"
-local gui_editor   = "code"
 local browser      = "firefox"
 local guieditor    = "code"
 local scrlocker    = "slock"
@@ -701,9 +700,6 @@ awful.rules.rules = {
       maximized_vertical = false,
       callback = function(c)
         if (c.floating) then
-          -- c.width = c.screen.geometry.width*2/5
-          -- c.height = c.screen.geometry.height * 0.57
-          c.size_hints_honor = true
           awful.placement.centered(c)
         end
       end
@@ -821,6 +817,4 @@ end)
 client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 
--- possible workaround for tag preservation when switching back to default screen:
--- https://github.com/lcpz/awesome-copycats/issues/251
--- }}}
+awful.spawn.with_shell("~/.config/awesome/autorun.sh")

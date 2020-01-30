@@ -10,7 +10,7 @@ local lain  = require("lain")
 local awful = require("awful")
 local wibox = require("wibox")
 local dpi   = require("beautiful.xresources").apply_dpi
-local net_widgets   = require("net_widgets")
+-- local net_widgets   = require("net_widgets")
 local beautiful = require("beautiful")
 
 local awesome, client, os = awesome, client, os
@@ -288,9 +288,9 @@ theme.weather = lain.widget.weather({
 })
 
 --WIFI Widgets
-net_wireless = net_widgets.wireless({interface="wlx503eaab1ecf9",onclick="~/Scripts/./wifi_script.sh"})
+-- net_wireless = net_widgets.wireless({interface="wlx503eaab1ecf9",onclick="~/Scripts/./wifi_script.sh"})
 --net_wireless:buttons(awful.util.table.join(awful.button({}, 1, function () awful.spawn(terminal) end)
-net_internet = net_widgets.internet({indent = 0, timeout = 1})
+-- net_internet = net_widgets.internet({indent = 0, timeout = 1})
 --net_wired = net_widgets.indicator({
 --    interfaces  = {"enp27s0"},
 --    timeout     = 3
@@ -401,8 +401,7 @@ function theme.at_screen_connect(s)
         { -- Right widgets
             layout = wibox.layout.fixed.horizontal,
             wibox.widget.systray(),
-            small_spr,
-            net_wireless,
+            -- net_wireless,
             bar_spr,
             cmus,
             --theme.mail.widget,

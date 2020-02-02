@@ -41,9 +41,9 @@ let mapleader = " "
 nmap <leader>g :Goyo<cr>
 
 " FZF
-nmap <leader>ff :FzfFiles<cr>
-nmap <leader>bb :FzfBuffers<cr>
-nmap <leader>rg :FzfRg<space>
+nmap <leader>ff :Clap filer<cr>
+nmap <leader>bb :Clap buffers<cr>
+nmap <leader>rg :Clap grep<cr>
 
 " coc.nvim
 nmap <silent> gd <Plug>(coc-definition)
@@ -115,15 +115,32 @@ nnoremap g= mmgg=G'm
 
 augroup custom_commands
   autocmd!
-  " Auto-resize splits when Vim gets resized.
   autocmd VimResized * wincmd =
-  " Prevent automatic commentingof next line in insert mode
   au FileType * set fo-=c fo-=r fo-=o
-  " Update a buffer's contents on focus if it changed outside of Vim.
   au FocusGained,BufEnter * :checktime
   autocmd FileType qf,help,plugins,fugitive nnoremap q :q<cr>
   au BufWritePost init.vim,plugins.vim nested source %
+  au FileType html,htmljinja,htmldjango,php nmap <F5> :call Toggle_ft()<cr>
+  au FileType php let b:is_php = 1
 augroup END
+
+fun! Toggle_ft()
+  if exists("b:is_php")
+    if &filetype == 'php'
+      set ft=html
+    else
+      set ft=php
+    endif
+  else
+    if &filetype == 'htmljinja'
+      set ft=htmldjango
+    elseif &filetype == 'htmldjango'
+      set ft=html
+    else
+      set ft=htmljinja
+    endif
+  endif
+endfunction
 
 augroup ftdetect
   autocmd!
@@ -275,10 +292,10 @@ vnoremap <silent> # :<C-u>call VisualSelection('', '')<CR>?<C-R>=@/<CR><CR>
 map <silent> <leader><leader> :noh<cr>
 
 " Smart way to move between windows
-map <C-j> <C-W>j
-map <C-k> <C-W>k
-map <C-h> <C-W>h
-map <C-l> <C-W>l
+" map <C-j> <C-W>j
+" map <C-k> <C-W>k
+" map <C-h> <C-W>h
+" map <C-l> <C-W>l
 
 " Close the current buffer
 map <leader>bd :Bclose<cr>
@@ -294,7 +311,7 @@ map <leader>tn :tabnew<cr>
 map <leader>tp :tabp<cr>
 map <leader>to :tab sp<cr>
 map <leader>tc :Bclose<cr> :tabclose<cr>
-map <leader>tm :tabmove 
+" map <leader>tm :tabmove
 
 " Opens a new tab with the current buffer's path
 " Super useful when editing files in the same directory

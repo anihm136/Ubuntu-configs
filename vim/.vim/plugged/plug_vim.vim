@@ -7,7 +7,6 @@ call plug#begin('~/.vim/plugged')
   Plug 'haya14busa/is.vim'
   Plug 'elzr/vim-json'
   Plug 'ryanoasis/vim-devicons'
-  Plug 'vhda/verilog_systemverilog.vim'
   Plug 'vim-scripts/auto-pairs-gentle'
   Plug 'anihm136/vim-unimpaired'
   Plug 'tpope/vim-repeat'

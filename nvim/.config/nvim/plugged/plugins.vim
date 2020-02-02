@@ -6,24 +6,26 @@ call plug#begin('~/.config/nvim/plugged')
   Plug 'vim-airline/vim-airline-themes'
   Plug 'neoclide/coc.nvim'
   Plug 'junegunn/goyo.vim'
-  Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-  Plug 'junegunn/fzf.vim'
   Plug 'junegunn/vim-easy-align'
   Plug 'mattn/emmet-vim'
   Plug 'machakann/vim-sandwich'
   Plug 'psliwka/vim-smoothie'
   Plug 'honza/vim-snippets'
   Plug 'elzr/vim-json'
+  Plug 'kevinoid/vim-jsonc'
   Plug 'ryanoasis/vim-devicons'
   Plug 'joshdick/onedark.vim'
-  Plug 'vhda/verilog_systemverilog.vim'
   Plug 'haya14busa/is.vim'
-  Plug 'vim-scripts/auto-pairs-gentle'
+  Plug 'jiangmiao/auto-pairs'
   Plug 'mhinz/vim-grepper'
   Plug 'wellle/targets.vim'
   Plug 'tpope/vim-fugitive'
   Plug 'anihm136/vim-unimpaired'
   Plug 'tpope/vim-repeat'
+  Plug 'liuchengxu/vim-clap'
+  Plug 'mitsuhiko/vim-jinja'
+  Plug 'tweekmonster/django-plus.vim'
+  Plug 'captbaritone/better-indent-support-for-php-with-html'
 call plug#end()
 
 runtime macros/matchit.vim
@@ -42,34 +44,11 @@ let g:airline_powerline_fonts                = 1
 let g:airline#extensions#tabline#left_sep    = ' '
 
 " NERDCommenter customization
+let g:NERDCommentWholeLinesInVMode = 1
+let g:NERDCustomDelimiters = { 'htmljinja': { 'left': '{#','right': '#}' } }
 let g:NERDSpaceDelims            = 1
-let g:NERDCommentEmptyLines      = 1
+let g:NERDCommentEmptyLines      = 0
 let g:NERDTrimTrailingWhitespace = 1
-
-" FZF customization
-let $FZF_DEFAULT_OPTS = '--bind ctrl-a:select-all'
-command! -bang -nargs=* FzfRg call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case " . <q-args>, 1, <bang>0)
-let g:fzf_colors =
-      \ { 'fg':      ['fg', 'Normal'],
-      \ 'bg':      ['bg', 'Normal'],
-      \ 'hl':      ['fg', 'Comment'],
-      \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
-      \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
-      \ 'hl+':     ['fg', 'Statement'],
-      \ 'info':    ['fg', 'PreProc'],
-      \ 'border':  ['fg', 'Ignore'],
-      \ 'prompt':  ['fg', 'Conditional'],
-      \ 'pointer': ['fg', 'Exception'],
-      \ 'marker':  ['fg', 'Keyword'],
-      \ 'spinner': ['fg', 'Label'],
-      \ 'header':  ['fg', 'Comment'] }
-let g:fzf_action = {
-      \ 'ctrl-t': 'tab split',
-      \ 'ctrl-s': 'split',
-      \ 'ctrl-v': 'vsplit' }
-let g:fzf_layout = { 'down': '~20%' }
-let g:fzf_buffers_jump = 1
-let g:fzf_command_prefix = 'Fzf'
 
 " COC customization
 function! s:check_back_space() abort
@@ -87,7 +66,7 @@ inoremap <silent><expr> <cr>
       \ "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
 autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
-let g:coc_snippet_next = '  '
+imap <C-j> <Plug>(coc-snippets-expand-jump)
 
 nnoremap <silent> <leader>k :call <SID>show_documentation()<CR>
 
@@ -113,7 +92,13 @@ augroup json_autocmd
 augroup END
 
 " Auto pairs gentle
-let g:AutoPairsUseInsertedCount = 1
+augroup ft_pairs
+  autocmd!
+  au FileType htmljinja,htmldjango let b:AutoPairs = AutoPairs | call AutoPairsInit() | let b:AutoPairs = AutoPairsDefine({"{%":"%}", "{#":"#}", "<":">"}) | call AutoPairsInit()
+  au FileType php let b:AutoPairs = AutoPairs | call AutoPairsInit() | let b:AutoPairs = AutoPairsDefine({"<?":"?>", "<?php":"?>", "<":">"}) | call AutoPairsInit() 
+  au FileType html let b:AutoPairs = AutoPairs | call AutoPairsInit() | let b:AutoPairs = AutoPairsDefine({"<":">"}) | call AutoPairsInit() 
+ 
+augroup END
 
 " Grepper
 let g:grepper       = {}
@@ -132,3 +117,27 @@ onoremap <SID>line :normal! ^vg_<CR>
 nmap <silent> saa <Plug>(operator-sandwich-add)<SID>line
 nmap <silent> sdd <Plug>(operator-sandwich-delete)<SID>line
 nmap <silent> srr <Plug>(operator-sandwich-replace)<SID>line
+
+" Jinja
+let g:htmljinja_disable_html_upgrade = 1
+
+" Clap
+function! s:ensure_closed() abort
+  call clap#floating_win#close()
+  silent! autocmd! ClapEnsureAllClosed
+endfunction
+
+function! MyClapOnEnter() abort
+  augroup ClapEnsureAllClosed
+    autocmd!
+    autocmd BufEnter,WinEnter,WinLeave * call s:ensure_closed()
+  augroup END
+endfunction
+
+autocmd User ClapOnEnter call MyClapOnEnter()
+
+let g:clap_provider_grep_opts = '-H --no-heading --vimgrep --smart-case --hidden -g "!.git/"'
+let g:clap_provider_dotfiles = {
+      \ 'source': ['~/.dotfiles/vim/.vim/.vimrc', '~/.dotfiles/vim/.vim/plugged/plug_vim.vim', '~/.dotfiles/nvim/.config/nvim/plugged/plugins.vim', '~/.dotfiles/nvim/.config/nvim/init.vim', '~/.zshrc', '~/.profile', '~/.sh_funcs'],
+      \ 'sink': 'e',
+      \ }

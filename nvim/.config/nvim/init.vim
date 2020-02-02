@@ -296,6 +296,10 @@ map <silent> <leader><leader> :noh<cr>
 " map <C-k> <C-W>k
 " map <C-h> <C-W>h
 " map <C-l> <C-W>l
+nmap j gj
+nmap k gk
+nmap <Down> gj
+nmap <Up> gk
 
 " Close the current buffer
 map <leader>bd :Bclose<cr>

@@ -40,10 +40,12 @@ let mapleader = " "
 " Goyo
 nmap <leader>g :Goyo<cr>
 
-" FZF
+" Clap
 nmap <leader>ff :Clap filer<cr>
 nmap <leader>bb :Clap buffers<cr>
 nmap <leader>rg :Clap grep<cr>
+nmap <leader>bl :Clap blines<cr>
+nmap <leader>fd :Clap dotfiles<cr>
 
 " coc.nvim
 nmap <silent> gd <Plug>(coc-definition)

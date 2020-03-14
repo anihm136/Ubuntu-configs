@@ -26,12 +26,18 @@ if [ -d "$HOME/.local/bin" ] ; then
     PATH="$HOME/.local/bin:$PATH"
 fi
 
+[[ -f ~/.sh_funcs ]] && source ~/.sh_funcs
+[[ -f ~/.aliases ]] && source ~/.aliases
+
 
 export JAVA_HOME=/usr/lib/jvm/jdk-13.0.1+9
 export PATH=$PATH:$JAVA_HOME/bin
 export PATH=$HOME/.cargo/bin:$PATH
-export QT_STYLE_OVERRIDE=kvantum
+export PATH=$PATH:/opt/lampp/bin
+export PATH=$PATH:/home/anirudh/Applications
 export PATH=$PATH:/home/anirudh/.scripts
+export fpath=($fpath /home/anirudh/.local/share/zsh/completions)
+export QT_STYLE_OVERRIDE=kvantum
 export EDITOR=/usr/local/bin/nvim
 export TERMINAL="alacritty"
 export BROWSER="firefox"
@@ -41,7 +47,9 @@ export FZF_DEFAULT_OPTS="--height 40% --reverse"
 export FZF_CTRL_T_OPTS="--preview '(bat --style=numbers --color=always {} || cat {}) 2> /dev/null | head -500' --preview-window right:60% --select-1"
 export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:hidden:wrap --bind '?:toggle-preview'"
 export FZF_ALT_C_COMMAND="fda"
-export MANPAGER="sh -c 'col -bx | bat -l man -p'"
-export FZF_DEFAULT_COMMAND="rg --files --hidden --follow --glob '!.git' 2>/dev/null"
+export FZF_DEFAULT_COMMAND="fdfind --type f --hidden --follow --exclude .git"
 export FZF_CTRL_T_COMMAND="fdfind --hidden --follow --exclude .git"
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 export SUDO_ASKPASS="$HOME/.scripts/dmenupass"
+export PIPENV_VENV_IN_PROJECT=1
+export RIPGREP_CONFIG_PATH="$HOME/.config/ripgrep/.ripgreprc"

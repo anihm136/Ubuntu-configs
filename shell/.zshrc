@@ -1,4 +1,4 @@
-NUMTERM=$(pgrep -fc sakura)
+NUMTERM=$(pgrep -fc alacritty)
 if (( NUMTERM == 1));then
   ufetch-ubuntu
 fi
@@ -12,7 +12,6 @@ fi
 
 # Linux antigen file
 source $HOME/.scripts/antigen.zsh
-[ -f .sh_funcs ] && source .sh_funcs
 
 # Load the oh-my-zsh's library.
 antigen use oh-my-zsh
@@ -24,7 +23,14 @@ antigen theme romkatv/powerlevel10k
 antigen bundles <<EOBUNDLES
   command-not-found
   pip
+  pipenv
   python
+  node
+  npm
+  npx
+  cargo
+  rust
+  django
   esc/conda-zsh-completion
   git
   common-aliases
@@ -39,9 +45,6 @@ EOBUNDLES
 
 # Tell Antigen that you're done.
 antigen apply
-
-# Load custom aliases
-[[ -s "$HOME/.bash_aliases" ]] && source "$HOME/.bash_aliases"
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
@@ -79,3 +82,5 @@ zle -N zle-line-init
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+setopt auto_cd

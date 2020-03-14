@@ -26,6 +26,7 @@ call plug#begin('~/.config/nvim/plugged')
   Plug 'mitsuhiko/vim-jinja'
   Plug 'tweekmonster/django-plus.vim'
   Plug 'captbaritone/better-indent-support-for-php-with-html'
+  Plug 'fedorenchik/gtags.vim'
 call plug#end()
 
 runtime macros/matchit.vim
@@ -134,10 +135,13 @@ function! MyClapOnEnter() abort
   augroup END
 endfunction
 
-autocmd User ClapOnEnter call MyClapOnEnter()
-
+augroup clapCommands
+  autocmd!
+  autocmd User ClapOnEnter call MyClapOnEnter()
+  autocmd User ClapOnEnter map <buffer> q :call clap#floating_win#close()<cr>
+augroup END
 let g:clap_provider_grep_opts = '-H --no-heading --vimgrep --smart-case --hidden -g "!.git/"'
 let g:clap_provider_dotfiles = {
-      \ 'source': ['~/.dotfiles/vim/.vim/.vimrc', '~/.dotfiles/vim/.vim/plugged/plug_vim.vim', '~/.dotfiles/nvim/.config/nvim/plugged/plugins.vim', '~/.dotfiles/nvim/.config/nvim/init.vim', '~/.zshrc', '~/.profile', '~/.sh_funcs'],
+      \ 'source': ['~/.dotfiles/vim/.vim/.vimrc', '~/.dotfiles/vim/.vim/plugged/plug_vim.vim', '~/.dotfiles/nvim/.config/nvim/plugged/plugins.vim', '~/.dotfiles/nvim/.config/nvim/init.vim',  '~/.dotfiles/vifm/.config/vifm/vifmrc', '~/.zshrc', '~/.profile', '~/.sh_funcs'],
       \ 'sink': 'e',
       \ }

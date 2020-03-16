@@ -1,32 +1,33 @@
 call plug#begin('~/.config/nvim/plugged')
-  Plug 'airblade/vim-gitgutter'
-  Plug 'sheerun/vim-polyglot'
-  Plug 'scrooloose/nerdcommenter'
-  Plug 'vim-airline/vim-airline'
-  Plug 'vim-airline/vim-airline-themes'
-  Plug 'neoclide/coc.nvim'
-  Plug 'junegunn/goyo.vim'
-  Plug 'junegunn/vim-easy-align'
-  Plug 'mattn/emmet-vim'
-  Plug 'machakann/vim-sandwich'
-  Plug 'psliwka/vim-smoothie'
-  Plug 'honza/vim-snippets'
-  Plug 'elzr/vim-json'
-  Plug 'kevinoid/vim-jsonc'
-  Plug 'ryanoasis/vim-devicons'
-  Plug 'joshdick/onedark.vim'
-  Plug 'haya14busa/is.vim'
-  Plug 'jiangmiao/auto-pairs'
-  Plug 'mhinz/vim-grepper'
-  Plug 'wellle/targets.vim'
-  Plug 'tpope/vim-fugitive'
-  Plug 'anihm136/vim-unimpaired'
-  Plug 'tpope/vim-repeat'
-  Plug 'liuchengxu/vim-clap'
-  Plug 'mitsuhiko/vim-jinja'
-  Plug 'tweekmonster/django-plus.vim'
-  Plug 'captbaritone/better-indent-support-for-php-with-html'
-  Plug 'fedorenchik/gtags.vim'
+Plug 'airblade/vim-gitgutter'
+Plug 'sheerun/vim-polyglot'
+Plug 'scrooloose/nerdcommenter'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'neoclide/coc.nvim'
+Plug 'junegunn/goyo.vim'
+Plug 'junegunn/vim-easy-align'
+Plug 'machakann/vim-sandwich'
+Plug 'psliwka/vim-smoothie'
+Plug 'honza/vim-snippets'
+Plug 'ryanoasis/vim-devicons'
+Plug 'joshdick/onedark.vim'
+Plug 'haya14busa/is.vim'
+Plug 'jiangmiao/auto-pairs'
+Plug 'mhinz/vim-grepper'
+Plug 'wellle/targets.vim'
+Plug 'tpope/vim-fugitive'
+Plug 'anihm136/vim-unimpaired'
+Plug 'tpope/vim-repeat'
+Plug 'liuchengxu/vim-clap'
+Plug 'fedorenchik/gtags.vim'
+Plug 'mattn/emmet-vim', {'for': ['html', 'js', 'ts', 'jsx', 'tsx', 'php']}
+Plug 'kevinoid/vim-jsonc', {'for': 'jsonc'}
+Plug 'elzr/vim-json', {'for': 'json'}
+Plug 'mitsuhiko/vim-jinja', {'for': 'html'}
+Plug 'tweekmonster/django-plus.vim', {'for': ['python', 'html']}
+Plug 'captbaritone/better-indent-support-for-php-with-html', {'for': 'php'}
+Plug 'jupyter-vim/jupyter-vim', {'for': 'python'}
 call plug#end()
 
 runtime macros/matchit.vim
@@ -98,7 +99,7 @@ augroup ft_pairs
   au FileType htmljinja,htmldjango let b:AutoPairs = AutoPairs | call AutoPairsInit() | let b:AutoPairs = AutoPairsDefine({"{%":"%}", "{#":"#}", "<":">"}) | call AutoPairsInit()
   au FileType php let b:AutoPairs = AutoPairs | call AutoPairsInit() | let b:AutoPairs = AutoPairsDefine({"<?":"?>", "<?php":"?>", "<":">"}) | call AutoPairsInit() 
   au FileType html let b:AutoPairs = AutoPairs | call AutoPairsInit() | let b:AutoPairs = AutoPairsDefine({"<":">"}) | call AutoPairsInit() 
- 
+
 augroup END
 
 " Grepper
@@ -107,7 +108,7 @@ let g:grepper.tools = ["rg"]
 
 " Gitgutter
 let g:gitgutter_map_keys=0
-map <Leader>gf :GitGutterFold<cr>
+map <silent> <Leader>gf :GitGutterFold<cr>
 
 " Easy-align
 xmap ga <Plug>(EasyAlign)
@@ -138,7 +139,7 @@ endfunction
 augroup clapCommands
   autocmd!
   autocmd User ClapOnEnter call MyClapOnEnter()
-  autocmd User ClapOnEnter map <buffer> q :call clap#floating_win#close()<cr>
+  autocmd User ClapOnEnter map <silent><buffer> q :call clap#floating_win#close()<cr>
 augroup END
 let g:clap_provider_grep_opts = '-H --no-heading --vimgrep --smart-case --hidden -g "!.git/"'
 let g:clap_provider_dotfiles = {

@@ -19,6 +19,9 @@ super + f
 super + Return
   $TERMINAL
 
+super + l
+  lipsum
+
 XF86AudioNext
   cmus-remote -n
 

@@ -1,7 +1,9 @@
 call plug#begin('~/.config/nvim/plugged')
 Plug 'airblade/vim-gitgutter'
 Plug 'sheerun/vim-polyglot'
-Plug 'scrooloose/nerdcommenter'
+Plug 'anihm136/caw.vim'
+Plug 'anihm136/context_filetype.vim'
+Plug 'kana/vim-operator-user'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'neoclide/coc.nvim'
@@ -24,10 +26,9 @@ Plug 'fedorenchik/gtags.vim'
 Plug 'mattn/emmet-vim', {'for': ['html', 'js', 'ts', 'jsx', 'tsx', 'php']}
 Plug 'kevinoid/vim-jsonc', {'for': 'jsonc'}
 Plug 'elzr/vim-json', {'for': 'json'}
-Plug 'mitsuhiko/vim-jinja', {'for': 'html'}
-Plug 'tweekmonster/django-plus.vim', {'for': ['python', 'html']}
+Plug 'tweekmonster/django-plus.vim', {'for': ['python','html','htmldjango']}
+Plug 'mitsuhiko/vim-jinja', {'for': ['html','htmldjango']}
 Plug 'captbaritone/better-indent-support-for-php-with-html', {'for': 'php'}
-Plug 'jupyter-vim/jupyter-vim', {'for': 'python'}
 call plug#end()
 
 runtime macros/matchit.vim
@@ -44,13 +45,6 @@ let g:airline#extensions#tabline#tab_nr_type = 2
 let g:airline_theme                          = 'onedark'
 let g:airline_powerline_fonts                = 1
 let g:airline#extensions#tabline#left_sep    = ' '
-
-" NERDCommenter customization
-let g:NERDCommentWholeLinesInVMode = 1
-let g:NERDCustomDelimiters = { 'htmljinja': { 'left': '{#','right': '#}' } }
-let g:NERDSpaceDelims            = 1
-let g:NERDCommentEmptyLines      = 0
-let g:NERDTrimTrailingWhitespace = 1
 
 " COC customization
 function! s:check_back_space() abort
@@ -146,3 +140,9 @@ let g:clap_provider_dotfiles = {
       \ 'source': ['~/.dotfiles/vim/.vim/.vimrc', '~/.dotfiles/vim/.vim/plugged/plug_vim.vim', '~/.dotfiles/nvim/.config/nvim/plugged/plugins.vim', '~/.dotfiles/nvim/.config/nvim/init.vim',  '~/.dotfiles/vifm/.config/vifm/vifmrc', '~/.zshrc', '~/.profile', '~/.sh_funcs'],
       \ 'sink': 'e',
       \ }
+
+" Caw
+let g:caw_operator_keymappings = 0
+let g:caw_no_default_keymappings = 1
+map <unique> gc <Plug>(caw:hatpos:toggle:operator)
+nmap <unique> gcc <Plug>(caw:hatpos:toggle)

@@ -1,4 +1,4 @@
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Credits to Amir Salihefendic — @amix3k
 "
 "              _ _               __   _____  ____ _             _
@@ -229,19 +229,16 @@ fun! CleanWhitespace()
   let save_cursor = getpos(".")
   let old_query = getreg('/')
   silent! %s/\s\+$//ge
-  silent! %s/\n/
-/ge
-  silent! s/\(
-\)\+$//ge
-  silent! s/
-/\r/ge
+  silent! %s/\n/<0s0>/ge
+  silent! s/\(<0s0>\)\+$//ge
+  silent! s/<0s0>/\r/ge
   call setpos('.', save_cursor)
   call setreg('/', old_query)
 endfun
 
 augroup clean_spaces
   autocmd!
-  autocmd BufWritePre *.txt,*.js,*.jsx,*.ts,*.tsx,*.py,*.wiki,*.sh,*.coffee,*.c,*.cpp,*.java,*.vim call CleanWhitespace()
+  autocmd BufWritePre *.txt,*.js,*.jsx,*.ts,*.tsx,*.py,*.wiki,*.sh,*.coffee,*.c,*.cpp,*.java call CleanWhitespace()
   autocmd BufRead, BufNewFile, VimEnter *.js,*.jsx,*.ts,*.tsx,*.py,*.coffee,*.c,*.cpp,*.java if !exists("b:cscope") | exe "call ToggleGtagsCscope()" | endif
 augroup END
 
@@ -365,7 +362,7 @@ fun! ToggleFt()
 endfunction
 
 fun! DjangoFt()
-  if exists("b:is_django")
+  if exists("b:is_django") && b:is_django
     set ft=htmldjango
   endif
 endfunction

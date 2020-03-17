@@ -1,5 +1,5 @@
 if exists('g:started_by_firenvim')
-  so ./firevimconfig.vim
+	so ~/.config/nvim/firevimconfig.vim
 else
-  so ./genconfig.vim
+	so ~/.config/nvim/genconfig.vim
 endif

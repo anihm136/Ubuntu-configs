@@ -29,7 +29,16 @@ fi
 [[ -f ~/.sh_funcs ]] && source ~/.sh_funcs
 [[ -f ~/.aliases ]] && source ~/.aliases
 
+# Cleanup
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_DATA_HOME="$HOME/.local/share"
+export LESSHISTFILE="."
+export GTK2_RC_FILES="$XDG_CONFIG_HOME/gtk-2.0/.gtkrc-2.0"
+export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
+export GNUPGHOME="$XDG_DATA_HOME/gnupg"
+export RIPGREP_CONFIG_PATH="$XDG_CONFIG_HOME/ripgrep/.ripgreprc"
 
+# Path additions
 export JAVA_HOME=/usr/lib/jvm/jdk-13.0.1+9
 export PATH=$PATH:$JAVA_HOME/bin
 export PATH=$HOME/.cargo/bin:$PATH
@@ -37,6 +46,8 @@ export PATH=$PATH:/opt/lampp/bin
 export PATH=$PATH:/home/anirudh/Applications
 export PATH=$PATH:/home/anirudh/.scripts
 export fpath=($fpath /home/anirudh/.local/share/zsh/completions)
+
+# Settings
 export QT_STYLE_OVERRIDE=kvantum
 export EDITOR=/usr/local/bin/nvim
 export TERMINAL="alacritty"
@@ -52,4 +63,3 @@ export FZF_CTRL_T_COMMAND="fdfind --hidden --follow --exclude .git"
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 export SUDO_ASKPASS="$HOME/.scripts/dmenupass"
 export PIPENV_VENV_IN_PROJECT=1
-export RIPGREP_CONFIG_PATH="$HOME/.config/ripgrep/.ripgreprc"

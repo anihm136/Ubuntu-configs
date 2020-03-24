@@ -30,3 +30,12 @@ XF86AudioPrev
 
 XF86AudioPlay
   cmus-remote -u
+
+XF86AudioRaiseVolume
+  vol up
+
+XF86AudioLowerVolume
+  vol down
+
+XF86AudioMute
+  vol toggle

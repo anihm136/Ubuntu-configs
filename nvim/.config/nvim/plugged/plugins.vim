@@ -23,7 +23,8 @@ Plug 'anihm136/vim-unimpaired'
 Plug 'tpope/vim-repeat'
 Plug 'liuchengxu/vim-clap'
 Plug 'fedorenchik/gtags.vim'
-Plug 'mattn/emmet-vim', {'for': ['html', 'js', 'ts', 'jsx', 'tsx', 'php']}
+Plug 'chaoren/vim-wordmotion'
+Plug 'mattn/emmet-vim', {'for': ['html', 'js', 'ts', 'jsx', 'tsx', 'php', 'htmljinja', 'htmldjango']}
 Plug 'kevinoid/vim-jsonc', {'for': 'jsonc'}
 Plug 'elzr/vim-json', {'for': 'json'}
 Plug 'tweekmonster/django-plus.vim', {'for': ['python','html','htmldjango']}
@@ -137,12 +138,15 @@ augroup clapCommands
 augroup END
 let g:clap_provider_grep_opts = '-H --no-heading --vimgrep --smart-case --hidden -g "!.git/"'
 let g:clap_provider_dotfiles = {
-      \ 'source': ['~/.dotfiles/vim/.vim/.vimrc', '~/.dotfiles/vim/.vim/plugged/plug_vim.vim', '~/.dotfiles/nvim/.config/nvim/plugged/plugins.vim', '~/.dotfiles/nvim/.config/nvim/init.vim',  '~/.dotfiles/vifm/.config/vifm/vifmrc', '~/.zshrc', '~/.profile', '~/.sh_funcs'],
+      \ 'source': ['~/.dotfiles/vim/.vim/.vimrc', '~/.dotfiles/vim/.vim/plugged/plug_vim.vim', '~/.dotfiles/nvim/.config/nvim/plugged/plugins.vim', '~/.dotfiles/nvim/.config/nvim/init.vim', '~/.dotfiles/nvim/.config/nvim/genconfig.vim','~/.dotfiles/nvim/.config/nvim/ipyrc.vim','~/.dotfiles/nvim/.config/nvim/firevimconfig.vim',  '~/.dotfiles/vifm/.config/vifm/vifmrc', '~/.zshrc', '~/.profile', '~/.sh_funcs'],
       \ 'sink': 'e',
       \ }
 
 " Caw
 let g:caw_operator_keymappings = 0
 let g:caw_no_default_keymappings = 1
-map <unique> gc <Plug>(caw:hatpos:toggle:operator)
-nmap <unique> gcc <Plug>(caw:hatpos:toggle)
+map <silent><unique> gc <Plug>(caw:hatpos:toggle:operator)
+nmap <silent><unique> gcc <Plug>(caw:hatpos:toggle)
+
+" Gtags
+let g:Gtags_No_Auto_Jump = 1

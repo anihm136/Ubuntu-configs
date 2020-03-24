@@ -13,7 +13,7 @@ fi
 # Linux antigen file
 source $HOME/.scripts/antigen.zsh
 
-# Load the oh-my-zsh's library.
+# Use ohmyzsh
 antigen use oh-my-zsh
 
 # Load the theme and configure
@@ -27,7 +27,6 @@ antigen bundles <<EOBUNDLES
   python
   node
   npm
-  npx
   cargo
   rust
   django

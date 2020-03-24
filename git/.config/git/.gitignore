@@ -1,0 +1,12 @@
+npm-debug.log
+node_modules/
+.vscode/
+GTAGS
+GRTAGS
+GPATH
+ctags
+cscope.out
+.starscope.db
+*~
+log/
+*.log

@@ -27,3 +27,4 @@ alias armsim='wine /home/anirudh/.wine/drive_c/users/anirudh/Local\ Settings/App
 alias rmf='rm -rf'
 alias mng='python manage.py'
 alias jup='nvim -u ~/.config/nvim/ipyrc.vim'
+alias cenvc='conda create --yes -n'

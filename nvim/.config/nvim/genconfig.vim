@@ -368,23 +368,65 @@ fun! DjangoFt()
 endfunction
 
 fun! ToggleGtagsCscope()
-  if !exists("b:cscope")
-    let b:cscope = 1
+  if !exists("b:idxmode")
+    let b:idxmode = 0
   endif
-  if b:cscope == 1 && (filereadable("GTAGS") || filereadable("cscope.out"))
+  if b:idxmode == 0
+    nmap <silent><buffer> gd <Plug>(coc-definition)
+    nmap <silent><buffer> gr <Plug>(coc-references)
+    nmap <silent><buffer> gs <Plug>(coc-implementation)
+    let b:idxmode = 1
+    echo "LSP mode"
+  elseif b:idxmode == 1
     silent exe 'cs kill -1'
-    silent exe filereadable("cscope.out") ? 'cs add cscope.out' : 'cs add GTAGS'
-    nnoremap <buffer><expr> gd ':cs find g ' . expand('<cword>') . '<cr>'
-    nnoremap <buffer><expr> gr ':cs find c ' . expand('<cword>') . '<cr>'
-    nnoremap <buffer><expr> gs ':cs find s ' . expand('<cword>') . '<cr>'
-    let b:cscope = 0
-    echo "cscope mode"
+    if !filereadable("cscope.out")
+      call inputsave()
+      let l:op = input('Cscope file not found. Create?([s]tarscope|[c]scope|[n]one) ')
+      call inputrestore()
+      redraw
+      if op == "s"
+        system('starscope -e cscope')
+      elseif op == "c"
+        system("git ls-files > cscope.files && cscope -bcqR && rm -f cscope.files")
+      else
+        let l:skip = 1
+      endif
+    endif
+    let b:idxmode = 2
+    if exists("l:skip")
+      call ToggleGtagsCscope()
+    else
+      silent exe 'cs add cscope.out'
+      nnoremap <silent><buffer><expr> gd ':cs find g ' . expand('<cword>') . '<cr>'
+      nnoremap <silent><buffer><expr> gr ':cs find c ' . expand('<cword>') . '<cr>'
+      nnoremap <silent><buffer><expr> gs ':cs find s ' . expand('<cword>') . '<cr>'
+      echo "cscope mode"
+    endif
   else
-    nnoremap <buffer> gd :Gtags<cr>
-    nnoremap <buffer> gr :Gtags -r<cr>
-    nnoremap <buffer> gs :Gtags -g<cr>
-    let b:cscope = 1
-    echo "gtags mode"
+    if !filereadable("GTAGS")
+      call inputsave()
+      let l:op = input('Gtags file not found. Create?([y]es|[n]o) ')
+      call inputrestore()
+      redraw
+      if op == "y"
+        if match(["c","cpp","java","php"], &filetype) != -1
+          system('gtags')
+        else
+          system('gtags --gtagslabel=ctags')
+        endif
+      else
+        let l:skip = 1
+      endif
+    endif
+    let b:idxmode = 0
+    if exists("l:skip")
+      call ToggleGtagsCscope()
+    else
+      nnoremap <silent><buffer> gd :Gtags<cr>
+      nnoremap <silent><buffer> gr :GtagsCursor<cr>
+      nnoremap <silent><buffer> gs :Gtags -g<cr>
+      echo "gtags mode"
+    endif
   endif
 endfunction
 

@@ -59,18 +59,6 @@ end
 
 run_once({"compton"}) -- entries must be separated by commas
 
--- This function implements the XDG autostart specification
---[[
-awful.spawn.with_shell(
-    'if (xrdb -query | grep -q "^awesome\\.started:\\s*true$"); then exit; fi;' ..
-    'xrdb -merge <<< "awesome.started:true";' ..
-    -- list each of your autostart commands, followed by ; inside single quotes, followed by ..
-    'dex --environment Awesome --autostart --search-paths "$XDG_CONFIG_DIRS/autostart:$XDG_CONFIG_HOME/autostart"' -- https://github.com/jceb/dex
-)
---]]
-
--- }}}
-
 -- {{{ Variable definitions
 
 local themes = {
@@ -90,7 +78,7 @@ local themes = {
 local chosen_theme = themes[11]
 local modkey       = "Mod4"
 local altkey       = "Mod1"
-local terminal     = "sakura"
+local terminal     = "alacritty"
 local editor       = os.getenv("EDITOR") or "vim"
 local browser      = "firefox"
 local guieditor    = "code"
@@ -282,18 +270,18 @@ globalkeys = my_table.join(
     {description = "show help", group="awesome"}),
 
   -- Tag browsing
-  awful.key({ modkey,           }, "j",   awful.tag.viewprev,
-    {description = "view previous", group = "tag"}),
-  awful.key({ modkey,           }, "k",  awful.tag.viewnext,
-    {description = "view next", group = "tag"}),
+  -- awful.key({ modkey,           }, "j",   awful.tag.viewprev,
+  --   {description = "view previous", group = "tag"}),
+  -- awful.key({ modkey,           }, "k",  awful.tag.viewnext,
+  --   {description = "view next", group = "tag"}),
   awful.key({ modkey,           }, "Escape", awful.tag.history.restore,
     {description = "go back", group = "tag"}),
 
   -- Non-empty tag browsing
-  --    awful.key({ altkey }, "Left", function () lain.util.tag_view_nonempty(-1) end,
-  --              {description = "view  previous nonempty", group = "tag"}),
-  --    awful.key({ altkey }, "Right", function () lain.util.tag_view_nonempty(1) end,
-  --              {description = "view  previous nonempty", group = "tag"}),
+  awful.key({ modkey }, "j", function () lain.util.tag_view_nonempty(-1) end,
+    {description = "view  previous nonempty", group = "tag"}),
+  awful.key({ modkey }, "k", function () lain.util.tag_view_nonempty(1) end,
+    {description = "view  previous nonempty", group = "tag"}),
 
   -- Default client focus
   awful.key({ altkey,           }, "Right",
@@ -387,8 +375,6 @@ awful.key({ altkey, "Shift" }, "d", function () lain.util.delete_tag() end,
   {description = "delete tag", group = "tag"}),
 
 -- Standard program
--- awful.key({ modkey,           }, "Return", function () awful.spawn(terminal) end,
-  -- {description = "open a terminal", group = "launcher"}),
 awful.key({ modkey, "Shift" }, "r", awesome.restart,
   {description = "reload awesome", group = "awesome"}),
 awful.key({ modkey, "Shift"}, "e", awesome.quit,
@@ -422,95 +408,6 @@ awful.key({ modkey, "Control" }, "n",
   end,
   {description = "restore minimized", group = "client"}),
 
--- Dropdown application
-awful.key({ modkey, }, "z", function () awful.screen.focused().quake:toggle() end,
-  {description = "dropdown application", group = "launcher"}),
-
--- Widgets popups
---    awful.key({ altkey, }, "c", function () if beautiful.cal then beautiful.cal.show(7) end end,
---              {description = "show calendar", group = "widgets"}),
---    awful.key({ altkey, }, "h", function () if beautiful.fs then beautiful.fs.show(7) end end,
---              {description = "show filesystem", group = "widgets"}),
---    awful.key({ altkey, }, "w", function () if beautiful.weather then beautiful.weather.show(7) end end,
---              {description = "show weather", group = "widgets"}),
-
--- Brightness
--- awful.key({ }, "XF86MonBrightnessUp", function () os.execute("xbacklight -inc 10") end,
-  -- {description = "+10%", group = "hotkeys"}),
--- awful.key({ }, "XF86MonBrightnessDown", function () os.execute("xbacklight -dec 10") end,
-  -- {description = "-10%", group = "hotkeys"}),
-
--- ALSA volume control
-awful.key({  }, "XF86AudioRaiseVolume",
-  function ()
-    awful.spawn.with_shell("amixer -D pulse sset Master 5%+", beautiful.volume.channel)
-    beautiful.volume.update()
-  end,
-  {description = "volume up", group = "hotkeys"}),
-awful.key({  }, "XF86AudioLowerVolume",
-  function ()
-    awful.spawn.with_shell("amixer -D pulse sset Master 5%-", beautiful.volume.channel)
-    beautiful.volume.update()
-  end,
-  {description = "volume down", group = "hotkeys"}),
-awful.key({  }, "XF86AudioMute",
-  function ()
-    awful.spawn.with_shell("amixer -D pulse sset Master toggle", beautiful.volume.togglechannel or beautiful.volume.channel)
-    beautiful.volume.update()
-  end,
-  {description = "toggle mute", group = "hotkeys"}),
-awful.key({ altkey, "Control" }, "m",
-  function ()
-    os.execute(string.format("amixer -q set %s 100%%", beautiful.volume.channel))
-    beautiful.volume.update()
-  end,
-  {description = "volume 100%", group = "hotkeys"}),
-awful.key({ altkey, "Control" }, "0",
-  function ()
-    os.execute(string.format("amixer -q set %s 0%%", beautiful.volume.channel))
-    beautiful.volume.update()
-  end,
-  {description = "volume 0%", group = "hotkeys"}),
-
--- MPD control
---    awful.key({ altkey, "Control" }, "Up",
---        function ()
---            os.execute("mpc toggle")
---            beautiful.mpd.update()
---        end,
---        {description = "mpc toggle", group = "widgets"}),
---    awful.key({ altkey, "Control" }, "Down",
---        function ()
---            os.execute("mpc stop")
---            beautiful.mpd.update()
---        end,
---        {description = "mpc stop", group = "widgets"}),
---    awful.key({ altkey, "Control" }, "Left",
---        function ()
---            os.execute("mpc prev")
---            beautiful.mpd.update()
---        end,
---        {description = "mpc prev", group = "widgets"}),
---    awful.key({ altkey, "Control" }, "Right",
---        function ()
---            os.execute("mpc next")
---            beautiful.mpd.update()
---        end,
---        {description = "mpc next", group = "widgets"}),
---    awful.key({ altkey }, "0",
---        function ()
---            local common = { text = "MPD widget ", position = "top_middle", timeout = 2 }
---            if beautiful.mpd.timer.started then
---                beautiful.mpd.timer:stop()
---                common.text = common.text .. lain.util.markup.bold("OFF")
---            else
---                beautiful.mpd.timer:start()
---                common.text = common.text .. lain.util.markup.bold("ON")
---            end
---            naughty.notify(common)
---        end,
---        {description = "mpc on/off", group = "widgets"}),
-
 -- Copy primary to clipboard (terminals to gtk)
 awful.key({ modkey }, "c", function () awful.spawn.with_shell("xsel | xsel -i -b") end,
   {description = "copy terminal to gtk", group = "hotkeys"}),
@@ -519,50 +416,18 @@ awful.key({ modkey }, "v", function () awful.spawn.with_shell("xsel -b | xsel") 
   {description = "copy gtk to terminal", group = "hotkeys"}),
 
 -- User programs
--- awful.key({ modkey }, "e", function () awful.spawn(guieditor) end,
-  -- {description = "run gui editor", group = "launcher"}),
 awful.key({ modkey, "Shift" }, "s", function () awful.spawn("xfce4-settings-manager") end,
   {description = "open settings", group = "launcher"}),
--- awful.key({ modkey }, "f", function () awful.spawn("thunar") end,
-  -- {description = "open file browser", group = "launcher"}),
 awful.key({ modkey }, "c", function () awful.spawn("mate-calculator") end,
   {description = "Open calculator", group = "launcher"}),
---awful.key({ modkey,"Shift" }, "Tab", function () awful.spawn.with_shell("~/Scripts/conkytoggle.sh") end,
---        {description = "open gkrellm", group = "launcher"}),
 
 -- Default
---[[ Menubar
-    awful.key({ modkey }, "p", function() menubar.show() end,
-              {description = "show the menubar", group = "launcher"})
-    --]]
---[[ dmenu
-    awful.key({ modkey }, "d", function ()
-            os.execute(string.format("dmenu_run -i -fn 'Inconsolata' -nb '%s' -nf '%s' -sb '%s' -sf '%s'",
-            beautiful.bg_normal, beautiful.fg_normal, beautiful.bg_focus, beautiful.fg_focus))
-        end,
-        {description = "show dmenu", group = "launcher"})
---    ]]
 -- alternatively use rofi, a dmenu-like application with more features
 -- check https://github.com/DaveDavenport/rofi for more details
 --    [[ rofi
 awful.key({ modkey }, "d", function () os.execute(string.format("rofi -run-list-command \". ~/.bash_aliases\" -run-command \"/bin/bash -i -c '{cmd}'\" -show run"))
   end,
   {description = "show rofi", group = "launcher"})
---]]
--- Prompt
---    awful.key({ modkey }, "r", function () awful.screen.focused().mypromptbox:run() end,
---              {description = "run prompt", group = "launcher"}),
---
---    awful.key({ modkey }, "x",
---              function ()
---                  awful.prompt.run {
---                    prompt       = "Run Lua code: ",
---                    textbox      = awful.screen.focused().mypromptbox.widget,
---                    exe_callback = awful.util.eval,
---                    history_path = awful.util.get_cache_dir() .. "/history_eval"
---                  }
---              end,
---              {description = "lua execute prompt", group = "awesome"})
 --]]
 )
 
@@ -577,11 +442,8 @@ clientkeys = my_table.join(
     {description = "toggle fullscreen", group = "client"}),
   awful.key({ modkey, "Shift"   }, "q",      function (c) c:kill()                         end,
     {description = "close", group = "client"}),
-  -- awful.key({ modkey, "Shift" }, "l",
-  -- function(c)
-  -- c.floating = not c.floating
-  -- end,
-  -- {description = "toggle floating", group = "client"}),
+  awful.key({ modkey, "Control"   }, "space",      awful.client.floating.toggle,
+    {description = "toggle floating", group = "client"}),
   awful.key({ modkey, "Shift" }, "c",  awful.placement.centered                     ,
     {description = "center floating client", group = "client"}),
   awful.key({ modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster()) end,

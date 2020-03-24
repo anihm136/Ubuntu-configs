@@ -1,0 +1,10 @@
+[user]
+	email = anihm136@gmail.com
+	name = Anirudh H M
+[color]
+	ui = auto
+	uix = auto
+[core]
+	excludesfile = /home/anirudh/.config/git/.gitignore
+[github]
+	user = anihm136@gmail.com

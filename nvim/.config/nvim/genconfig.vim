@@ -21,29 +21,6 @@ let mapleader = " "
 " Goyo
 nmap <silent> <leader>g :Goyo<cr>
 
-" Clap
-nmap <silent> <leader>ff :Clap filer<cr>
-nmap <silent> <leader>bb :Clap buffers<cr>
-nmap <silent> <leader>rg :Clap grep<cr>
-nmap <silent> <leader>bl :Clap blines<cr>
-nmap <silent> <leader>fd :Clap dotfiles<cr>
-
-" coc.nvim
-nmap <silent> <F7> :call CocAction('format')<cr>
-nmap <silent> <F8> :CocCommand prettier.formatFile<cr>
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
-
-" Gtags
-nmap <silent> <F6> :call helpers#toggleTags()<cr>
-
-" Fugitive
-nmap <silent> <leader>gs :G<cr>
-nmap <silent> <leader>gp :Gpush<cr>
-
-" Sandwich
-map s <NOP>
-
 " Netrw
 let g:netrw_banner = 0
 let g:netrw_liststyle = 3
@@ -51,7 +28,7 @@ let g:netrw_browse_split = 4
 let g:netrw_altv = 1
 let g:netrw_winsize = 20
 let g:netrw_fastbrowse = 0
-nmap <silent> <Leader>0 :call helpers#toggleNetrw()<cr>
+nnoremap <silent> <Leader>0 :call helpers#toggleNetrw()<cr>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => General
@@ -170,33 +147,32 @@ vnoremap <silent> # :<C-u>call helpers#visualSelection('', '')<CR>?<C-R>=@/<CR><
 " => Moving around, tabs, windows and buffers
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-map <silent> <leader><leader> :noh<cr>
+nnoremap <silent> <leader><leader> :noh<cr>
 
 nmap j gj
 nmap k gk
 nmap <Down> gj
 nmap <Up> gk
 
-map <silent><leader>bd :call helpers#bufcloseCloseIt()<cr>
-map <leader>ba :bufdo bd<cr>
+noremap <silent><leader>bd :call helpers#bufcloseCloseIt()<cr>
+noremap <leader>ba :bufdo bd<cr>
 
-map <silent><leader>l :bnext<cr>
-map <silent><leader>h :bprevious<cr>
+noremap <silent><leader>l :bnext<cr>
+noremap <silent><leader>h :bprevious<cr>
 
-map <leader>tn :tabnew<cr>
-map <leader>tp :tabp<cr>
-map <leader>to :tab sp<cr>
-map <leader>tc :call helpers#bufcloseCloseIt() <bar> tabclose<cr>
+noremap <leader>tn :tabnew<cr>
+noremap <leader>tp :tabp<cr>
+noremap <leader>to :tab sp<cr>
+noremap <leader>tc :call helpers#bufcloseCloseIt() <bar> tabclose<cr>
 
-map <leader>e :edit <c-r>=expand("%:p:h")<cr>/
-map <leader>cd :cd %:p:h <bar> pwd<cr>
+noremap <leader>e :edit <c-r>=expand("%:p:h")<cr>/
+noremap <leader>cd :cd %:p:h <bar> pwd<cr>
 
 try
   set switchbuf=useopen,usetab
   set stal=2
 catch
 endtry
-
 
 autocmd custom_commands BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 
@@ -206,7 +182,6 @@ autocmd custom_commands BufReadPost * if line("'\"") > 1 && line("'\"") <= line(
 
 map 0 ^
 map Y y$
-
 
 autocmd custom_commands BufWritePre *.txt,*.js,*.jsx,*.ts,*.tsx,*.py,*.wiki,*.sh,*.coffee,*.c,*.cpp,*.java call helpers#cleanWhitespace()
 autocmd custom_commands BufRead,BufNewFile,VimEnter *.js,*.jsx,*.ts,*.tsx,*.py,*.coffee,*.c,*.cpp,*.java if !exists("b:cscope") | call helpers#toggleTags() | endif
@@ -248,7 +223,7 @@ xmap <F2>
 " => Spell checking
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-map <leader>ss :setlocal spell!<cr>
+noremap <leader>ss :setlocal spell!<cr>
 
 map <leader>sn ]s
 map <leader>sp [s
@@ -259,6 +234,6 @@ map <leader>s? z=
 " => Misc
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-map <leader>q :e ~/buffer<cr>
-map <leader>x :e ~/buffer.md<cr>
+noremap <leader>q :e ~/buffer<cr>
+noremap <leader>x :e ~/buffer.md<cr>
 

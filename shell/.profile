@@ -49,17 +49,19 @@ export fpath=($fpath /home/anirudh/.local/share/zsh/completions)
 
 # Settings
 export QT_STYLE_OVERRIDE=kvantum
+export FZF_DEFAULT_OPTS="--height 40% --reverse"
+export FZF_CTRL_T_OPTS="--preview '(bat --style=numbers --color=always {} || cat {}) 2> /dev/null | head -500' --preview-window right:60% --select-1"
+export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:hidden:wrap --bind '?:toggle-preview'"
+export FZF_ALT_C_COMMAND="fda"
+export FZF_DEFAULT_COMMAND="fdfind --type f --hidden --follow --exclude .git --exclude node_modules --exclude .venv"
+export FZF_CTRL_T_COMMAND="fdfind --hidden --follow --exclude .git --exclude node_modules --exclude .venv"
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+export SUDO_ASKPASS="$HOME/.scripts/dmenupass"
+export PIPENV_VENV_IN_PROJECT=1
+
+# Default applications
 export EDITOR=/usr/local/bin/nvim
 export TERMINAL="alacritty"
 export BROWSER="firefox"
 export FILE="nautilus"
 export GUIEDITOR="code"
-export FZF_DEFAULT_OPTS="--height 40% --reverse"
-export FZF_CTRL_T_OPTS="--preview '(bat --style=numbers --color=always {} || cat {}) 2> /dev/null | head -500' --preview-window right:60% --select-1"
-export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:hidden:wrap --bind '?:toggle-preview'"
-export FZF_ALT_C_COMMAND="fda"
-export FZF_DEFAULT_COMMAND="fdfind --type f --hidden --follow --exclude .git"
-export FZF_CTRL_T_COMMAND="fdfind --hidden --follow --exclude .git"
-export MANPAGER="sh -c 'col -bx | bat -l man -p'"
-export SUDO_ASKPASS="$HOME/.scripts/dmenupass"
-export PIPENV_VENV_IN_PROJECT=1

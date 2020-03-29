@@ -10,3 +10,4 @@ cscope.out
 *~
 log/
 *.log
+.vim/

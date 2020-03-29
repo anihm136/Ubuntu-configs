@@ -30,10 +30,12 @@ nmap <silent> <leader>fd :Clap dotfiles<cr>
 
 " coc.nvim
 nmap <silent> <F7> :call CocAction('format')<cr>
-nmap <silent> <F8> :CocCommand prettier.formatFile
+nmap <silent> <F8> :CocCommand prettier.formatFile<cr>
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
 
 " Gtags
-nmap <silent> <F6> :call ToggleGtagsCscope()<cr>
+nmap <silent> <F6> :call helpers#toggleTags()<cr>
 
 " Fugitive
 nmap <silent> <leader>gs :G<cr>
@@ -49,7 +51,7 @@ let g:netrw_browse_split = 4
 let g:netrw_altv = 1
 let g:netrw_winsize = 20
 let g:netrw_fastbrowse = 0
-nmap <silent> <Leader>0 :call ToggleNetrw()<cr>
+nmap <silent> <Leader>0 :call helpers#toggleNetrw()<cr>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => General
@@ -61,8 +63,7 @@ set confirm
 set mouse=a
 set cscopeprg=cscope
 set history=500
-filetype plugin on
-filetype indent on
+filetype plugin indent on
 set autoread
 set noshowmode
 set clipboard=unnamedplus
@@ -72,31 +73,24 @@ set updatetime=200
 set inccommand=nosplit
 set scrolloff=10
 
-nmap <leader>w :wa!<cr>
-nmap <leader>W :w !sudo tee %<cr>
-vmap y ygv<Esc>
+nnoremap <leader>w :wa!<cr>
+nnoremap <leader>W :w !sudo tee %<cr>
+vnoremap y ygv<Esc>
 nnoremap g= mmgg=G'm
-imap fd <Esc>
-map <silent> <leader>r :set wrap!<cr>
+inoremap fd <Esc>
+nnoremap <silent> <leader>r :set wrap!<cr>
 
 augroup custom_commands
   autocmd!
-  autocmd VimResized * wincmd =
-  au FileType * set fo-=c fo-=r fo-=o
-  au FocusGained,BufEnter * :checktime
-  autocmd FileType help,plugins,fugitive nnoremap <silent><buffer> q :q<cr>
-  autocmd FileType qf nnoremap <silent> <C-n> :cn<cr> | nnoremap <silent> <C-p> :cp<cr> | nnoremap <silent> q :call CloseQf()<cr>
-  au BufWritePost init.vim,plugins.vim nested source %
-  au FileType html,htmljinja,htmldjango,php nmap <silent><buffer> <F5> :call ToggleFt()<cr>
-  au FileType php let b:is_php = 1
-  autocmd FileType netrw setl bufhidden=wipe | nnoremap <silent><buffer> q :bw<cr>
 augroup END
 
-augroup ftdetect
-  autocmd!
-  autocmd BufRead,BufNewFile *.m,*.oct setlocal filetype=octave
-  autocmd Filetype htmljinja exe "silent call DjangoFt()"
-augroup END
+autocmd custom_commands VimResized * wincmd =
+autocmd custom_commands FileType * set fo-=c fo-=r fo-=o
+autocmd custom_commands FocusGained,BufEnter * :checktime
+autocmd custom_commands FileType help,plugins,fugitive nnoremap <silent><buffer> q :q<cr>
+autocmd custom_commands FileType qf nnoremap <silent> <C-n> :cn<cr> | nnoremap <silent> <C-p> :cp<cr> | nnoremap <silent> q :call helpers#closeQf()<cr>
+autocmd custom_commands BufWritePost init.vim,plugins.vim nested source %
+autocmd custom_commands FileType netrw setl bufhidden=wipe | nnoremap <silent><buffer> q :bw<cr>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
@@ -113,10 +107,10 @@ set wildignore=*.o,*~,*.pyc
 set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store
 
 set ruler
-set rnu nu
+set relativenumber number
 set cmdheight=1
 set hidden
-set backspace=eol,start,indent
+set backspace=indent,eol,start
 set whichwrap+=<,>,h,l
 set ignorecase
 set smartcase
@@ -137,10 +131,6 @@ set foldcolumn=1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 syntax enable
-
-if $COLORTERM == 'gnome-terminal'
-  set t_Co=256
-endif
 
 try
   colorscheme onedark
@@ -163,12 +153,6 @@ set noswapfile
 " => Text, tab and indent related
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-set expandtab
-set smarttab
-set shiftwidth=2
-set tabstop=2
-set softtabstop=2
-
 set lbr
 set tw=500
 
@@ -179,8 +163,8 @@ set nowrap
 " => Visual mode related
 """"""""""""""""""""""""""""""
 
-vnoremap <silent> * :<C-u>call VisualSelection('', '')<CR>/<C-R>=@/<CR><CR>
-vnoremap <silent> # :<C-u>call VisualSelection('', '')<CR>?<C-R>=@/<CR><CR>
+vnoremap <silent> * :<C-u>call helpers#visualSelection('', '')<CR>/<C-R>=@/<CR><CR>
+vnoremap <silent> # :<C-u>call helpers#visualSelection('', '')<CR>?<C-R>=@/<CR><CR>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Moving around, tabs, windows and buffers
@@ -193,7 +177,7 @@ nmap k gk
 nmap <Down> gj
 nmap <Up> gk
 
-map <silent><leader>bd :Bclose<cr>
+map <silent><leader>bd :call helpers#bufcloseCloseIt()<cr>
 map <leader>ba :bufdo bd<cr>
 
 map <silent><leader>l :bnext<cr>
@@ -202,10 +186,10 @@ map <silent><leader>h :bprevious<cr>
 map <leader>tn :tabnew<cr>
 map <leader>tp :tabp<cr>
 map <leader>to :tab sp<cr>
-map <leader>tc :Bclose<cr> :tabclose<cr>
+map <leader>tc :call helpers#bufcloseCloseIt() <bar> tabclose<cr>
 
 map <leader>e :edit <c-r>=expand("%:p:h")<cr>/
-map <leader>cd :cd %:p:h<cr>:pwd<cr>
+map <leader>cd :cd %:p:h <bar> pwd<cr>
 
 try
   set switchbuf=useopen,usetab
@@ -213,10 +197,8 @@ try
 catch
 endtry
 
-augroup edit_save
-  autocmd!
-  au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
-augroup END
+
+autocmd custom_commands BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Editing mappings
@@ -225,22 +207,9 @@ augroup END
 map 0 ^
 map Y y$
 
-fun! CleanWhitespace()
-  let save_cursor = getpos(".")
-  let old_query = getreg('/')
-  silent! %s/\s\+$//ge
-  silent! %s/\n/<0s0>/ge
-  silent! s/\(<0s0>\)\+$//ge
-  silent! s/<0s0>/\r/ge
-  call setpos('.', save_cursor)
-  call setreg('/', old_query)
-endfun
 
-augroup clean_spaces
-  autocmd!
-  autocmd BufWritePre *.txt,*.js,*.jsx,*.ts,*.tsx,*.py,*.wiki,*.sh,*.coffee,*.c,*.cpp,*.java call CleanWhitespace()
-  autocmd BufRead, BufNewFile, VimEnter *.js,*.jsx,*.ts,*.tsx,*.py,*.coffee,*.c,*.cpp,*.java if !exists("b:cscope") | exe "call ToggleGtagsCscope()" | endif
-augroup END
+autocmd custom_commands BufWritePre *.txt,*.js,*.jsx,*.ts,*.tsx,*.py,*.wiki,*.sh,*.coffee,*.c,*.cpp,*.java call helpers#cleanWhitespace()
+autocmd custom_commands BufRead,BufNewFile,VimEnter *.js,*.jsx,*.ts,*.tsx,*.py,*.coffee,*.c,*.cpp,*.java if !exists("b:cscope") | call helpers#toggleTags() | endif
 
 " Press * to search for the term under the cursor or a visual selection and
 " then press a key below to replace all instances of it in the current file.
@@ -293,160 +262,3 @@ map <leader>s? z=
 map <leader>q :e ~/buffer<cr>
 map <leader>x :e ~/buffer.md<cr>
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Helper functions
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-command! Bclose call <SID>BufcloseCloseIt()
-function! <SID>BufcloseCloseIt()
-  let l:currentBufNum = bufnr("%")
-  let l:alternateBufNum = bufnr("#")
-
-  if buflisted(l:alternateBufNum)
-    buffer #
-  else
-    bnext
-  endif
-
-  if bufnr("%") == l:currentBufNum
-    new
-  endif
-
-  if buflisted(l:currentBufNum)
-    execute("bdelete! ".l:currentBufNum)
-  endif
-endfunction
-
-function! CmdLine(str)
-  call feedkeys(":" . a:str)
-endfunction
-
-function! VisualSelection(direction, extra_filter) range
-  let l:saved_reg = @"
-  execute "normal! vgvy"
-
-  let l:pattern = escape(@", "\\/.*'$^~[]")
-  let l:pattern = substitute(l:pattern, "\n$", "", "")
-
-  if a:direction == 'gv'
-    call CmdLine("Ack '" . l:pattern . "' " )
-  elseif a:direction == 'replace'
-    call CmdLine("%s" . '/'. l:pattern . '/')
-  endif
-
-  let @/ = l:pattern
-  let @" = l:saved_reg
-endfunction
-
-fun! ToggleFt()
-  if exists("b:is_php")
-    if &filetype == 'php'
-      set ft=html
-      echo "HTML mode"
-    else
-      set ft=php
-      echo "PHP mode"
-    endif
-  else
-    if &filetype == 'htmljinja'
-      set ft=htmldjango
-      echo "Django mode"
-    elseif &filetype == 'htmldjango'
-      set ft=html
-      echo "HTML mode"
-    else
-      set ft=htmljinja
-      echo "Jinja mode"
-    endif
-  endif
-endfunction
-
-fun! DjangoFt()
-  if exists("b:is_django") && b:is_django
-    set ft=htmldjango
-  endif
-endfunction
-
-fun! ToggleGtagsCscope()
-  if !exists("b:idxmode")
-    let b:idxmode = 0
-  endif
-  if b:idxmode == 0
-    nmap <silent><buffer> gd <Plug>(coc-definition)
-    nmap <silent><buffer> gr <Plug>(coc-references)
-    nmap <silent><buffer> gs <Plug>(coc-implementation)
-    let b:idxmode = 1
-    echo "LSP mode"
-  elseif b:idxmode == 1
-    silent exe 'cs kill -1'
-    if !filereadable("cscope.out")
-      call inputsave()
-      let l:op = input('Cscope file not found. Create?([s]tarscope|[c]scope|[n]one) ')
-      call inputrestore()
-      redraw
-      if op == "s"
-        system('starscope -e cscope')
-      elseif op == "c"
-        system("git ls-files > cscope.files && cscope -bcqR && rm -f cscope.files")
-      else
-        let l:skip = 1
-      endif
-    endif
-    let b:idxmode = 2
-    if exists("l:skip")
-      call ToggleGtagsCscope()
-    else
-      silent exe 'cs add cscope.out'
-      nnoremap <silent><buffer><expr> gd ':cs find g ' . expand('<cword>') . '<cr>'
-      nnoremap <silent><buffer><expr> gr ':cs find c ' . expand('<cword>') . '<cr>'
-      nnoremap <silent><buffer><expr> gs ':cs find s ' . expand('<cword>') . '<cr>'
-      echo "cscope mode"
-    endif
-  else
-    if !filereadable("GTAGS")
-      call inputsave()
-      let l:op = input('Gtags file not found. Create?([y]es|[n]o) ')
-      call inputrestore()
-      redraw
-      if op == "y"
-        if match(["c","cpp","java","php"], &filetype) != -1
-          system('gtags')
-        else
-          system('gtags --gtagslabel=ctags')
-        endif
-      else
-        let l:skip = 1
-      endif
-    endif
-    let b:idxmode = 0
-    if exists("l:skip")
-      call ToggleGtagsCscope()
-    else
-      nnoremap <silent><buffer> gd :Gtags<cr>
-      nnoremap <silent><buffer> gr :GtagsCursor<cr>
-      nnoremap <silent><buffer> gs :Gtags -g<cr>
-      echo "gtags mode"
-    endif
-  endif
-endfunction
-
-function! ToggleNetrw()
-  let l:flag = 1
-  for i in range(1, winnr("$"))
-    if getwinvar(i, '&filetype') == "netrw"
-      silent exe 'bwipeout ' . winbufnr(i)
-      let flag = 0
-      break
-    endif
-  endfor
-  if flag == 1
-    silent exe 'Vex'
-  endif
-endfunction
-
-function! CloseQf()
-  silent exe "ccl"
-  unmap <C-n>
-  unmap <C-p>
-  unmap q
-endfunction

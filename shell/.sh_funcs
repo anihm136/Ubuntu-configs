@@ -59,8 +59,8 @@ e() {
   if [[ -n "$@" ]]; then
     nvim $@
   else
-    local files=$(fzf -m)
-    local args=(`echo $files`)
+    local files="$(fzf -m)"
+    local args=(`echo "$files" | tr " " "\ "`)
     [ -n "$args" ] && nvim "${args[@]}"
   fi
 }

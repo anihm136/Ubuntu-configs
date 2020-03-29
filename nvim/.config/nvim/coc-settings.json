@@ -9,6 +9,7 @@
   "diagnostic.checkCurrentLine": true,
   "python.linting.pylintEnabled": true,
   "python.linting.flake8Enabled": true,
+  "python.formatting.provider": "black",
   "diagnostic.warningSign": "⚠",
   "diagnostic.errorSign": "❌",
   "suggest.removeDuplicateItems": true,

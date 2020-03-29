@@ -1,35 +1,37 @@
 call plug#begin('~/.config/nvim/plugged')
 Plug 'airblade/vim-gitgutter'
-Plug 'sheerun/vim-polyglot'
+Plug 'airblade/vim-rooter'
 Plug 'anihm136/caw.vim'
 Plug 'anihm136/context_filetype.vim'
-Plug 'kana/vim-operator-user'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-Plug 'neoclide/coc.nvim'
+Plug 'anihm136/vim-unimpaired'
+Plug 'chaoren/vim-wordmotion'
+Plug 'fedorenchik/gtags.vim'
+Plug 'haya14busa/is.vim'
+Plug 'honza/vim-snippets'
+Plug 'jiangmiao/auto-pairs'
+Plug 'joshdick/onedark.vim'
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/vim-easy-align'
-Plug 'machakann/vim-sandwich'
-Plug 'psliwka/vim-smoothie'
-Plug 'honza/vim-snippets'
-Plug 'ryanoasis/vim-devicons'
-Plug 'joshdick/onedark.vim'
-Plug 'haya14busa/is.vim'
-Plug 'jiangmiao/auto-pairs'
-Plug 'mhinz/vim-grepper'
-Plug 'wellle/targets.vim'
-Plug 'tpope/vim-fugitive'
-Plug 'anihm136/vim-unimpaired'
-Plug 'tpope/vim-repeat'
+Plug 'kana/vim-operator-user'
 Plug 'liuchengxu/vim-clap'
-Plug 'fedorenchik/gtags.vim'
-Plug 'chaoren/vim-wordmotion'
-Plug 'mattn/emmet-vim', {'for': ['html', 'js', 'ts', 'jsx', 'tsx', 'php', 'htmljinja', 'htmldjango']}
-Plug 'kevinoid/vim-jsonc', {'for': 'jsonc'}
-Plug 'elzr/vim-json', {'for': 'json'}
-Plug 'tweekmonster/django-plus.vim', {'for': ['python','html','htmldjango']}
-Plug 'mitsuhiko/vim-jinja', {'for': ['html','htmldjango']}
+Plug 'machakann/vim-sandwich'
+Plug 'mhinz/vim-grepper'
+Plug 'neoclide/coc.nvim'
+Plug 'psliwka/vim-smoothie'
+Plug 'ryanoasis/vim-devicons'
+Plug 'sheerun/vim-polyglot'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-sleuth'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'wellle/targets.vim'
 Plug 'captbaritone/better-indent-support-for-php-with-html', {'for': 'php'}
+Plug 'elzr/vim-json', {'for': 'json'}
+Plug 'kevinoid/vim-jsonc', {'for': 'jsonc'}
+Plug 'mattn/emmet-vim', {'for': ['html', 'js', 'ts', 'jsx', 'tsx', 'php', 'htmljinja', 'htmldjango']}
+Plug 'mitsuhiko/vim-jinja', {'for': ['html','htmldjango']}
+Plug 'tweekmonster/django-plus.vim', {'for': ['python','html','htmldjango']}
 call plug#end()
 
 runtime macros/matchit.vim
@@ -63,7 +65,7 @@ inoremap <silent><expr> <cr>
       \ "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
 autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
-imap <C-j> <Plug>(coc-snippets-expand-jump)
+imap <C-z> <Plug>(coc-snippets-expand-jump)
 
 nnoremap <silent> <leader>k :call <SID>show_documentation()<CR>
 
@@ -76,26 +78,6 @@ function! s:show_documentation()
 endfunction
 
 autocmd CursorHold * silent call CocActionAsync('highlight')
-
-" JSON customization
-au! BufRead,BufNewFile *.json set filetype=json
-augroup json_autocmd
-  autocmd!
-  autocmd FileType json set autoindent
-  autocmd FileType json set formatoptions=tcq2l
-  autocmd FileType json set textwidth=78 shiftwidth=2
-  autocmd FileType json set softtabstop=2 tabstop=8
-  autocmd FileType json set expandtab
-augroup END
-
-" Auto pairs gentle
-augroup ft_pairs
-  autocmd!
-  au FileType htmljinja,htmldjango let b:AutoPairs = AutoPairs | call AutoPairsInit() | let b:AutoPairs = AutoPairsDefine({"{%":"%}", "{#":"#}", "<":">"}) | call AutoPairsInit()
-  au FileType php let b:AutoPairs = AutoPairs | call AutoPairsInit() | let b:AutoPairs = AutoPairsDefine({"<?":"?>", "<?php":"?>", "<":">"}) | call AutoPairsInit() 
-  au FileType html let b:AutoPairs = AutoPairs | call AutoPairsInit() | let b:AutoPairs = AutoPairsDefine({"<":">"}) | call AutoPairsInit() 
-
-augroup END
 
 " Grepper
 let g:grepper       = {}
@@ -119,26 +101,23 @@ nmap <silent> srr <Plug>(operator-sandwich-replace)<SID>line
 let g:htmljinja_disable_html_upgrade = 1
 
 " Clap
-function! s:ensure_closed() abort
-  call clap#floating_win#close()
-  silent! autocmd! ClapEnsureAllClosed
-endfunction
+let g:clap_disable_run_rooter = v:true
 
 function! MyClapOnEnter() abort
   augroup ClapEnsureAllClosed
     autocmd!
-    autocmd BufEnter,WinEnter,WinLeave * call s:ensure_closed()
+    autocmd BufEnter,WinEnter,WinLeave * ++once call clap#floating_win#close()
   augroup END
 endfunction
 
 augroup clapCommands
   autocmd!
   autocmd User ClapOnEnter call MyClapOnEnter()
-  autocmd User ClapOnEnter map <silent><buffer> q :call clap#floating_win#close()<cr>
+  autocmd User ClapOnEnter map <silent><buffer> q :call clap.input.clear() <bar> call clap#floating_win#close()<cr>
 augroup END
-let g:clap_provider_grep_opts = '-H --no-heading --vimgrep --smart-case --hidden -g "!.git/"'
+let g:clap_provider_grep_opts = '-H --no-heading --vimgrep'
 let g:clap_provider_dotfiles = {
-      \ 'source': ['~/.dotfiles/vim/.vim/.vimrc', '~/.dotfiles/vim/.vim/plugged/plug_vim.vim', '~/.dotfiles/nvim/.config/nvim/plugged/plugins.vim', '~/.dotfiles/nvim/.config/nvim/init.vim', '~/.dotfiles/nvim/.config/nvim/genconfig.vim','~/.dotfiles/nvim/.config/nvim/ipyrc.vim','~/.dotfiles/nvim/.config/nvim/firevimconfig.vim',  '~/.dotfiles/vifm/.config/vifm/vifmrc', '~/.zshrc', '~/.profile', '~/.sh_funcs'],
+      \ 'source': ['~/.dotfiles/nvim/.config/nvim/plugged/plugins.vim', '~/.dotfiles/nvim/.config/nvim/init.vim', '~/.dotfiles/nvim/.config/nvim/genconfig.vim','~/.dotfiles/nvim/.config/nvim/ipyrc.vim','~/.dotfiles/nvim/.config/nvim/firevimconfig.vim',  '~/.dotfiles/vifm/.config/vifm/vifmrc', '~/.zshrc', '~/.profile', '~/.sh_funcs'],
       \ 'sink': 'e',
       \ }
 
@@ -150,3 +129,10 @@ nmap <silent><unique> gcc <Plug>(caw:hatpos:toggle)
 
 " Gtags
 let g:Gtags_No_Auto_Jump = 1
+
+" Rooter
+let g:rooter_change_directory_for_non_project_files = 'current'
+let g:rooter_resolve_links = 1
+let g:rooter_silent_chdir = 1
+let g:rooter_targets = '*'
+let g:rooter_use_lcd = 1

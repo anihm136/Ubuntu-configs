@@ -6,6 +6,7 @@ GRTAGS
 GPATH
 ctags
 cscope.out
+cscope.files
 .starscope.db
 *~
 log/

@@ -18,7 +18,7 @@ let g:clap_provider_dotfiles = {
       \ 'sink': 'e',
       \ }
 
-nnoremap <silent> <leader>ff :Clap filer<cr>
+nnoremap <silent> <leader>ff :Clap files<cr>
 nnoremap <silent> <leader>bb :Clap buffers<cr>
 nnoremap <silent> <leader>rg :Clap grep<cr>
 nnoremap <silent> <leader>bl :Clap blines<cr>

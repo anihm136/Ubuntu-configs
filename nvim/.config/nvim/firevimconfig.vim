@@ -40,3 +40,4 @@ colorscheme deus
 
 nnoremap <Esc><Esc> :call firenvim#focus_page()<CR>
 nmap <C-e> ZZ
+inoremap fd <Esc>

@@ -50,15 +50,15 @@ set updatetime=200
 set inccommand=nosplit
 set scrolloff=10
 
-nnoremap <leader>w :wa!<cr>
-nnoremap <leader>W :w !sudo tee %<cr>
-vnoremap y ygv<Esc>
-nnoremap g= mmgg=G'm
-inoremap fd <Esc>
-nnoremap <silent> <leader>r :set wrap!<cr>
+nnoremap <silent> <leader>w :wa!<cr>
+nnoremap <silent> <leader>W :w !sudo tee %<cr>
+vnoremap <silent> y ygv<Esc>
+nnoremap <silent> g= mmgg=G'm:RetabIndent!<cr>
+inoremap <silent> fd <Esc>
+nnoremap <silent><leader>r :set wrap!<cr>
 
 augroup custom_commands
-  autocmd!
+	autocmd!
 augroup END
 
 autocmd custom_commands VimResized * wincmd =
@@ -66,8 +66,9 @@ autocmd custom_commands FileType * set fo-=c fo-=r fo-=o
 autocmd custom_commands FocusGained,BufEnter * :checktime
 autocmd custom_commands FileType help,plugins,fugitive nnoremap <silent><buffer> q :q<cr>
 autocmd custom_commands FileType qf nnoremap <silent> <C-n> :cn<cr> | nnoremap <silent> <C-p> :cp<cr> | nnoremap <silent> q :call helpers#closeQf()<cr>
-autocmd custom_commands BufWritePost init.vim,plugins.vim nested source %
+autocmd custom_commands BufWritePost init.vim,plugins.vim,genconfig.vim nested silent source %
 autocmd custom_commands FileType netrw setl bufhidden=wipe | nnoremap <silent><buffer> q :bw<cr>
+autocmd custom_commands BufReadPost * DetectIndent
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
@@ -110,7 +111,7 @@ set foldcolumn=1
 syntax enable
 
 try
-  colorscheme onedark
+	colorscheme onedark
 catch
 endtry
 set background=dark
@@ -169,8 +170,8 @@ noremap <leader>e :edit <c-r>=expand("%:p:h")<cr>/
 noremap <leader>cd :cd %:p:h <bar> pwd<cr>
 
 try
-  set switchbuf=useopen,usetab
-  set stal=2
+	set switchbuf=useopen,usetab
+	set stal=2
 catch
 endtry
 
@@ -207,17 +208,17 @@ xnoremap <silent> rn "sy:let @/=@s<CR>cgn
 " replace. It's similar to <leader>r except this one applies to all matches
 " across all files instead of just the current file.
 nnoremap <F2>
-      \ :let @s='\<'.expand('<cword>').'\>'<CR>
-      \ :Grepper -cword -noprompt<CR>
-      \ :cfdo %s/<C-r>s//g \| update
-      \<Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left>
+			\ :let @s='\<'.expand('<cword>').'\>'<CR>
+			\ :Grepper -cword -noprompt<CR>
+			\ :cfdo %s/<C-r>s//g \| update
+			\<Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left>
 
 " The same as above except it works with a visual selection.
 xmap <F2>
-      \ "sy
-      \ gvgr
-      \ :cfdo %s/<C-r>s//g \| update
-      \<Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left>
+			\ "sy
+			\ gvgr
+			\ :cfdo %s/<C-r>s//g \| update
+			\<Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Spell checking

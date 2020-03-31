@@ -79,7 +79,8 @@ printf "\033[6 q"
 }
 zle -N zle-line-init
 
+bindkey -v "^[[3~" delete-char
+bindkey -a "^[[3~" delete-char
+
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-setopt auto_cd

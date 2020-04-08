@@ -55,6 +55,7 @@ nnoremap <silent> <leader>W :w !sudo tee %<cr>
 vnoremap <silent> y ygv<Esc>
 nnoremap <silent> g= mmgg=G'm:RetabIndent!<cr>
 inoremap <silent> fd <Esc>
+inoremap <silent> <C-v> <C-r>+
 nnoremap <silent><leader>r :set wrap!<cr>
 
 augroup custom_commands

@@ -576,7 +576,7 @@ awful.rules.rules = {
   { rule = { class = "Firefox" },
   properties = { screen = 1, tag = awful.util.tagnames[4] } },
 
-  { rule = { class = "Chromium-browser" },
+  { rule = { class = "Brave-browser" },
   properties = { screen = 1, tag = awful.util.tagnames[4] } },
 
   { rule = { class = "gedit" },

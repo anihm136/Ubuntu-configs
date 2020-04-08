@@ -99,7 +99,7 @@ This function should only modify configuration layer settings."
    ;; To use a local version of a package, use the `:location' property:
    ;; '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
-   dotspacemacs-additional-packages '(doom-themes dtrt-indent (smart-tabs-mode :location (recipe :fetcher github :repo "dochang/smarttabs" :branch "keep-indent-setting")))
+   dotspacemacs-additional-packages '((doom-themes :location (recipe :fetcher github :repo "hlissner/emacs-doom-themes")) dtrt-indent org-wild-notifier (smart-tabs-mode :location (recipe :fetcher github :repo "dochang/smarttabs" :branch "keep-indent-setting")))
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -517,7 +517,21 @@ before packages are loaded."
    projectile-project-search-path '("~/Projects" "~/Projects/forks")
    magit-repository-directories '(("~/Projects/" . 2))
    git-magit-status-fullscreen t)
-  (doom-themes-org-config)
+  (with-eval-after-load 'org
+    (require 'doom-themes-ext-org)
+    (setq
+     org-directory "~/Documents/org/"
+     org-default-notes-file (concat org-directory "/default.org")
+     org-agenda-files (list org-directory)
+     org-log-into-drawer t
+     org-startup-folded nil
+     alert-default-style 'libnotify
+     org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)"))
+     org-capture-templates
+     '(("t" "Todo" entry (file+headline org-default-notes-file "Tasks")
+        "* TODO %? %^G\n :LOGBOOK:\n %U\n :END:\n %i\n")
+       ("n" "Note" entry (file+headline org-default-notes-file "Notes")
+        "* %? %^G\n :LOGBOOK:\n %U\n :END:\n  %i\n"))))
   (doom-themes-treemacs-config)
   (global-company-mode)
   (global-git-commit-mode t)
@@ -534,8 +548,8 @@ before packages are loaded."
    web-mode-code-indent-offset 2
    web-mode-attr-indent-offset 2)
   (dtrt-indent-global-mode t)
+  (org-wild-notifier-mode t)
   (add-hook 'prog-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
-
 
   (defun eslint-fix-buffer ()
     (interactive)
@@ -552,15 +566,13 @@ before packages are loaded."
 
   (defun forward-to-argsep ()
     (interactive)
-    (while
-        (progn
-          (comment-forward most-positive-fixnum)
-          (looking-at "[^,)]"))
+    (while(progn
+            (comment-forward most-positive-fixnum)
+            (looking-at "[^,)]"))
       (condition-case ex (forward-sexp)
         ('scan-error (if (looking-at "[<>]")
                          (forward-char)
-                       (throw ex nil))))
-      )
+                       (throw ex nil)))))
     (point)
     )
 
@@ -571,79 +583,59 @@ before packages are loaded."
       (while (looking-at "<")
         (up-list -1))
       (forward-char)
-      (while
-          (progn
-            (setq cur (point))
-            (> pt (forward-to-argsep))
-            )
-        (forward-char)
-        )
-      (goto-char cur))
-    )
+      (while (progn
+               (setq cur (point))
+               (> pt (forward-to-argsep))
+               )
+        (forward-char))
+      (goto-char cur)))
 
   (defun transpose-args-direction (is_forward)
     (interactive)
-    (let*
-        (
-         (pt-original (point))
-         (pt
-          (progn
-            (when (not is_forward)
-              (goto-char (- (backward-to-argsep) 1))
-              (unless (looking-at ",")
-                (goto-char pt-original)
-                (user-error "Argument separator not found"))
+    (let* (
+           (pt-original (point))
+           (pt (progn
+                 (when (not is_forward)
+                   (goto-char (- (backward-to-argsep) 1))
+                   (unless (looking-at ",")
+                     (goto-char pt-original)
+                     (user-error "Argument separator not found")))
+                 (point))
+               )
+           (b (backward-to-argsep))
+           (sep (progn (goto-char pt)
+                       (forward-to-argsep)))
+           (e (progn
+                (unless (looking-at ",")
+                  (goto-char pt-original)
+                  (user-error "Argument separator not found"))
+                (forward-char)
+                (forward-to-argsep))
               )
-            (point))
-          )
-         (b (backward-to-argsep))
-         (sep
-          (progn (goto-char pt)
-                 (forward-to-argsep)))
-         (e
-          (progn
-            (unless (looking-at ",")
-              (goto-char pt-original)
-              (user-error "Argument separator not found"))
-            (forward-char)
-            (forward-to-argsep))
-          )
-         (ws-first
-          (buffer-substring-no-properties
-           (goto-char b)
-           (progn (skip-chars-forward "[[:space:]\n]")
-                  (point))
+           (ws-first
+            (buffer-substring-no-properties
+             (goto-char b)
+             (progn (skip-chars-forward "[[:space:]\n]")
+                    (point))))
+           (first (buffer-substring-no-properties (point) sep))
+           (ws-second (buffer-substring-no-properties
+                       (goto-char (1+ sep))
+                       (progn (skip-chars-forward "[[:space:]\n]")
+                              (point))
+                       )
+                      )
+           (second (buffer-substring-no-properties (point) e))
            )
-          )
-         (first (buffer-substring-no-properties (point) sep))
-         (ws-second
-          (buffer-substring-no-properties
-           (goto-char (1+ sep))
-           (progn (skip-chars-forward "[[:space:]\n]")
-                  (point))
-           )
-          )
-         (second (buffer-substring-no-properties (point) e))
-         )
       (delete-region b e)
       (insert ws-first second "," ws-second first)
 
       (if is_forward
-          (goto-char
-           (+
-            (- (point) (length first))
-            (- pt b (length ws-first))
-            )
-           )
-        (goto-char
-         (+
-          b (length ws-first)
-          (- pt-original (+ pt 1 (length ws-second)))
-          )
-         )
-        )
-      )
-    )
+          (goto-char (+ (- (point) (length first))
+                        (- pt b (length ws-first))
+                        ))
+        (goto-char (+
+                    b (length ws-first)
+                    (- pt-original (+ pt 1 (length ws-second))))))))
 
   (define-key evil-normal-state-map (kbd "<M-up>") 'move-text-line-up)
   (define-key evil-normal-state-map (kbd "<M-down>") 'move-text-line-down)
@@ -656,9 +648,16 @@ before packages are loaded."
   (define-key evil-normal-state-map (kbd "g=") (kbd "mmgg=G'm"))
   (define-key evil-normal-state-map (kbd "g>") '(lambda () (interactive) (transpose-args-direction t)))
   (define-key evil-normal-state-map (kbd "g<") '(lambda () (interactive) (transpose-args-direction nil)))
+  (define-key evil-insert-state-map (kbd "C-v") (kbd "C-r +"))
 
-  (spacemacs/declare-prefix "ee" "eslint")
-  (spacemacs/set-leader-keys  "eef" 'eslint-fix-buffer)
+  (spacemacs/declare-prefix-for-mode 'js2-mode "ee" "eslint")
+  (spacemacs/declare-prefix-for-mode 'typescript-mode "ee" "eslint")
+  (spacemacs/declare-prefix-for-mode 'rjsx-mode "ee" "eslint")
+  (spacemacs/declare-prefix-for-mode 'typescript-tsx-mode "ee" "eslint")
+  (spacemacs/set-leader-keys-for-major-mode 'js2-mode  "eef" 'eslint-fix-buffer)
+  (spacemacs/set-leader-keys-for-major-mode 'rjsx-mode  "eef" 'eslint-fix-buffer)
+  (spacemacs/set-leader-keys-for-major-mode 'typescript-mode  "eef" 'eslint-fix-buffer)
+  (spacemacs/set-leader-keys-for-major-mode 'typescript-tsx-mode  "eef" 'eslint-fix-buffer)
   (smart-tabs-add-language-support jsx rjsx-mode-hook
     ((js2-jsx-indent-line . js2-basic-offset)))
   (smart-tabs-add-language-support ts typescript-mode-hook
@@ -702,7 +701,7 @@ This function is called at the very end of Spacemacs initialization."
    '(importmagic-python-interpreter "/home/anirudh/miniconda3/bin/python3")
    '(package-selected-packages
      (quote
-      (visual-fill-column treemacs-persp org-category-capture window-purpose imenu-list parent-mode iedit paredit anzu general pony-mode xcscope ein polymode anaphora websocket smart-tabs-mode dtrt-indent tide typescript-mode rjsx-mode ox-gfm pandoc-mode ox-pandoc github-search github-clone gist gh marshal logito forge ghub closql emacsql-sqlite emacsql treepy ggtags counsel-gtags wgrep treemacs-magit smex smeargle orgit magit-svn magit-gitflow magit-popup ivy-yasnippet ivy-xref ivy-rtags ivy-purpose ivy-hydra gitignore-templates gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter flyspell-correct-ivy evil-magit magit transient git-commit with-editor diff-hl counsel-projectile counsel-css counsel swiper ivy browse-at-remote flymake conda dap-mode bui tree-mode company-tabnine unicode-escape names autothemer auto-complete evil-mc zenburn-theme zen-and-art-theme yasnippet-snippets yapfify ws-butler writeroom-mode winum white-sand-theme which-key web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme treemacs-projectile treemacs-evil toxi-theme toc-org tao-theme tangotango-theme tango-plus-theme tango-2-theme tagedit symon symbol-overlay sunny-day-theme sublime-themes subatomic256-theme subatomic-theme string-inflection spaceline-all-the-icons spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme slim-mode seti-theme scss-mode sass-mode reverse-theme restart-emacs request rebecca-theme rainbow-delimiters railscasts-theme pytest pyenv-mode py-isort purple-haze-theme pug-mode professional-theme prettier-js popwin planet-theme pippel pipenv pip-requirements phoenix-dark-pink-theme phoenix-dark-mono-theme persp-mode pcre2el password-generator paradox overseer organic-green-theme org-projectile org-present org-pomodoro org-mime org-download org-cliplink org-bullets org-brain open-junk-file omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme nodejs-repl noctilux-theme naquadah-theme nameless mvn mustang-theme move-text monokai-theme monochrome-theme molokai-theme moe-theme mmm-mode minimal-theme meghanada maven-test-mode material-theme markdown-toc majapahit-theme madhat2r-theme macrostep lush-theme lorem-ipsum livid-mode live-py-mode link-hint light-soap-theme kaolin-themes json-navigator json-mode js2-refactor js-doc jbeans-theme jazz-theme ir-black-theme inkpot-theme indent-guide importmagic impatient-mode hybrid-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation heroku-theme hemisu-theme helm-xref helm-themes helm-swoop helm-rtags helm-pydoc helm-purpose helm-projectile helm-org-rifle helm-org helm-mode-manager helm-make helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag hc-zenburn-theme gruvbox-theme gruber-darker-theme groovy-mode groovy-imports grandshell-theme gradle-mode gotham-theme google-translate google-c-style golden-ratio gnuplot gh-md gandalf-theme fuzzy font-lock+ flycheck-package flx-ido flatui-theme flatland-theme fill-column-indicator farmhouse-theme fancy-battery eziam-theme eyebrowse expand-region exotica-theme evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-line evil-surround evil-org evil-numbers evil-nerd-commenter evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu espresso-theme emmet-mode elisp-slime-nav editorconfig dumb-jump dracula-theme dotenv-mode doom-themes doom-modeline django-theme disaster diminish devdocs define-word darktooth-theme darkokai-theme darkmine-theme darkburn-theme dakrone-theme cython-mode cyberpunk-theme csv-mode cpp-auto-include company-web company-tern company-statistics company-rtags company-c-headers company-anaconda column-enforce-mode color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized clues-theme clean-aindent-mode clang-format chocolate-theme cherry-blossom-theme centered-cursor-mode busybee-theme bubbleberry-theme blacken birds-of-paradise-plus-theme badwolf-theme auto-yasnippet auto-highlight-symbol auto-compile apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes aggressive-indent afternoon-theme ace-link ace-jump-helm-line ac-ispell)))
+      (org-wild-notifier org-alert yaml-mode utop tuareg caml seeing-is-believing rvm ruby-tools ruby-test-mode ruby-refactor ruby-hash-syntax rubocopfmt rubocop rspec-mode robe rbenv rake ocp-indent ob-elixir minitest flycheck-ocaml merlin flycheck-mix flycheck-credo emojify emoji-cheat-sheet-plus helm helm-core dune company-emoji chruby bundler inf-ruby alchemist elixir-mode visual-fill-column treemacs-persp org-category-capture window-purpose imenu-list parent-mode iedit paredit anzu general pony-mode xcscope ein polymode anaphora websocket smart-tabs-mode dtrt-indent tide typescript-mode rjsx-mode ox-gfm pandoc-mode ox-pandoc github-search github-clone gist gh marshal logito forge ghub closql emacsql-sqlite emacsql treepy ggtags counsel-gtags wgrep treemacs-magit smex smeargle orgit magit-svn magit-gitflow magit-popup ivy-yasnippet ivy-xref ivy-rtags ivy-purpose ivy-hydra gitignore-templates gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter flyspell-correct-ivy evil-magit magit transient git-commit with-editor diff-hl counsel-projectile counsel-css counsel swiper ivy browse-at-remote flymake conda dap-mode bui tree-mode company-tabnine unicode-escape names autothemer auto-complete evil-mc zenburn-theme zen-and-art-theme yasnippet-snippets yapfify ws-butler writeroom-mode winum white-sand-theme which-key web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme treemacs-projectile treemacs-evil toxi-theme toc-org tao-theme tangotango-theme tango-plus-theme tango-2-theme tagedit symon symbol-overlay sunny-day-theme sublime-themes subatomic256-theme subatomic-theme string-inflection spaceline-all-the-icons spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme slim-mode seti-theme scss-mode sass-mode reverse-theme restart-emacs request rebecca-theme rainbow-delimiters railscasts-theme pytest pyenv-mode py-isort purple-haze-theme pug-mode professional-theme prettier-js popwin planet-theme pippel pipenv pip-requirements phoenix-dark-pink-theme phoenix-dark-mono-theme persp-mode pcre2el password-generator paradox overseer organic-green-theme org-projectile org-present org-pomodoro org-mime org-download org-cliplink org-bullets org-brain open-junk-file omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme nodejs-repl noctilux-theme naquadah-theme nameless mvn mustang-theme move-text monokai-theme monochrome-theme molokai-theme moe-theme mmm-mode minimal-theme meghanada maven-test-mode material-theme markdown-toc majapahit-theme madhat2r-theme macrostep lush-theme lorem-ipsum livid-mode live-py-mode link-hint light-soap-theme kaolin-themes json-navigator json-mode js2-refactor js-doc jbeans-theme jazz-theme ir-black-theme inkpot-theme indent-guide importmagic impatient-mode hybrid-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation heroku-theme hemisu-theme helm-xref helm-themes helm-swoop helm-rtags helm-pydoc helm-purpose helm-projectile helm-org-rifle helm-org helm-mode-manager helm-make helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag hc-zenburn-theme gruvbox-theme gruber-darker-theme groovy-mode groovy-imports grandshell-theme gradle-mode gotham-theme google-translate google-c-style golden-ratio gnuplot gh-md gandalf-theme fuzzy font-lock+ flycheck-package flx-ido flatui-theme flatland-theme fill-column-indicator farmhouse-theme fancy-battery eziam-theme eyebrowse expand-region exotica-theme evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-line evil-surround evil-org evil-numbers evil-nerd-commenter evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu espresso-theme emmet-mode elisp-slime-nav editorconfig dumb-jump dracula-theme dotenv-mode doom-themes doom-modeline django-theme disaster diminish devdocs define-word darktooth-theme darkokai-theme darkmine-theme darkburn-theme dakrone-theme cython-mode cyberpunk-theme csv-mode cpp-auto-include company-web company-tern company-statistics company-rtags company-c-headers company-anaconda column-enforce-mode color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized clues-theme clean-aindent-mode clang-format chocolate-theme cherry-blossom-theme centered-cursor-mode busybee-theme bubbleberry-theme blacken birds-of-paradise-plus-theme badwolf-theme auto-yasnippet auto-highlight-symbol auto-compile apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes aggressive-indent afternoon-theme ace-link ace-jump-helm-line ac-ispell)))
    '(pdf-view-midnight-colors (quote ("#b2b2b2" . "#292b2e"))))
   (custom-set-faces
    ;; custom-set-faces was added by Custom.

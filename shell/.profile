@@ -43,8 +43,9 @@ export JAVA_HOME=/usr/lib/jvm/jdk-13.0.1+9
 export PATH=$PATH:$JAVA_HOME/bin
 export PATH=$HOME/.cargo/bin:$PATH
 export PATH=$PATH:/opt/lampp/bin
-export PATH=$PATH:/home/anirudh/Applications
-export PATH=$PATH:/home/anirudh/.scripts
+export PATH=$PATH:$HOME/Applications
+export PATH=$PATH:$HOME/.scripts
+export PATH=$PATH:$HOME/.emacs.d/bin
 export fpath=($fpath /home/anirudh/.local/share/zsh/completions)
 
 # Settings
@@ -53,8 +54,8 @@ export FZF_DEFAULT_OPTS="--height 40% --reverse"
 export FZF_CTRL_T_OPTS="--preview '(bat --style=numbers --color=always {} || cat {}) 2> /dev/null | head -500' --preview-window right:60% --select-1"
 export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:hidden:wrap --bind '?:toggle-preview'"
 export FZF_ALT_C_COMMAND="fda"
-export FZF_DEFAULT_COMMAND="fdfind --type f --hidden --follow --exclude .git --exclude node_modules --exclude .venv"
-export FZF_CTRL_T_COMMAND="fdfind --hidden --follow --exclude .git --exclude node_modules --exclude .venv"
+export FZF_DEFAULT_COMMAND="fdfind --type f --hidden --follow --exclude .git --exclude node_modules --exclude .venv --exclude .ccls-cache"
+export FZF_CTRL_T_COMMAND="fdfind --hidden --follow --exclude .git --exclude node_modules --exclude .venv --exclude .ccls-cache"
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 export SUDO_ASKPASS="$HOME/.scripts/dmenupass"
 export PIPENV_VENV_IN_PROJECT=1

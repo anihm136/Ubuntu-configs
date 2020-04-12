@@ -23,13 +23,14 @@ super + l
   lipsum
 
 XF86AudioNext
-  cmus-remote -n
+  music playnext
 
 XF86AudioPrev
+  music playprev
   cmus-remote -r
 
 XF86AudioPlay
-  cmus-remote -u
+  music playpause
 
 XF86AudioRaiseVolume
   vol up

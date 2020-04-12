@@ -58,7 +58,8 @@
 (setq-default tab-width 2
               standard-indent 2)
 
-(setq lsp-auto-guess-root nil)
+(setq lsp-auto-guess-root nil
+      +evil-want-o/O-to-continue-comments nil)
 
 (add-hook! 'prog-mode-hook (lambda ()(modify-syntax-entry ?_ "w")))
 
@@ -67,8 +68,6 @@
   (setq evil-escape-key-sequence "fd"
         evil-escape-delay 0.3))
 
-(use-package! org-wild-notifier
-  :commands org-wild-notifier-mode)
 
 (use-package! aggressive-indent
   :config
@@ -112,6 +111,9 @@
   (with-eval-after-load 'flycheck
     (flycheck-add-mode 'proselint 'org-mode)))
 
+(use-package! org-wild-notifier
+  :commands org-wild-notifier-mode)
+
 (use-package! projectile
   :defer t
   :config
@@ -122,7 +124,6 @@
   :defer t
   :config
   (setq magit-repository-directories '(("~/Projects/" . 2))
-        git-magit-status-fullscreen t
         global-git-commit-mode t))
 
 (use-package! company
@@ -144,6 +145,8 @@
 
 (after! (rjsx-mode js2-mode)
   (setq js-indent-level standard-indent))
+
+(add-hook! 'after-init-hook 'global-subword-mode)
 
 (map! :localleader
       (:after rjsx-mode

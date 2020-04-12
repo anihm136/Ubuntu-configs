@@ -30,7 +30,7 @@ Plug 'wellle/targets.vim'
 Plug 'captbaritone/better-indent-support-for-php-with-html', {'for': 'php'}
 Plug 'elzr/vim-json', {'for': 'json'}
 Plug 'kevinoid/vim-jsonc', {'for': 'jsonc'}
-Plug 'mattn/emmet-vim', {'for': ['html', 'js', 'ts', 'jsx', 'tsx', 'php', 'htmljinja', 'htmldjango']}
+Plug 'mattn/emmet-vim', {'for': ['html', 'javascript', 'typescript', 'javascriptreact', 'typescriptreact', 'php', 'htmljinja', 'htmldjango']}
 Plug 'mitsuhiko/vim-jinja', {'for': ['html','htmldjango']}
 Plug 'tweekmonster/django-plus.vim', {'for': ['python','html','htmldjango']}
 call plug#end()

@@ -69,7 +69,7 @@ autocmd custom_commands FileType help,plugins,fugitive nnoremap <silent><buffer>
 autocmd custom_commands FileType qf nnoremap <silent> <C-n> :cn<cr> | nnoremap <silent> <C-p> :cp<cr> | nnoremap <silent> q :call helpers#closeQf()<cr>
 autocmd custom_commands BufWritePost init.vim,plugins.vim,genconfig.vim nested silent source %
 autocmd custom_commands FileType netrw setl bufhidden=wipe | nnoremap <silent><buffer> q :bw<cr>
-autocmd custom_commands BufReadPost * DetectIndent
+autocmd custom_commands BufReadPost,BufNewFile * DetectIndent
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
@@ -186,7 +186,7 @@ map 0 ^
 map Y y$
 
 autocmd custom_commands BufWritePre *.txt,*.js,*.jsx,*.ts,*.tsx,*.py,*.wiki,*.sh,*.coffee,*.c,*.cpp,*.java call helpers#cleanWhitespace()
-autocmd custom_commands BufRead,BufNewFile,VimEnter *.js,*.jsx,*.ts,*.tsx,*.py,*.coffee,*.c,*.cpp,*.java if !exists("b:cscope") | call helpers#toggleTags() | endif
+autocmd custom_commands BufRead,BufNewFile,VimEnter *.js,*.jsx,*.ts,*.tsx,*.py,*.coffee,*.c,*.cpp,*.java if !exists("b:idxmode") | call helpers#toggleTags() | endif
 
 " Press * to search for the term under the cursor or a visual selection and
 " then press a key below to replace all instances of it in the current file.

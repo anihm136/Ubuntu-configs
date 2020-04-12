@@ -24,15 +24,15 @@ if !exists("g:started_by_firenvim")
 
 	inoremap <silent><expr> <TAB>
 				\ pumvisible() ? "\<C-n>" :
-				\ <SID>check_back_space() ? "\<TAB>": 
+				\ <SID>check_back_space() ? "\<TAB>":
 				\ coc#refresh()
 
 	inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
-	imap <C-z> <Plug>(coc-snippets-expand-jump)
+	imap <C-j> <Plug>(coc-snippets-expand-jump)
 	nnoremap <silent> <leader>k :call <SID>show_documentation()<CR>
 	nnoremap <silent> <F7> :call CocAction('format')<cr>
 	nnoremap <silent> <F8> :CocCommand prettier.formatFile<cr>
-	nmap <silent> [g <Plug>(coc-diagnostic-prev)
-	nmap <silent> ]g <Plug>(coc-diagnostic-next)
+	nmap <silent> [e <Plug>(coc-diagnostic-prev)
+	nmap <silent> ]e <Plug>(coc-diagnostic-next)
 endif

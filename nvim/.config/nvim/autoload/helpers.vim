@@ -98,12 +98,10 @@ fun! helpers#toggleTags() abort
     silent exe 'cs kill -1'
     if !filereadable("cscope.out")
       call inputsave()
-      let l:op = input('Cscope file not found. Create?([s]tarscope|[p]ycscope|[c]scope|[n]one) ')
+      let l:op = input('Cscope file not found. Create?([p]ycscope|[c]scope|[n]one) ')
       call inputrestore()
       redraw
-      if op == "s"
-        silent call system('starscope -e cscope')
-      elseif op == "c"
+      if op == "c"
       try
         silent call system("git ls-files > cscope.files && cscope -bcqR && rm -f cscope.files")
       catch

@@ -46,7 +46,6 @@
 --regex-typescript=/^[ \t]*import[ \t]+([a-zA-Z0-9_]+)/\1/I,imports/
 
 --exclude=.git
---exclude=@.gitignore
 --exclude=.svn
 --exclude=.hg
 --exclude=min
@@ -74,5 +73,13 @@
 --exclude=tests
 --exclude=.tmp
 --exclude=*bundle.*
+--exclude=GTAGS
+--exclude=GPATH
+--exclude=GRTAGS
+--exclude=.vim
+--exclude=dist
+--exclude=build
+--exclude=.vscode
+--exclude=*~*
 
 --sort=no

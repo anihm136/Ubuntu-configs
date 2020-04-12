@@ -5,6 +5,5 @@
 	ui = auto
 	uix = auto
 [core]
-	excludesfile = /home/anirudh/.config/git/.gitignore
 [github]
 	user = anihm136@gmail.com

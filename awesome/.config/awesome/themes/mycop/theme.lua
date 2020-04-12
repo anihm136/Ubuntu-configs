@@ -18,7 +18,7 @@ local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
 
 local theme                                     = {}
 theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/mycop"
-theme.wallpaper                                 = theme.dir .. "/wall.jpg"
+theme.wallpaper                                 = theme.dir .. "/wall.png"
 theme.font                                      = "System San Francisco Display Regular 13"
 theme.taglist_font                              = "Heavy Data Nerd Font 13"
 theme.fg_normal                                 = "#BBBBBB"
@@ -103,13 +103,13 @@ mytextclock.font = 'Heavy Data Nerd Font 13'
 
 -- Calendar
 theme.cal = lain.widget.cal({
-    attach_to = { mytextclock },
-    notification_preset = {
-        font = "Noto Mono 9",
-        fg   = theme.fg_normal,
-        bg   = theme.bg_normal
-    }
-})
+        attach_to = { mytextclock },
+        notification_preset = {
+            font = "Noto Mono 9",
+            fg   = theme.fg_normal,
+            bg   = theme.bg_normal
+        }
+    })
 
 -- Mail IMAP check
 --[[ commented because it needs to be set before use
@@ -238,7 +238,7 @@ local volicon = wibox.widget.imagebox(theme.vol)
 theme.volume = lain.widget.alsabar {
     width = dpi(59), border_width = 0, ticks = true, ticks_size = dpi(6),
     notification_preset = { font = theme.font },
---    togglechannel = "IEC958,3",
+    --    togglechannel = "IEC958,3",
     settings = function()
         if volume_now.status == "off" then
             volicon:set_image(theme.vol_mute)
@@ -259,33 +259,33 @@ theme.volume = lain.widget.alsabar {
 theme.volume.tooltip.wibox.fg = theme.fg_normal
 
 theme.volume.bar:buttons(my_table.join (
-          awful.button({}, 1, function()
+        awful.button({}, 1, function()
             os.execute(string.format("%s -e alsamixer", awful.terminal))
-          end),
-          awful.button({}, 2, function()
+        end),
+        awful.button({}, 2, function()
             os.execute(string.format("%s set %s 100%%", theme.volume.cmd, theme.volume.channel))
             theme.volume.update()
-          end),
-          awful.button({}, 3, function()
+        end),
+        awful.button({}, 3, function()
             os.execute(string.format("%s set %s toggle", theme.volume.cmd, theme.volume.togglechannel or theme.volume.channel))
             theme.volume.update()
-          end),
-          awful.button({}, 4, function()
+        end),
+        awful.button({}, 4, function()
             os.execute(string.format("%s set %s 1%%+", theme.volume.cmd, theme.volume.channel))
             theme.volume.update()
-          end),
-          awful.button({}, 5, function()
+        end),
+        awful.button({}, 5, function()
             os.execute(string.format("%s set %s 1%%-", theme.volume.cmd, theme.volume.channel))
             theme.volume.update()
-          end)
-))
+        end)
+    ))
 local volumebg = wibox.container.background(theme.volume.bar, "#474747", gears.shape.rectangle)
 local volumewidget = wibox.container.margin(volumebg, dpi(2), dpi(7), dpi(4), dpi(4))
 
 -- Weather
 theme.weather = lain.widget.weather({
-    city_id = 1277333, -- placeholder (London)
-})
+        city_id = 1277333, -- placeholder (London)
+    })
 
 --WIFI Widgets
 -- net_wireless = net_widgets.wireless({interface="wlx503eaab1ecf9",onclick="~/Scripts/./wifi_script.sh"})
@@ -297,41 +297,84 @@ theme.weather = lain.widget.weather({
 --})
 
 -- Cmus widget
-local cmus, cmus_timer = awful.widget.watch(
-    "cmus-remote -Q",
+-- local cmus, cmus_timer = awful.widget.watch(
+--     "cmus-remote -Q",
+--     1,
+--     function(widget, stdout)
+--         local cmus_now = {
+--             state   = "N/A",
+--             artist  = "N/A",
+--             title   = "N/A",
+--             album   = "N/A"
+--         }
+--
+--         for w in string.gmatch(stdout, "(.-)tag") do
+--             a, b = w:match("(%w+) (.*)\n")
+--             cmus_now[a] = b
+--         end
+--
+--         if string.match(stdout, "tag title (.+)\n") then
+--             cmus_now["title"] = string.match(stdout, "tag title (.+)\n")
+--         end
+--         if string.match(stdout, "status (%a+)\n") then
+--             cmus_now["state"] = string.match(stdout, "status (%a+)")
+--         end
+--
+--         -- customize here
+--         local wistring = " " .. cmus_now.artist .. " - " .. cmus_now.title .. " "
+--         if cmus_now.state == "paused" then
+--             wistring = " ⏸ " .. wistring
+--         elseif cmus_now.state == "playing" then
+--             wistring = " ▶ " .. wistring
+--         elseif cmus_now.state == "stopped" then
+--             wistring = " ■ " .. wistring
+--         end
+--         widget:set_text(wistring)
+--     end
+--     )
+
+-- MOCP widget
+local mocp, mocp_timer = awful.widget.watch(
+    "mocp -i",
     1,
     function(widget, stdout)
-        local cmus_now = {
+        local mocp_now = {
             state   = "N/A",
             artist  = "N/A",
             title   = "N/A",
-            album   = "N/A"
+            album   = "N/A",
+            cur_time = "`",
+            tot_time = "`"
         }
 
-        for w in string.gmatch(stdout, "(.-)tag") do
-            a, b = w:match("(%w+) (.*)\n")
-            cmus_now[a] = b
+        if string.match(stdout, "SongTitle: ([%w%p ]+)\n") then
+            mocp_now["title"] = string.match(stdout, "SongTitle: ([%w%p ]+)\n")
         end
-       
-        if string.match(stdout, "tag title (.+)\n") then
-          cmus_now["title"] = string.match(stdout, "tag title (.+)\n")
+        if string.match(stdout, "State: (%a+)") then
+            mocp_now["state"] = string.match(stdout, "State: (%a+)")
         end
-        if string.match(stdout, "status (%a+)\n") then
-          cmus_now["state"] = string.match(stdout, "status (%a+)")
+        if string.match(stdout, "Artist: ([%w%p ]+)\n") then
+            mocp_now["artist"] = string.match(stdout, "Artist: ([%w%p ]+)")
+        end
+        if string.match(stdout, "CurrentTime: ([%d%p ]+)\n") then
+            mocp_now["cur_time"] = string.match(stdout, "CurrentTime: ([%d%p ]+)")
+        end
+        if string.match(stdout, "TotalTime: ([%d%p ]+)\n") then
+            mocp_now["tot_time"] = string.match(stdout, "TotalTime: ([%d%p ]+)")
         end
 
         -- customize here
-        local wistring = " " .. cmus_now.artist .. " - " .. cmus_now.title .. " " 
-        if cmus_now.state == "paused" then
-          wistring = " ⏸ " .. wistring
-        elseif cmus_now.state == "playing" then
-          wistring = " ▶ " .. wistring
-        elseif cmus_now.state == "stopped" then
-          wistring = " ■ " .. wistring
+        local wistring = " " .. mocp_now.artist .. " - " .. mocp_now.title .. "   " .. mocp_now.cur_time .. " [" .. mocp_now.tot_time .. "] "
+        if mocp_now.state == "PAUSE" then
+            wistring = " ⏸ " .. wistring
+        elseif mocp_now.state == "PLAY" then
+            wistring = " ▶ " .. wistring
+        elseif mocp_now.state == "STOP" then
+            wistring = " ■ " .. wistring
         end
         widget:set_text(wistring)
     end
-)
+    )
 
 -- Separators
 local first     = wibox.widget.textbox(markup.font("Misc Tamsyn 3", " "))
@@ -369,56 +412,56 @@ function theme.at_screen_connect(s)
     -- We need one layoutbox per screen.
     s.mylayoutbox = awful.widget.layoutbox(s)
     s.mylayoutbox:buttons(my_table.join(
-                           awful.button({}, 1, function () awful.layout.inc( 1) end),
-                           awful.button({}, 2, function () awful.layout.set( awful.layout.layouts[1] ) end),
-                           awful.button({}, 3, function () awful.layout.inc(-1) end),
-                           awful.button({}, 4, function () awful.layout.inc( 1) end),
-                           awful.button({}, 5, function () awful.layout.inc(-1) end)))
+            awful.button({}, 1, function () awful.layout.inc( 1) end),
+            awful.button({}, 2, function () awful.layout.set( awful.layout.layouts[1] ) end),
+            awful.button({}, 3, function () awful.layout.inc(-1) end),
+            awful.button({}, 4, function () awful.layout.inc( 1) end),
+        awful.button({}, 5, function () awful.layout.inc(-1) end)))
 
-    -- Create a taglist widget
-    s.mytaglist = awful.widget.taglist(s, awful.widget.taglist.filter.all, awful.util.taglist_buttons)
+        -- Create a taglist widget
+        s.mytaglist = awful.widget.taglist(s, awful.widget.taglist.filter.all, awful.util.taglist_buttons)
 
-    -- Create a tasklist widget
-    s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, awful.util.tasklist_buttons)
+        -- Create a tasklist widget
+        s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, awful.util.tasklist_buttons)
 
-    -- Create the wibox
-    s.mywibox = awful.wibar({ position = "top", screen = s, height = dpi(24), bg = theme.bg_normal, fg = theme.fg_normal })
+        -- Create the wibox
+        s.mywibox = awful.wibar({ position = "top", screen = s, height = dpi(24), bg = theme.bg_normal, fg = theme.fg_normal })
 
-    -- Add widgets to the wibox
-    s.mywibox:setup {
-        layout = wibox.layout.align.horizontal,
-        { -- Left widgets
-            layout = wibox.layout.fixed.horizontal,
-            small_spr,
-            s.mylayoutbox,
-            first,
-            bar_spr,
-            s.mytaglist,
-            first,
-            s.mypromptbox,
-        },
-        s.mytasklist, -- Middle widget
-        { -- Right widgets
-            layout = wibox.layout.fixed.horizontal,
-            wibox.widget.systray(),
-            -- net_wireless,
-            bar_spr,
-            cmus,
-            --theme.mail.widget,
---            mpdicon,
---            theme.mpd.widget,
---            baticon,
---            batwidget,
-            bar_spr,
-            fsicon,
-            fswidget,
-            bar_spr,
-            volicon,
-            volumewidget,
-            bar_spr,
-            mytextclock,
-        },
-    }
-end
+        -- Add widgets to the wibox
+        s.mywibox:setup {
+            layout = wibox.layout.align.horizontal,
+            { -- Left widgets
+                layout = wibox.layout.fixed.horizontal,
+                small_spr,
+                s.mylayoutbox,
+                first,
+                bar_spr,
+                s.mytaglist,
+                first,
+                s.mypromptbox,
+            },
+            s.mytasklist, -- Middle widget
+            { -- Right widgets
+                layout = wibox.layout.fixed.horizontal,
+                wibox.widget.systray(),
+                -- net_wireless,
+                bar_spr,
+                mocp,
+                --theme.mail.widget,
+                --            mpdicon,
+                --            theme.mpd.widget,
+                --            baticon,
+                --            batwidget,
+                bar_spr,
+                fsicon,
+                fswidget,
+                bar_spr,
+                volicon,
+                volumewidget,
+                bar_spr,
+                mytextclock,
+            },
+        }
+    end
 
-return theme
+    return theme

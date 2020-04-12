@@ -56,6 +56,10 @@
 "   disable the filetype specific maps
 " g:ctab_disable_tab_maps
 "   disable the (original) tab mappings
+let g:ctab_filetype_maps = 0
+let g:ctab_disable_checkalign = 1
+let g:ctab_enable_default_filetype_maps = 0
+let g:ctab_disable_tab_maps = 1
 
 if  exists('g:ctab_filetype_maps') && g:ctab_filetype_maps
   let s:buff_map=' <buffer> '

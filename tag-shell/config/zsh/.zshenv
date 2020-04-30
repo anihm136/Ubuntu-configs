@@ -1,0 +1,1 @@
+/home/anirudh/.profile

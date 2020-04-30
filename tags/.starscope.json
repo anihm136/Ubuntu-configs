@@ -1,4 +1,0 @@
-{
-  "excludes": ["node_modules", "build", "locale", ".git", "dist",
-    "*.(jpe?g|png)"]
-}

@@ -1,7 +1,0 @@
-let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =5
-let g:netrw_dirhist_1='/etc/lightdm/lightdm.conf.d'
-let g:netrw_dirhist_2='/home/anirudh/Desktop'
-let g:netrw_dirhist_3='/home/anirudh/.vim/plugged/coc.nvim/autoload/coc'
-let g:netrw_dirhist_4='/home/anirudh/.vim/plugged/vim-pasta'
-let g:netrw_dirhist_5='/home/anirudh/.vim'

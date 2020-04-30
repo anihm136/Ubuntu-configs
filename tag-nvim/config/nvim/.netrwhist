@@ -1,0 +1,12 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhistcnt =4
+let g:netrw_dirhist_4='/home/anirudh/Desktop/newnew/src/Components'
+let g:netrw_dirhist_3='/home/anirudh/Desktop/newnew/src'
+let g:netrw_dirhist_2='/home/anirudh/Desktop/newnew/src/Components'
+let g:netrw_dirhist_1='/home/anirudh/Projects/webfw_project_meteor/imports/startup/client'
+let g:netrw_dirhist_0='/home/anirudh/Projects/webfw_project_meteor/imports/startup/server'
+let g:netrw_dirhist_9='/home/anirudh/Projects/webfw_project_meteor/imports'
+let g:netrw_dirhist_8='/home/anirudh/Projects/webfw_project_meteor'
+let g:netrw_dirhist_7='/home/anirudh/Projects/webfw_project_meteor/collections'
+let g:netrw_dirhist_6='/home/anirudh/Projects/webfw_project_meteor/imports/startup'
+let g:netrw_dirhist_5='/home/anirudh/Projects/webfw_project_meteor/imports'

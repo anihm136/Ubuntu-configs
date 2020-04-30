@@ -1,0 +1,3 @@
+EXCLUDES="startpage"
+TAGS="alacritty awesome doom git nvim rofi shell sxhkd tags tmux vifm zathura"
+SYMLINK_DIRS="zsh"

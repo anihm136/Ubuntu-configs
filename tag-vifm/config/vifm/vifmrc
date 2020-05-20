@@ -89,7 +89,7 @@ fileviewer <image/*>
 filextype *.svg inkscape %f 2>/dev/null &!
 filextype *.xcf gimp %f 2>/dev/null &!
 
-filextype *.pdf, *.epub zathura %c %i &!
+filextype *.pdf,*.epub zathura %c %i &!
 fileviewer *.pdf
   \ vifmimg pdf %px %py %pw %ph %c
   \ %pc

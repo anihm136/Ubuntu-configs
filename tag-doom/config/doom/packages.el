@@ -56,3 +56,5 @@
 (package! aggressive-indent)
 (package! importmagic)
 (package! org-projectile)
+(package! ggtags)
+(package! counsel-gtags)

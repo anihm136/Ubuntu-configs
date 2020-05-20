@@ -1,18 +1,24 @@
 {
-  "suggest.snippetIndicator": "<s>",
+  "list.interactiveDebounceTime": 300,
+  "suggest.snippetIndicator": "\u26a1 ",
   "suggest.maxCompleteItemCount": 8,
   "suggest.maxPreviewWidth": 50,
-  "coc.preferences.formatOnSaveFiletypes": ["html", "css", "javascript",
-    "Markdown", "vim"],
   "signature.enable": true,
   "signature.target": "float",
-  "diagnostic.checkCurrentLine": true,
   "codeLens.enable": true,
+  "diagnostic.virtualText": true,
+  "diagnostic.errorSign": "◉",
+  "diagnostic.warningSign": "⚠",
+  "suggest.completionItemKindLabels": {
+    "module": " ",
+    "function": "ﬦ",
+    "variable": "ﮂ"
+  },
+  "diagnostic.checkCurrentLine": true,
   "python.linting.pylintEnabled": true,
   "python.linting.flake8Enabled": true,
   "python.formatting.provider": "black",
-  "diagnostic.warningSign": "⚠",
-  "diagnostic.errorSign": "❌",
+  "python.jediEnabled": false,
   "suggest.removeDuplicateItems": true,
   "coc.source.omni.filetypes": ["verilog", "Markdown", "vim", "octave"]
 }

@@ -35,8 +35,11 @@ nnoremap <silent> <Leader>0 :call helpers#toggleNetrw()<cr>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 so ~/.config/nvim/plugins.vim
 
+let g:python3_host_prog = "/usr/bin/python3"
+
 set splitbelow splitright
 set confirm
+set termguicolors
 set mouse=a
 set cscopeprg=cscope
 set history=500
@@ -51,9 +54,8 @@ set inccommand=nosplit
 set scrolloff=10
 
 nnoremap <silent> <leader>w :wa!<cr>
-nnoremap <silent> <leader>W :w !sudo tee %<cr>
+nnoremap <silent> <leader>W execute 'silent! write !sudo tee "%" >/dev/null' <bar> edit!
 vnoremap <silent> y ygv<Esc>
-nnoremap <silent> g= mmgg=G'm:RetabIndent!<cr>
 inoremap <silent> fd <Esc>
 inoremap <silent> <C-v> <C-r>+
 nnoremap <silent><leader>r :set wrap!<cr>
@@ -111,11 +113,9 @@ set foldcolumn=1
 
 syntax enable
 
-try
-	colorscheme onedark
-catch
-endtry
-set background=dark
+command! -nargs=? -complete=customlist,CompleteColors SetColorscheme call helpers#setColorscheme(<f-args>)
+nnoremap <silent><F12> :SetColorscheme<cr>
+silent exec "SetColorscheme"
 
 set encoding=utf8
 set ffs=unix,dos,mac
@@ -138,12 +138,6 @@ set tw=500
 set autoindent
 set nowrap
 
-""""""""""""""""""""""""""""""
-" => Visual mode related
-""""""""""""""""""""""""""""""
-
-vnoremap <silent> * :<C-u>call helpers#visualSelection('', '')<CR>/<C-R>=@/<CR><CR>
-vnoremap <silent> # :<C-u>call helpers#visualSelection('', '')<CR>?<C-R>=@/<CR><CR>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Moving around, tabs, windows and buffers
@@ -151,10 +145,13 @@ vnoremap <silent> # :<C-u>call helpers#visualSelection('', '')<CR>?<C-R>=@/<CR><
 
 nnoremap <silent> <leader><leader> :noh<cr>
 
-nmap j gj
-nmap k gk
-nmap <Down> gj
-nmap <Up> gk
+map j gj
+map k gk
+map <Down> gj
+map <Up> gk
+vnoremap <S-Up> <Up>
+vnoremap <S-Down> <Down>
+vnoremap p "_dP
 
 noremap <silent><leader>bd :call helpers#bufcloseCloseIt()<cr>
 noremap <leader>ba :bufdo bd<cr>
@@ -186,7 +183,7 @@ map 0 ^
 map Y y$
 
 autocmd custom_commands BufWritePre *.txt,*.js,*.jsx,*.ts,*.tsx,*.py,*.wiki,*.sh,*.coffee,*.c,*.cpp,*.java call helpers#cleanWhitespace()
-autocmd custom_commands BufRead,BufNewFile,VimEnter *.js,*.jsx,*.ts,*.tsx,*.py,*.coffee,*.c,*.cpp,*.java if !exists("b:idxmode") | call helpers#toggleTags() | endif
+autocmd custom_commands BufRead,BufNewFile,VimEnter *.js,*.jsx,*.ts,*.tsx,*.py,*.coffee,*.c,*.cpp,*.java silent call ProgFunc()
 
 " Press * to search for the term under the cursor or a visual selection and
 " then press a key below to replace all instances of it in the current file.
@@ -239,3 +236,20 @@ map <leader>s? z=
 noremap <leader>q :e ~/buffer<cr>
 noremap <leader>x :e ~/buffer.md<cr>
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Helper functions
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+function! CompleteColors(ArgLead, CommandLine, CursorColumn) abort
+	let l:comp = extend(getcompletion('', 'color'), ['dark', 'light'])
+	let l:pat = '^'.a:ArgLead
+	call filter(l:comp, {idx,val -> val =~ l:pat})
+	return l:comp
+endfunction
+
+function! ProgFunc() abort
+	silent exec "RainbowParentheses"
+	if !exists("b:idxmode")
+		call helpers#toggleTags()
+	endif
+endfunction

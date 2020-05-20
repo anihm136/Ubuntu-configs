@@ -2,6 +2,7 @@
 cf() {
   local file
 
+
   file="$(locate -Ai -0 $@ | grep -z -vE '~$' | fzf --read0 -0 -1)"
 
   if [[ -n $file ]]
@@ -65,13 +66,29 @@ e() {
   fi
 }
 
-v() {
-  if [[ -n "$@" ]]; then
-    vim $@
-  else
-    local files=$(fzf -m)
-    local args=(`echo $files`)
-    [ -n "$args" ] && vim "${args[@]}"
-  fi
+mcp() {
+  local fro=()
+  local to=()
+  local flags=()
+  local dest=false
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      -d)
+        dest=true
+        ;;
+      -*)
+        flags+=("$1")
+        ;;
+      *)
+        if [[ $dest == true ]]; then
+          to+=("${(q)1}")
+        else
+          fro+=($1)
+        fi
+        ;;
+    esac
+    shift
+  done
+  echo $to | xargs -n 1 cp $flags $fro
 }
 

@@ -15,6 +15,7 @@ function! helpers#bufcloseCloseIt() abort
   if buflisted(l:currentBufNum)
     execute("bdelete! ".l:currentBufNum)
   endif
+  silent redrawtabline 
 endfunction
 
 function! s:CmdLine(str) abort
@@ -102,11 +103,11 @@ fun! helpers#toggleTags() abort
       call inputrestore()
       redraw
       if op == "c"
-      try
-        silent call system("git ls-files > cscope.files && cscope -bcqR && rm -f cscope.files")
-      catch
-        silent call system("cscope -bcqR")
-      endtry
+        try
+          silent call system("git ls-files > cscope.files && cscope -bcqR && rm -f cscope.files")
+        catch
+          silent call system("cscope -bcqR")
+        endtry
       elseif op == "p"
         try
           silent call system("git ls-files > cscope.files && pycscope -i cscope.files && rm -f cscope.files")
@@ -177,4 +178,64 @@ function! helpers#closeQf() abort
   unmap <C-p>
   unmap q
 endfunction
+
+function! helpers#setColorscheme(...) abort
+  if a:0 == 0
+    let l:color = 'dark'
+  else
+    let l:color = a:1
+  endif
+
+  let l:dark_themes = {
+        \ "space_vim_theme" : "violet",
+        \ "spacegray" : "minimalist",
+        \ "neodark" : "neodark",
+        \ "new-railscasts" : "base16_railscasts",
+        \ "tender" : "tender",
+        \ "solarized8_flat" : "solarized_flood",
+        \ "gruvbox" : "gruvbox",
+        \ "monokai_pro" : "monokai_pro"
+        \ }
+
+  let l:light_themes = {
+        \ "space_vim_theme" : "violet",
+        \ "solarized8_flat" : "solarized",
+        \ "gruvbox" : "gruvbox"
+        \ }
+
+  let l:all_themes = extend(copy(dark_themes), light_themes)
+
+  let l:select = [dark_themes, light_themes]
+
+  if l:color == 'dark' || l:color == 'light'
+    let g:neodark#background = '#202020'
+    let g:spacegray_low_contrast = 1
+    let g:solarized_italics = 0
+    let g:solarized_extra_hi_groups = 1
+    silent exec "set background=" . l:color
+    let l:dct = select[(l:color == 'dark' ? 0 : 1)]
+    let l:themeIndex = str2nr(matchstr(reltimestr(reltime()), '\v\.@<=\d+')[1:]) % len(keys(l:dct))
+    let l:colorscheme = keys(dct)[themeIndex]
+    silent exec "colorscheme " . l:colorscheme
+    echo l:colorscheme
+    try
+      silent exec "AirlineTheme " . l:dct[l:colorscheme]
+    catch
+      let g:airline_theme = l:dct[l:colorscheme]
+    endtry
+  else
+    silent exec "colorscheme " . l:color
+    echo l:color
+    try
+      silent exec "AirlineTheme " . l:all_themes[l:color]
+    catch
+      let g:airline_theme = l:all_themes[l:colorscheme]
+    endtry
+  endif
+  highlight LineNr ctermbg=NONE guibg=NONE
+  highlight SignColumn ctermbg=NONE guibg=NONE
+  highlight FoldColumn ctermbg=NONE guibg=NONE
+  highlight Comment gui=italic
+endfunction
+
 

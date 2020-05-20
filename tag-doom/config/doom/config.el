@@ -29,8 +29,7 @@
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type 'relative)
 
-(setq org-directory "~/Documents/org/GTD/"
-      ani/org-directory "~/Documents/org/")
+(setq org-directory "~/Documents/org/GTD/")
 
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
@@ -51,12 +50,14 @@
 
 
 ;; Eager loading
+(defconst ani/org-directory "~/Documents/org/"
+  "The default directory for org files.")
 
 (define-derived-mode tsx-mode web-mode "TSX mode")
 (add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-mode))
 (after! flycheck
   (flycheck-add-mode 'javascript-eslint 'tsx-mode)
-  (add-hook 'tsx-mode-hook (lambda () (flycheck-add-next-checker 'lsp 'javascript-eslint))))
+  (add-hook! '(tsx-mode-local-vars-hook js2-mode-local-vars-hook typescript-mode-local-vars-hook) (lambda () (flycheck-add-next-checker 'lsp 'javascript-eslint))))
 
 (setq-default tab-width 2
               standard-indent 2)
@@ -92,6 +93,7 @@
 
 (use-package! org
   :defer t
+  :init
   :config
   (defun ani/org-archive-done-tasks ()
     (interactive)
@@ -100,7 +102,6 @@
   (map! :map org-mode-map
         :n "C-c A" 'ani/org-archive-done-tasks)
   (setq org-default-notes-file (concat org-directory "inbox.org")
-        org-agenda-files (list org-directory)
         org-refile-use-outline-path 'file
         org-outline-path-complete-in-steps nil
         org-refile-allow-creating-parent-nodes 'confirm
@@ -116,21 +117,23 @@
                 ("[X]" :foreground "red" :weight bold)))
         org-capture-templates
         '(("t" "Todo" entry (file+headline org-default-notes-file "Tasks")
-           "* TODO %? %^G\n U\n %i\n")
+           "* TODO %? %^G\n %i\n")
           ("c" "org-protocol-capture" entry (file+headline org-default-notes-file "Reading")
            "* TODO [[%:link][%:description]]\n\n %i"
            :immediate-finish t)
-          ("k" "Cliplink capture task" entry (file "")
+          ("k" "Cliplink capture task" entry (file+headline org-default-notes-file "Reading")
            "* TODO %(org-cliplink-capture)\n" :immediate-finish t))
         )
   (with-eval-after-load 'flycheck
     (flycheck-add-mode 'proselint 'org-mode))
   (org-wild-notifier-mode))
 
+
 (use-package! org-agenda
   :defer t
   :config
-  (setq org-columns-default-format "%40ITEM(Task) %Effort(EE){:} %CLOCKSUM(Time Spent) %SCHEDULED(Scheduled) %DEADLINE(Deadline)"))
+  (setq org-agenda-files (directory-files-recursively org-directory "\.org$")
+        org-columns-default-format "%40ITEM(Task) %Effort(EE){:} %CLOCKSUM(Time Spent) %SCHEDULED(Scheduled) %DEADLINE(Deadline)"))
 
 (use-package org-projectile
   :after org
@@ -158,7 +161,8 @@
                                                ((org-agenda-overriding-header "In Progress")
                                                 (org-agenda-files (append (list (concat org-directory "someday.org")
                                                                                 (concat org-directory "projects.org")
-                                                                                (concat org-directory "next.org"))
+                                                                                (concat org-directory "next.org")
+                                                                                (concat org-directory "inbox.org"))
                                                                           (org-projectile-todo-files)))
                                                 ))
                                          (todo "TODO"
@@ -170,8 +174,9 @@
                                                ((org-agenda-overriding-header "One-off Tasks")
                                                 (org-agenda-files (list (concat org-directory "next.org")))
                                                 (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))))))))
-    (setq org-agenda-files (append org-agenda-files (org-projectile-todo-files))
-          org-refile-targets '((org-agenda-files)))))
+    (setq org-agenda-files (nconc org-agenda-files (org-projectile-todo-files)))
+    (setq org-refile-targets '((nil :maxlevel . 3)
+                               (org-agenda-files :maxlevel . 3)))))
 
 (use-package! org-protocol
   :defer t
@@ -213,12 +218,25 @@
                             company-preview-if-just-one-frontend
                             company-echo-metadata-frontend)))
 
+(use-package! counsel-gtags
+  :init
+  (map! :leader :prefix "c" (:prefix ("g" . "gtags")
+                             :desc "Goto definition" "d" 'counsel-gtags-find-definition
+                             :desc "Find symbol" "s" 'counsel-gtags-dwim
+                             :desc "Goto reference" "r" 'counsel-gtags-find-reference))
+  :commands (counsel-gtags-dwim counsel-gtags-find-definition counsel-gtags-find-reference))
+
 (use-package! python
   :defer t
-  :hook (python-mode . importmagic-mode))
+  :hook (python-mode . importmagic-mode)
+  :config
+  (with-eval-after-load 'lsp-ui
+    (flycheck-add-next-checker 'lsp 'python-flake8)))
 
 (after! (:any js rjsx-mode typescript-mode tsx-mode)
-  (setq flycheck-javascript-eslint-executable "eslint_d"))
+  (setq flycheck-javascript-eslint-executable "eslint_d")
+  (with-eval-after-load 'lsp-ui
+    (flycheck-add-next-checker 'lsp 'javascript-eslint)))
 
 (after! typescript-mode
   (setq typescript-indent-level standard-indent))
@@ -236,17 +254,17 @@
 
 (map! :localleader
       (:after rjsx-mode
-        :map rjsx-mode-map
-        "f" 'eslintd-fix)
+       :map rjsx-mode-map
+       "f" 'eslintd-fix)
       (:after js2-mode
-        :map js2-mode-map
-        "f" 'eslintd-fix)
+       :map js2-mode-map
+       "f" 'eslintd-fix)
       (:after typescript-mode
-        :map typescript-mode-map
-        "f" 'eslintd-fix)
+       :map typescript-mode-map
+       "f" 'eslintd-fix)
       (:after tsx-mode
-        :map tsx-mode-map
-        "f" 'eslintd-fix))
+       :map tsx-mode-map
+       "f" 'eslintd-fix))
 
 ;; Utility functions and keymaps
 
@@ -322,13 +340,16 @@
   (interactive)
   (global-subword-mode t)
   (setq lsp-auto-guess-root nil
+        lsp-signature-doc-lines 1
         +evil-want-o/O-to-continue-comments nil
         alert-default-style 'libnotify))
 
 (add-hook! 'after-init-hook (map! :nv "C-a" 'evil-numbers/inc-at-pt
                                   :nv "C-S-x" 'evil-numbers/dec-at-pt
+                                  :v "g C-a" 'evil-numbers/inc-at-pt-incremental
+                                  :v "g C-S-x" 'evil-numbers/dec-at-pt-incremental
                                   :v "R" 'evil-multiedit-match-all
-                                  :n "g=" "mmgg=G'm"
+                                  :o "A" ":normal! mmggVG'm"
                                   :n "g>" '(lambda () (interactive) (transpose-args-direction t))
                                   :n "g<" '(lambda () (interactive) (transpose-args-direction nil))
                                   :n "]p" 'unimpaired-paste-below

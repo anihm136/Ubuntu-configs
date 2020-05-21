@@ -20,11 +20,6 @@
 ;; font string. You generally only need these two:
 (setq doom-font (font-spec :family "mononoki Nerd Font" :size 16))
 
-;; There are two ways to load a theme. Both assume the theme is installed and
-;; available. You can either set `doom-theme' or manually load a theme with the
-;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-one)
-
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type 'relative)
@@ -49,9 +44,18 @@
 ;; they are implemented.
 
 
-;; Eager loading
+;; Utility variables
+
 (defconst ani/org-directory "~/Documents/org/"
   "The default directory for org files.")
+
+(defvar dark-themes '(doom-one doom-gruvbox doom-solarized-dark doom-spacegrey doom-monokai-pro doom-moonlight doom-tomorrow-night)
+  "Set of dark themes to choose from.")
+
+(defvar light-themes '(doom-gruvbox-light doom-solarized-light)
+  "Set of light themes to choose from.")
+
+;; Eager loading
 
 (define-derived-mode tsx-mode web-mode "TSX mode")
 (add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-mode))
@@ -337,21 +341,31 @@
   (evil-paste-after 1 evil-this-register))
 
 (defun +ani/my-init-func ()
-  (interactive)
+  "Function to run on init"
   (global-subword-mode t)
+  (ani/set-random-theme "dark")
   (setq lsp-auto-guess-root nil
         lsp-signature-doc-lines 1
         +evil-want-o/O-to-continue-comments nil
-        alert-default-style 'libnotify))
+        alert-default-style 'libnotify)
+  (map! :nv "C-a" 'evil-numbers/inc-at-pt
+        :nv "C-S-x" 'evil-numbers/dec-at-pt
+        :v "g C-a" 'evil-numbers/inc-at-pt-incremental
+        :v "g C-S-x" 'evil-numbers/dec-at-pt-incremental
+        :v "R" 'evil-multiedit-match-all
+        :n "g>" '(lambda () (interactive) (transpose-args-direction t))
+        :n "g<" '(lambda () (interactive) (transpose-args-direction nil))
+        :n "]p" 'unimpaired-paste-below
+        :n "[p" 'unimpaired-paste-above
+        :i "C-v" "C-r +"
+        :n "<f12>" 'ani/set-random-theme))
 
-(add-hook! 'after-init-hook (map! :nv "C-a" 'evil-numbers/inc-at-pt
-                                  :nv "C-S-x" 'evil-numbers/dec-at-pt
-                                  :v "g C-a" 'evil-numbers/inc-at-pt-incremental
-                                  :v "g C-S-x" 'evil-numbers/dec-at-pt-incremental
-                                  :v "R" 'evil-multiedit-match-all
-                                  :o "A" ":normal! mmggVG'm"
-                                  :n "g>" '(lambda () (interactive) (transpose-args-direction t))
-                                  :n "g<" '(lambda () (interactive) (transpose-args-direction nil))
-                                  :n "]p" 'unimpaired-paste-below
-                                  :n "[p" 'unimpaired-paste-above
-                                  :i "C-v" "C-r +"))
+
+(defun ani/set-random-theme (&optional color)
+  "Set the theme to a random dark theme. If COLOR is provided (one of dark and light), set a random theme of that COLOR."
+  (interactive)
+  (random t)
+  (if (string-equal (or color "dark") "light")
+      (funcall 'load-theme (nth (random (length light-themes)) light-themes) t)
+    (funcall 'load-theme (nth (random (length dark-themes)) dark-themes) t))
+  (princ custom-enabled-themes))

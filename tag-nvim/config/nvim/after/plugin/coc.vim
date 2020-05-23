@@ -1,5 +1,5 @@
 if !exists("g:started_by_firenvim")
-	let g:coc_global_extensions = ['coc-python', 'coc-tsserver', 'coc-eslint', 'coc-prettier', 'coc-css', 'coc-html', 'coc-phpls', 'coc-json',  'coc-sh', 'coc-syntax', 'coc-highlight', 'coc-snippets', 'coc-omni']
+	let g:coc_global_extensions = ['coc-python', 'coc-tsserver', 'coc-eslint', 'coc-prettier', 'coc-css', 'coc-html', 'coc-phpls', 'coc-json',  'coc-syntax', 'coc-highlight', 'coc-snippets', 'coc-omni']
 
 	function! s:check_back_space() abort
 		let col = col('.') - 1

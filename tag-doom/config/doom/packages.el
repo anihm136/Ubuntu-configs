@@ -58,3 +58,4 @@
 (package! org-projectile)
 (package! ggtags)
 (package! counsel-gtags)
+(package! jupyter)

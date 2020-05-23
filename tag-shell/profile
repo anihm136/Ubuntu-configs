@@ -35,6 +35,7 @@ export XDG_DATA_HOME="$HOME/.local/share"
 export LESSHISTFILE="."
 export GTK2_RC_FILES="$XDG_CONFIG_HOME/gtk-2.0/.gtkrc-2.0"
 export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
+export ADOTDIR="$XDG_CONFIG_HOME/antigen"
 export GNUPGHOME="$XDG_DATA_HOME/gnupg"
 export RIPGREP_CONFIG_PATH="$XDG_CONFIG_HOME/ripgrep/.ripgreprc"
 

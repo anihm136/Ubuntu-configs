@@ -4,27 +4,34 @@ Plug 'airblade/vim-rooter'
 Plug 'tyru/caw.vim'
 Plug 'anihm136/context_filetype.vim'
 Plug 'anihm136/vim-unimpaired'
-Plug 'chaoren/vim-wordmotion'
 Plug 'fedorenchik/gtags.vim'
 Plug 'honza/vim-snippets'
 Plug 'junegunn/vim-easy-align'
-Plug 'kana/vim-operator-user'
-Plug 'kana/vim-textobj-user'
-Plug 'kana/vim-textobj-entire'
-Plug 'kana/vim-textobj-indent'
 Plug 'mhinz/vim-grepper'
-Plug 'neoclide/coc.nvim'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'roryokane/detectindent'
 Plug 'sheerun/vim-polyglot'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
-Plug 'wellle/targets.vim'
+Plug 'tpope/vim-eunuch'
+Plug 'christoomey/vim-tmux-navigator'
+Plug 'thinca/vim-quickrun'
+Plug 'Shougo/vimproc.vim', {'do' : 'make'}
+Plug 'wmvanvliet/jupyter-vim'
+" Language-specific
 Plug 'captbaritone/better-indent-support-for-php-with-html', {'for': 'php'}
 Plug 'elzr/vim-json', {'for': 'json'}
 Plug 'kevinoid/vim-jsonc', {'for': 'jsonc'}
 Plug 'mattn/emmet-vim', {'for': ['html', 'javascript', 'typescript', 'javascriptreact', 'typescriptreact', 'php', 'htmljinja', 'htmldjango']}
 Plug 'mitsuhiko/vim-jinja', {'for': ['html','htmldjango']}
 Plug 'tweekmonster/django-plus.vim', {'for': ['python','html','htmldjango']}
+" Textobjects
+Plug 'kana/vim-operator-user'
+Plug 'kana/vim-textobj-user'
+Plug 'kana/vim-textobj-entire'
+Plug 'kana/vim-textobj-indent'
+Plug 'wellle/targets.vim'
+Plug 'chaoren/vim-wordmotion'
 " UI
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
@@ -66,3 +73,7 @@ omap ag <Plug>(textobj-entire-a)
 xmap ig <Plug>(textobj-entire-i)
 omap ig <Plug>(textobj-entire-i)
 
+" Jupyter
+let g:jupyter_mapkeys = 0
+nmap <buffer><silent> gR <Plug>JupyterRunTextObj
+vmap <buffer><silent> gR <Plug>JupyterRunVisual

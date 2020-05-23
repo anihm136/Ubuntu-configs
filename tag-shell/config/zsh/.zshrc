@@ -12,38 +12,7 @@ fi
 
 # Linux antigen file
 source $HOME/.scripts/antigen.zsh
-
-# Use ohmyzsh
-antigen use oh-my-zsh
-
-# Load the theme and configure
-antigen theme romkatv/powerlevel10k
-
-# Add plugins
-antigen bundles <<EOBUNDLES
-  command-not-found
-  pip
-  pipenv
-  python
-  node
-  npm
-  cargo
-  rust
-  django
-  esc/conda-zsh-completion
-  git
-  common-aliases
-  web-search
-  sudo
-  vi-mode
-  z
-  zdharma/fast-syntax-highlighting
-  zsh-users/zsh-completions
-  zsh-users/zsh-history-substring-search ./zsh-history-substring-search.zsh
-EOBUNDLES
-
-# Tell Antigen that you're done.
-antigen apply
+antigen init $ADOTDIR/.antigenrc
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
@@ -61,6 +30,9 @@ unset __conda_setup
 # <<< conda initialize <<<
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+eval "$(pipenv --completion)"
+eval "$(direnv hook zsh)"
 
 zle-keymap-select () {
 VI_KEYMAP=$KEYMAP

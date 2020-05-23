@@ -12,7 +12,7 @@
 "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-let mapleader = " "
+let g:mapleader = "\<Space>"
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Plugin mappings
@@ -33,8 +33,6 @@ nnoremap <silent> <Leader>0 :call helpers#toggleNetrw()<cr>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => General
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-so ~/.config/nvim/plugins.vim
-
 let g:python3_host_prog = "/usr/bin/python3"
 
 set splitbelow splitright
@@ -45,13 +43,17 @@ set cscopeprg=cscope
 set history=500
 filetype plugin indent on
 set autoread
+set noshowcmd
 set noshowmode
+set undofile
+set nrformats-=octal
 set clipboard=unnamedplus
 set completeopt=menuone,preview
 set signcolumn=yes
 set updatetime=200
 set inccommand=nosplit
 set scrolloff=10
+set listchars=tab:>-,trail:-,extends:>,precedes:<,nbsp:%,eol:$
 
 nnoremap <silent> <leader>w :wa!<cr>
 nnoremap <silent> <leader>W execute 'silent! write !sudo tee "%" >/dev/null' <bar> edit!
@@ -101,11 +103,13 @@ set lazyredraw
 set magic
 set showmatch
 set mat=2
+set nostartofline
 set noerrorbells
 set novisualbell
-set t_vb=
 set tm=500
-set foldcolumn=1
+set diffopt&
+				\ diffopt+=vertical
+				\ diffopt+=hiddenoff
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Colors and Fonts
@@ -151,7 +155,6 @@ map <Down> gj
 map <Up> gk
 vnoremap <S-Up> <Up>
 vnoremap <S-Down> <Down>
-vnoremap p "_dP
 
 noremap <silent><leader>bd :call helpers#bufcloseCloseIt()<cr>
 noremap <leader>ba :bufdo bd<cr>
@@ -181,6 +184,8 @@ autocmd custom_commands BufReadPost * if line("'\"") > 1 && line("'\"") <= line(
 
 map 0 ^
 map Y y$
+nnoremap x "_x
+xnoremap <expr> p printf('pgv"%sygv<esc>', v:register)
 
 autocmd custom_commands BufWritePre *.txt,*.js,*.jsx,*.ts,*.tsx,*.py,*.wiki,*.sh,*.coffee,*.c,*.cpp,*.java call helpers#cleanWhitespace()
 autocmd custom_commands BufRead,BufNewFile,VimEnter *.js,*.jsx,*.ts,*.tsx,*.py,*.coffee,*.c,*.cpp,*.java silent call ProgFunc()

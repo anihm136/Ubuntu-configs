@@ -92,3 +92,30 @@ mcp() {
   echo $to | xargs -n 1 cp $flags $fro
 }
 
+mmv() {
+  local fro=()
+  local to=()
+  local flags=()
+  local dest=false
+  local args=$@
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      -d)
+        dest=true
+        ;;
+      -*)
+        flags+=("$1")
+        ;;
+      *)
+        if [[ $dest == true ]]; then
+          to+=("${(q)1}")
+        else
+          fro+=($1)
+        fi
+        ;;
+    esac
+    shift
+  done
+  mcp $args && rm $fro
+}
+

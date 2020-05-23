@@ -234,8 +234,13 @@
   :defer t
   :hook (python-mode . importmagic-mode)
   :config
+  (after! lsp-python-ms
+    (set-lsp-priority! 'mspyls 1))
   (with-eval-after-load 'lsp-ui
     (flycheck-add-next-checker 'lsp 'python-flake8)))
+
+(use-package! jupyter
+  :after python)
 
 (after! (:any js rjsx-mode typescript-mode tsx-mode)
   (setq flycheck-javascript-eslint-executable "eslint_d")
@@ -346,6 +351,7 @@
   (ani/set-random-theme "dark")
   (setq lsp-auto-guess-root nil
         lsp-signature-doc-lines 1
+        company-idle-delay nil
         +evil-want-o/O-to-continue-comments nil
         alert-default-style 'libnotify)
   (map! :nv "C-a" 'evil-numbers/inc-at-pt

@@ -1,0 +1,7 @@
+use_conda() {
+  CONDA_SH=$HOME/miniconda3/etc/profile.d/conda.sh
+  source "$CONDA_SH"
+  # Activate and capture environment variables
+  echo "Activating conda environment"
+  conda activate $1
+}

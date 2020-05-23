@@ -3,22 +3,24 @@
   "suggest.snippetIndicator": "\u26a1 ",
   "suggest.maxCompleteItemCount": 8,
   "suggest.maxPreviewWidth": 50,
+  "suggest.autoTrigger": "none",
+  "suggest.enablePreview": true,
+  "suggest.completionItemKindLabels": {
+    "module": " ",
+    "function": "ﬦ",
+    "variable": "ﮂ"
+  },
   "signature.enable": true,
   "signature.target": "float",
   "codeLens.enable": true,
   "diagnostic.virtualText": true,
   "diagnostic.errorSign": "◉",
   "diagnostic.warningSign": "⚠",
-  "suggest.completionItemKindLabels": {
-    "module": " ",
-    "function": "ﬦ",
-    "variable": "ﮂ"
-  },
   "diagnostic.checkCurrentLine": true,
   "python.linting.pylintEnabled": true,
   "python.linting.flake8Enabled": true,
   "python.formatting.provider": "black",
   "python.jediEnabled": false,
   "suggest.removeDuplicateItems": true,
-  "coc.source.omni.filetypes": ["verilog", "Markdown", "vim", "octave"]
+  "coc.source.omni.filetypes": ["verilog", "Markdown", "vim", "octave", "sh", "zsh"]
 }

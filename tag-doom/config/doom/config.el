@@ -380,6 +380,8 @@
         alert-default-style 'libnotify)
   (map! :nv "C-a" 'evil-numbers/inc-at-pt
         :nv "C-S-x" 'evil-numbers/dec-at-pt
+        :nv "M-j" 'drag-stuff-down
+        :nv "M-k" 'drag-stuff-up
         :v "g C-a" 'evil-numbers/inc-at-pt-incremental
         :v "g C-S-x" 'evil-numbers/dec-at-pt-incremental
         :v "R" 'evil-multiedit-match-all

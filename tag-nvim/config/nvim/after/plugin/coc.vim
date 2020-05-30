@@ -1,5 +1,6 @@
 if !exists("g:started_by_firenvim")
 	let g:coc_global_extensions = ['coc-python', 'coc-tsserver', 'coc-eslint', 'coc-prettier', 'coc-css', 'coc-html', 'coc-phpls', 'coc-json',  'coc-syntax', 'coc-highlight', 'coc-snippets', 'coc-omni']
+	let g:coc_snippet_next = '<tab>'
 
 	function! s:check_back_space() abort
 		let col = col('.') - 1
@@ -25,14 +26,15 @@ if !exists("g:started_by_firenvim")
 	endif
 
 	inoremap <silent><expr> <TAB>
-				\ pumvisible() ? "\<C-n>" :
-				\ <SID>check_back_space() ? "\<TAB>":
-				\ coc#refresh()
+	  \ pumvisible() ? "\<C-n>" :
+	  \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+	  \ <SID>check_back_space() ? "\<TAB>" :
+	  \ ""
 
 	inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+	inoremap <silent><expr> <c-space> coc#refresh()
 
-	imap <C-j> <Plug>(coc-snippets-expand-jump)
-	nnoremap <silent> <leader>k :call <SID>show_documentation()<CR>
+	nnoremap <silent> K :call <SID>show_documentation()<CR>
 	nnoremap <silent> <F7> :call CocAction('format')<cr>
 	nnoremap <silent> <F8> :CocCommand prettier.formatFile<cr>
 	nmap <silent> [e <Plug>(coc-diagnostic-prev)

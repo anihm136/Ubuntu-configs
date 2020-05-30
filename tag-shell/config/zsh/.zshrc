@@ -33,6 +33,9 @@ unset __conda_setup
 
 eval "$(pipenv --completion)"
 eval "$(direnv hook zsh)"
+if (command -v perl && command -v cpanm) >/dev/null 2>&1; then
+  test -d "$HOME/perl5/lib/perl5" && eval $(perl -I "$HOME/perl5/lib/perl5" -Mlocal::lib)
+fi
 
 zle-keymap-select () {
 VI_KEYMAP=$KEYMAP

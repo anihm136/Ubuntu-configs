@@ -7,17 +7,17 @@ Plug 'anihm136/vim-unimpaired'
 Plug 'fedorenchik/gtags.vim'
 Plug 'honza/vim-snippets'
 Plug 'junegunn/vim-easy-align'
-Plug 'mhinz/vim-grepper'
+Plug 'mhinz/vim-grepper', {'on': 'Grepper'}
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'roryokane/detectindent'
 Plug 'sheerun/vim-polyglot'
-Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-fugitive', {'on': ['Git','G','GPush']}
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-eunuch'
 Plug 'christoomey/vim-tmux-navigator'
-Plug 'thinca/vim-quickrun'
+Plug 'thinca/vim-quickrun', {'on': 'QuickRun'}
 Plug 'Shougo/vimproc.vim', {'do' : 'make'}
-Plug 'wmvanvliet/jupyter-vim'
+Plug 'justinmk/vim-dirvish'
 " Language-specific
 Plug 'captbaritone/better-indent-support-for-php-with-html', {'for': 'php'}
 Plug 'elzr/vim-json', {'for': 'json'}
@@ -25,6 +25,8 @@ Plug 'kevinoid/vim-jsonc', {'for': 'jsonc'}
 Plug 'mattn/emmet-vim', {'for': ['html', 'javascript', 'typescript', 'javascriptreact', 'typescriptreact', 'php', 'htmljinja', 'htmldjango']}
 Plug 'mitsuhiko/vim-jinja', {'for': ['html','htmldjango']}
 Plug 'tweekmonster/django-plus.vim', {'for': ['python','html','htmldjango']}
+Plug 'wmvanvliet/jupyter-vim', {'for': 'python'}
+Plug 'tpope/vim-dadbod'
 " Textobjects
 Plug 'kana/vim-operator-user'
 Plug 'kana/vim-textobj-user'
@@ -35,11 +37,9 @@ Plug 'chaoren/vim-wordmotion'
 " UI
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'junegunn/goyo.vim'
+Plug 'junegunn/goyo.vim', {'on': 'Goyo'}
 Plug 'junegunn/rainbow_parentheses.vim'
 Plug 'ryanoasis/vim-devicons'
-Plug 'Yggdroot/indentLine'
-Plug 'lukas-reineke/indent-blankline.nvim'
 " UX
 Plug 'jiangmiao/auto-pairs'
 Plug 'liuchengxu/vim-clap'
@@ -77,3 +77,4 @@ omap ig <Plug>(textobj-entire-i)
 let g:jupyter_mapkeys = 0
 nmap <buffer><silent> gR <Plug>JupyterRunTextObj
 vmap <buffer><silent> gR <Plug>JupyterRunVisual
+

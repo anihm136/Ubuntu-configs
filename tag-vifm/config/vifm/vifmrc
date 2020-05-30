@@ -18,7 +18,7 @@ set timefmt=%m/%d\ %H:%M
 set confirm-=delete
 set rulerformat=
 set trash
-colorscheme zenburn_1
+colorscheme nord
 
 map <C-h> <C-w>h
 map <C-j> <C-w>j

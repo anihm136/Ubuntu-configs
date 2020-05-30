@@ -18,7 +18,7 @@
 ;;
 ;; They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
 ;; font string. You generally only need these two:
-(setq doom-font (font-spec :family "mononoki Nerd Font" :size 16))
+(setq doom-font (font-spec :family "Iosevka Nerd Font Mono" :size 16))
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -49,7 +49,7 @@
 (defconst ani/org-directory "~/Documents/org/"
   "The default directory for org files.")
 
-(defvar dark-themes '(doom-one doom-gruvbox doom-solarized-dark doom-spacegrey doom-monokai-pro doom-moonlight doom-tomorrow-night)
+(defvar dark-themes '(doom-one doom-gruvbox doom-solarized-dark doom-spacegrey doom-monokai-pro doom-sourcerer doom-tomorrow-night)
   "Set of dark themes to choose from.")
 
 (defvar light-themes '(doom-gruvbox-light doom-solarized-light)
@@ -115,7 +115,8 @@
         org-log-into-drawer t
         org-log-state-notes-insert-after-drawers nil
         org-todo-keywords
-        '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)" "[X](x@)"))
+        '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+          (sequence "WAITING(w)" "|" "[X](x@)"))
         org-todo-keyword-faces
         (quote (("NEXT" :foreground "orange" :weight bold)
                 ("[X]" :foreground "red" :weight bold)))
@@ -205,7 +206,7 @@
 
 (use-package! projectile
   :defer t
-  :config
+  :init
   (setq projectile-project-search-path '("~/Projects" "~/Projects/forks"))
   )
 
@@ -240,7 +241,22 @@
     (flycheck-add-next-checker 'lsp 'python-flake8)))
 
 (use-package! jupyter
-  :after python)
+  :defer t
+  :after python
+  :commands (jupyter-run-repl jupyter-connect-repl)
+  :config
+  (map! :map python-mode-map
+        :leader :prefix "c" :desc "Send to kernel" "s" 'jupyter-eval-line-or-region))
+
+(use-package ivy-posframe
+  :defer t
+  :config
+  (setq ivy-posframe-display-functions-alist '((counsel-M-x . nil)
+                                               (swiper . nil)
+                                               (t . ivy-posframe-display-at-frame-center))
+        ivy-posframe-height-alist '((t . 12))
+        ivy-posframe-parameters '((internal-border-width . 6))
+        ivy-posframe-width 100))
 
 (after! (:any js rjsx-mode typescript-mode tsx-mode)
   (setq flycheck-javascript-eslint-executable "eslint_d")
@@ -349,9 +365,17 @@
   "Function to run on init"
   (global-subword-mode t)
   (ani/set-random-theme "dark")
-  (setq lsp-auto-guess-root nil
-        lsp-signature-doc-lines 1
+  (setq-default uniquify-buffer-name-style 'forward
+                window-combination-resize t
+                x-stretch-cursor t)
+  (setq lsp-signature-doc-lines 1
         company-idle-delay nil
+        evil-want-fine-undo t
+        inhibit-compacting-font-caches t
+        evil-vsplit-window-right t
+        evil-split-window-below t
+        doom-fallback-buffer-name "► Doom"
+        +doom-dashboard-name "► Doom"
         +evil-want-o/O-to-continue-comments nil
         alert-default-style 'libnotify)
   (map! :nv "C-a" 'evil-numbers/inc-at-pt
@@ -359,11 +383,15 @@
         :v "g C-a" 'evil-numbers/inc-at-pt-incremental
         :v "g C-S-x" 'evil-numbers/dec-at-pt-incremental
         :v "R" 'evil-multiedit-match-all
+        :desc "Transpose function argument to the right"
         :n "g>" '(lambda () (interactive) (transpose-args-direction t))
+        :desc "Transpose function argument to the left"
         :n "g<" '(lambda () (interactive) (transpose-args-direction nil))
         :n "]p" 'unimpaired-paste-below
         :n "[p" 'unimpaired-paste-above
+        :desc "Paste in insert mode"
         :i "C-v" "C-r +"
+        :desc "Set random theme"
         :n "<f12>" 'ani/set-random-theme))
 
 
@@ -374,4 +402,17 @@
   (if (string-equal (or color "dark") "light")
       (funcall 'load-theme (nth (random (length light-themes)) light-themes) t)
     (funcall 'load-theme (nth (random (length dark-themes)) dark-themes) t))
+  (setq font-lock-comment-face '(font-lock-comment-face :slant italic))
   (princ custom-enabled-themes))
+
+(defadvice! doom--load-theme-a (orig-fn theme &optional no-confirm no-enable)
+  :around #'load-theme
+  (with-temp-buffer
+    (unless no-enable
+      (mapc #'disable-theme custom-enabled-themes))
+    (when (funcall orig-fn theme no-confirm no-enable)
+      (unless no-enable
+        (setq doom-theme theme
+              doom-init-theme-p t)
+        (run-hooks 'doom-load-theme-hook))
+      t)))

@@ -35,9 +35,10 @@ export XDG_DATA_HOME="$HOME/.local/share"
 export LESSHISTFILE="."
 export GTK2_RC_FILES="$XDG_CONFIG_HOME/gtk-2.0/.gtkrc-2.0"
 export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
+export ZSH_COMPDUMP="$HOME/.cache/zsh"
 export ADOTDIR="$XDG_CONFIG_HOME/antigen"
 export GNUPGHOME="$XDG_DATA_HOME/gnupg"
-export RIPGREP_CONFIG_PATH="$XDG_CONFIG_HOME/ripgrep/.ripgreprc"
+export RIPGREP_CONFIG_PATH="$XDG_CONFIG_HOME/ripgrep/ripgreprc"
 
 # Path additions
 export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
@@ -45,8 +46,10 @@ export PATH=$PATH:$JAVA_HOME/bin
 export PATH=$HOME/.cargo/bin:$PATH
 export PATH=$PATH:/opt/lampp/bin
 export PATH=$PATH:$HOME/Applications
+export PATH=$PATH:$HOME/Applications/nvim/bin
 export PATH=$PATH:$HOME/.scripts
 export PATH=$PATH:$HOME/.emacs.d/bin
+export PATH=$PATH:/opt/mssql-tools/bin
 export fpath=($fpath /home/anirudh/.local/share/zsh/completions)
 
 # Settings
@@ -63,7 +66,7 @@ export SUDO_ASKPASS="$HOME/.scripts/dmenupass"
 export PIPENV_VENV_IN_PROJECT=1
 
 # Default applications
-export EDITOR=/usr/bin/nvim
+export EDITOR="nvim"
 export TERMINAL="alacritty"
 export BROWSER="firefox"
 export FILE="pcmanfm-qt"

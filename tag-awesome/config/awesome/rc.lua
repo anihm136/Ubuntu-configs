@@ -425,7 +425,7 @@ awful.key({ modkey }, "c", function () awful.spawn("kcalc") end,
 -- alternatively use rofi, a dmenu-like application with more features
 -- check https://github.com/DaveDavenport/rofi for more details
 --    [[ rofi
-awful.key({ modkey }, "d", function () os.execute(string.format("rofi -run-list-command \"showaliases\" -run-command \"/bin/zsh -i -c '{cmd}'\" -show run"))
+awful.key({ modkey }, "d", function () os.execute(string.format("rofi -run-list-command \"showaliases\" -run-command \"/bin/bash -i -c '{cmd}'\" -show run"))
   end,
   {description = "show rofi", group = "launcher"})
 --]]

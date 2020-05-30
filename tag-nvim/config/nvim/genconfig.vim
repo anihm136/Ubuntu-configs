@@ -21,19 +21,28 @@ let g:mapleader = "\<Space>"
 " Goyo
 nmap <silent> <leader>g :Goyo<cr>
 
-" Netrw
-let g:netrw_banner = 0
-let g:netrw_liststyle = 3
-let g:netrw_browse_split = 4
-let g:netrw_altv = 1
-let g:netrw_winsize = 20
-let g:netrw_fastbrowse = 0
-nnoremap <silent> <Leader>0 :call helpers#toggleNetrw()<cr>
+" Dirvish
+command! -nargs=? -complete=dir Explore Dirvish <args>
+command! -nargs=? -complete=dir Sexplore belowright split | silent Dirvish <args>
+command! -nargs=? -complete=dir Vexplore leftabove 30vsplit | silent Dirvish <args>
+augroup dirVish
+	autocmd!
+	autocmd FileType dirvish nnoremap <silent><buffer> p ddO<Esc>:let @"=substitute(@", '\n', '', 'g')<CR>:r ! find "<C-R>"" -maxdepth 1 -print0 \| xargs -0 ls -Fd<CR>:silent! keeppatterns %s/\/\//\//g<CR>:silent! keeppatterns %s/[^a-zA-Z0-9\/]$//g<CR>:silent! keeppatterns g/^$/d<CR>:noh<CR>
+	autocmd FileType dirvish nnoremap <buffer> + :edit %
+	autocmd FileType dirvish nmap <buffer><silent> q gq
+	autocmd FileType dirvish nnoremap <buffer> <BS> -
+augroup END
+nnoremap <silent> <Leader>0 :call helpers#toggleFileExplorer()<cr>
+
+" DB
+nnoremap <buffer> <leader>sd :DB b:db =<Space>
+vnoremap <buffer><silent> <leader>se :DB<cr>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => General
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:python3_host_prog = "/usr/bin/python3"
+" let g:perl_host_prog = '/usr/bin/perl'
 
 set splitbelow splitright
 set confirm
@@ -72,8 +81,31 @@ autocmd custom_commands FocusGained,BufEnter * :checktime
 autocmd custom_commands FileType help,plugins,fugitive nnoremap <silent><buffer> q :q<cr>
 autocmd custom_commands FileType qf nnoremap <silent> <C-n> :cn<cr> | nnoremap <silent> <C-p> :cp<cr> | nnoremap <silent> q :call helpers#closeQf()<cr>
 autocmd custom_commands BufWritePost init.vim,plugins.vim,genconfig.vim nested silent source %
-autocmd custom_commands FileType netrw setl bufhidden=wipe | nnoremap <silent><buffer> q :bw<cr>
 autocmd custom_commands BufReadPost,BufNewFile * DetectIndent
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Disable unnecessary defaults
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+let g:loaded_python_provider = 0
+let g:loaded_ruby_provider = 0
+let g:loaded_node_provider = 0
+let g:loaded_perl_provider = 0
+let g:loaded_sql_completion    = 1 "$VIMRUNTIME/autoload/sqlcomplete.vim
+let g:omni_sql_no_default_maps = 1
+let g:loaded_2html_plugin      = 1 "$VIMRUNTIME/plugin/tohtml.vim
+let g:loaded_getscript         = 1 "$VIMRUNTIME/autoload/getscript.vim
+let g:loaded_getscriptPlugin   = 1 "$VIMRUNTIME/plugin/getscriptPlugin.vim
+let g:loaded_logipat           = 1 "$VIMRUNTIME/plugin/logiPat.vim
+let g:loaded_logiPat           = 1 "$VIMRUNTIME/plugin/logiPat.vim
+let g:loaded_netrw             = 1 "$VIMRUNTIME/autoload/netrw.vim
+let g:loaded_netrwFileHandlers = 1 "$VIMRUNTIME/autoload/netrwFileHandlers.vim
+let g:loaded_netrwPlugin       = 1 "$VIMRUNTIME/plugin/netrwPlugin.vim
+let g:loaded_netrwSettings     = 1 "$VIMRUNTIME/autoload/netrwSettings.vim
+let g:loaded_rrhelper          = 1 "$VIMRUNTIME/plugin/rrhelper.vim
+let g:loaded_vimball           = 1 "$VIMRUNTIME/autoload/vimball.vim
+let g:loaded_vimballPlugin     = 1 "$VIMRUNTIME/plugin/vimballPlugin.vim
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
@@ -190,33 +222,18 @@ xnoremap <expr> p printf('pgv"%sygv<esc>', v:register)
 autocmd custom_commands BufWritePre *.txt,*.js,*.jsx,*.ts,*.tsx,*.py,*.wiki,*.sh,*.coffee,*.c,*.cpp,*.java call helpers#cleanWhitespace()
 autocmd custom_commands BufRead,BufNewFile,VimEnter *.js,*.jsx,*.ts,*.tsx,*.py,*.coffee,*.c,*.cpp,*.java silent call ProgFunc()
 
-" Press * to search for the term under the cursor or a visual selection and
-" then press a key below to replace all instances of it in the current file.
-nnoremap <Leader>rn :%s///g<Left><Left>
-nnoremap <Leader>rc :%s///gc<Left><Left><Left>
-
-" The same as above but instead of acting on the whole file it will be
-" restricted to the previously visually selected range. You can do that by
-" pressing *, visually selecting the range you want it to apply to and then
-" press a key below to replace all instances of it in the current selection.
 xnoremap <Leader>rn :s///g<Left><Left>
 xnoremap <Leader>rc :s///gc<Left><Left><Left>
 
-" Type a replacement term and press . to repeat the replacement again. Useful
-" for replacing a few instances of the term (comparable to multiple cursors).
 nnoremap <silent> rn :let @/='\<'.expand('<cword>').'\>'<CR>cgn
 xnoremap <silent> rn "sy:let @/=@s<CR>cgn
 
-" After searching for text, press this mapping to do a project wide find and
-" replace. It's similar to <leader>r except this one applies to all matches
-" across all files instead of just the current file.
 nnoremap <F2>
 			\ :let @s='\<'.expand('<cword>').'\>'<CR>
 			\ :Grepper -cword -noprompt<CR>
 			\ :cfdo %s/<C-r>s//g \| update
 			\<Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left>
 
-" The same as above except it works with a visual selection.
 xmap <F2>
 			\ "sy
 			\ gvgr

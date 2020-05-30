@@ -23,14 +23,10 @@ function! s:CmdLine(str) abort
 endfunction
 
 function! helpers#cleanWhitespace() abort
-  let save_cursor = getpos(".")
-  let old_query = getreg('/')
-  silent! %s/\s\+$//ge
-  silent! %s/\n/<0s0>/ge
-  silent! s/\(<0s0>\)\+$//ge
-  silent! s/<0s0>/\r/ge
-  call setpos('.', save_cursor)
-  call setreg('/', old_query)
+  let l = line(".")
+  let c = col(".")
+  keepp %s/\s\+$//e
+  call cursor(l, c)
 endfun
 
 function! helpers#visualSelection(direction, extra_filter) range abort
@@ -90,8 +86,9 @@ fun! helpers#toggleTags() abort
   endif
   if b:idxmode == 0
     nmap <silent><buffer> gd <Plug>(coc-definition)
-    nmap <silent><buffer> gr <Plug>(coc-references)
+    nmap <silent><buffer> gD <Plug>(coc-references)
     nmap <silent><buffer> gs <Plug>(coc-implementation)
+    nmap <silent><buffer> <Leader>rn <Plug>(coc-rename)
     let b:idxmode = 1
     let g:idxmode = 0
     echo "LSP mode"
@@ -125,8 +122,11 @@ fun! helpers#toggleTags() abort
     else
       silent exe 'cs add cscope.out'
       nnoremap <silent><buffer><expr> gd ':cs find g ' . expand('<cword>') . '<cr>'
-      nnoremap <silent><buffer><expr> gr ':cs find c ' . expand('<cword>') . '<cr>'
+      nnoremap <silent><buffer><expr> gD ':cs find c ' . expand('<cword>') . '<cr>'
       nnoremap <silent><buffer><expr> gs ':cs find s ' . expand('<cword>') . '<cr>'
+      nnoremap <silent><buffer> <Leader>rn :%s///g<Left><Left>
+      nnoremap <silent><buffer> <Leader>rc :%s///gc<Left><Left><Left>
+
       echo "cscope mode"
     endif
   else
@@ -151,24 +151,28 @@ fun! helpers#toggleTags() abort
       call helpers#toggleTags()
     else
       nnoremap <silent><buffer> gd :Gtags<cr>
-      nnoremap <silent><buffer> gr :GtagsCursor<cr>
+      nnoremap <silent><buffer> gD :GtagsCursor<cr>
       nnoremap <silent><buffer> gs :Gtags -g<cr>
+      nnoremap <silent><buffer> <Leader>rn :%s///g<Left><Left>
+      nnoremap <silent><buffer> <Leader>rc :%s///gc<Left><Left><Left>
       echo "gtags mode"
     endif
   endif
 endfunction
 
-function! helpers#toggleNetrw() abort
+function! helpers#toggleFileExplorer() abort
   let l:flag = 1
   for i in range(1, winnr("$"))
-    if getwinvar(i, '&filetype') == "netrw"
+    if getwinvar(i, '&filetype') == "dirvish"
       silent exe 'bwipeout ' . winbufnr(i)
       let flag = 0
       break
     endif
   endfor
   if flag == 1
-    silent exe 'Vex'
+    silent exe 'Vexplore'
+    nmap <buffer> <cr> :call dirvish#open("edit",1)<cr>
+    nmap <buffer><silent> q gq:q<CR>
   endif
 endfunction
 

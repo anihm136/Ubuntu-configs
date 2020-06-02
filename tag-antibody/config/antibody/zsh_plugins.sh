@@ -1,3 +1,5 @@
+source /home/anirudh/.local/share/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-robbyrussell-SLASH-oh-my-zsh/oh-my-zsh.sh
+fpath+=( /home/anirudh/.local/share/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-robbyrussell-SLASH-oh-my-zsh )
 source /home/anirudh/.local/share/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-robbyrussell-SLASH-oh-my-zsh/lib/bzr.zsh
 source /home/anirudh/.local/share/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-robbyrussell-SLASH-oh-my-zsh/lib/cli.zsh
 source /home/anirudh/.local/share/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-robbyrussell-SLASH-oh-my-zsh/lib/clipboard.zsh

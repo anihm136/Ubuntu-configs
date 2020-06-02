@@ -13,8 +13,10 @@ fi
 HISTSIZE=1000
 SAVEHIST=1000
 HISTFILE="$XDG_CACHE_HOME/zsh/history"
+ZSH_COMPDUMP="$XDG_CACHE_HOME/zsh/.zcompdump"
 
 # Linux antibody file
+ZSH="$ANTIBODY_HOME"/https-COLON--SLASH--SLASH-github.com-SLASH-robbyrussell-SLASH-oh-my-zsh
 source "${XDG_CONFIG_HOME:-$HOME/.config}/antibody/zsh_plugins.sh"
 
 # >>> conda initialize >>>

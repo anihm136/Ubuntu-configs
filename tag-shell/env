@@ -1,0 +1,49 @@
+# XDG Dirs
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_CACHE_HOME="$HOME/.cache"
+
+# Cleanup
+export LESSHISTFILE="."
+export GTK2_RC_FILES="$XDG_CONFIG_HOME/gtk-2.0/.gtkrc-2.0"
+export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
+export ZSH_COMPDUMP="$HOME/.cache/zsh"
+export ANTIBODY_HOME="$XDG_DATA_HOME/antibody"
+export GNUPGHOME="$XDG_DATA_HOME/gnupg"
+export RIPGREP_CONFIG_PATH="$XDG_CONFIG_HOME/ripgrep/ripgreprc"
+
+# Path additions
+export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+typeset -U PATH path
+path=("$path[@]" "$JAVA_HOME/bin")
+path=("$path[@]" "$HOME/.cargo/bin")
+path=("$path[@]" "/opt/lampp/bin")
+path=("$path[@]" "$HOME/Applications/nvim/bin")
+path=("$path[@]" "$HOME/.scripts")
+path=("$path[@]" "$HOME/.emacs.d/bin")
+path=("$path[@]" "/opt/mssql-tools/bin")
+export PATH
+if [ -d "$HOME/.local/bin" ] ; then
+		PATH="$HOME/.local/bin:$PATH"
+fi
+export fpath=($fpath /home/anirudh/.local/share/zsh/completions)
+
+# Settings
+# export QT_STYLE_OVERRIDE=kvantum
+export QT_QPA_PLATFORMTHEME=qt5ct
+export FZF_DEFAULT_OPTS="--height 40% --reverse"
+export FZF_CTRL_T_OPTS="--preview '(bat --style=numbers --color=always {} || cat {}) 2> /dev/null | head -500' --preview-window right:60% --select-1"
+export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:hidden:wrap --bind '?:toggle-preview'"
+export FZF_ALT_C_COMMAND="fda"
+export FZF_DEFAULT_COMMAND="fdfind --type f --hidden --follow --exclude .git --exclude node_modules --exclude .venv --exclude .ccls-cache"
+export FZF_CTRL_T_COMMAND="fdfind --hidden --follow --exclude .git --exclude node_modules --exclude .venv --exclude .ccls-cache"
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+export SUDO_ASKPASS="$HOME/.scripts/dmenupass"
+export PIPENV_VENV_IN_PROJECT=1
+
+# Default applications
+export EDITOR="nvim"
+export TERMINAL="alacritty"
+export BROWSER="firefox"
+export FILE="pcmanfm-qt"
+export GUIEDITOR="codium"

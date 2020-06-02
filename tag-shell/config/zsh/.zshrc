@@ -69,9 +69,9 @@ bindkey '^a' beginning-of-line
 bindkey '^e' end-of-line
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-[[ -f ~/.sh_funcs ]] && source ~/.sh_funcs
-[[ -f ~/.aliases ]] && source ~/.aliases
-[[ -f .zaliases ]] && source .zaliases
+[[ -f $HOME/.sh_funcs ]] && source $HOME/.sh_funcs
+[[ -f $HOME/.aliases ]] && source $HOME/.aliases
+[[ -f $ZDOTDIR/.zaliases ]] && source $ZDOTDIR/.zaliases
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh

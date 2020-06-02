@@ -64,7 +64,8 @@
   (add-hook! '(tsx-mode-local-vars-hook js2-mode-local-vars-hook typescript-mode-local-vars-hook) (lambda () (flycheck-add-next-checker 'lsp 'javascript-eslint))))
 
 (setq-default tab-width 2
-              standard-indent 2)
+              standard-indent 2
+              evil-respect-visual-line-mode t)
 
 (use-package! evil-escape
   :config
@@ -123,7 +124,7 @@
         org-capture-templates
         '(("t" "Todo" entry (file+headline org-default-notes-file "Tasks")
            "* TODO %? %^G\n %i\n")
-          ("c" "org-protocol-capture" entry (file+headline org-default-notes-file "Reading")
+          ("l" "org-protocol-capture" entry (file+headline org-default-notes-file "Reading")
            "* TODO [[%:link][%:description]]\n\n %i"
            :immediate-finish t)
           ("k" "Cliplink capture task" entry (file+headline org-default-notes-file "Reading")

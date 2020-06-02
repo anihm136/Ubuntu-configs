@@ -10,7 +10,6 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-
 HISTSIZE=1000
 SAVEHIST=1000
 HISTFILE="$XDG_CACHE_HOME/zsh/history"
@@ -72,6 +71,7 @@ bindkey '^e' end-of-line
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 [[ -f ~/.sh_funcs ]] && source ~/.sh_funcs
 [[ -f ~/.aliases ]] && source ~/.aliases
+[[ -f .zaliases ]] && source .zaliases
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh

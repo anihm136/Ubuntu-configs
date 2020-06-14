@@ -7,7 +7,6 @@ export XDG_CACHE_HOME="$HOME/.cache"
 export LESSHISTFILE="."
 export GTK2_RC_FILES="$XDG_CONFIG_HOME/gtk-2.0/.gtkrc-2.0"
 export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
-export ZSH_COMPDUMP="$HOME/.cache/zsh"
 export ANTIBODY_HOME="$XDG_DATA_HOME/antibody"
 export GNUPGHOME="$XDG_DATA_HOME/gnupg"
 export RIPGREP_CONFIG_PATH="$XDG_CONFIG_HOME/ripgrep/ripgreprc"
@@ -20,7 +19,7 @@ path=("$path[@]" "$HOME/.cargo/bin")
 path=("$path[@]" "/opt/lampp/bin")
 path=("$path[@]" "$HOME/Applications/nvim/bin")
 path=("$path[@]" "$HOME/.scripts")
-path=("$path[@]" "$HOME/.emacs.d/bin")
+path=("$path[@]" "$XDG_CONFIG_HOME/emacs/bin")
 path=("$path[@]" "/opt/mssql-tools/bin")
 export PATH
 if [ -d "$HOME/.local/bin" ] ; then
@@ -29,7 +28,6 @@ fi
 export fpath=($fpath /home/anirudh/.local/share/zsh/completions)
 
 # Settings
-# export QT_STYLE_OVERRIDE=kvantum
 export QT_QPA_PLATFORMTHEME=qt5ct
 export FZF_DEFAULT_OPTS="--height 40% --reverse"
 export FZF_CTRL_T_OPTS="--preview '(bat --style=numbers --color=always {} || cat {}) 2> /dev/null | head -500' --preview-window right:60% --select-1"
@@ -40,6 +38,8 @@ export FZF_CTRL_T_COMMAND="fdfind --hidden --follow --exclude .git --exclude nod
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 export SUDO_ASKPASS="$HOME/.scripts/dmenupass"
 export PIPENV_VENV_IN_PROJECT=1
+export LC_ALL=en_IN.utf8
+export DOTNET_CLI_TELEMETRY_OPTOUT=1
 
 # Default applications
 export EDITOR="nvim"

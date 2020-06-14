@@ -85,10 +85,10 @@ fun! helpers#toggleTags() abort
     endif
   endif
   if b:idxmode == 0
-    nmap <silent><buffer> gd <Plug>(coc-definition)
-    nmap <silent><buffer> gD <Plug>(coc-references)
-    nmap <silent><buffer> gs <Plug>(coc-implementation)
-    nmap <silent><buffer> <Leader>rn <Plug>(coc-rename)
+    nnoremap <silent><buffer> gd <cmd>lua vim.lsp.buf.definition()<CR>
+    nnoremap <silent><buffer> gD <cmd>lua vim.lsp.buf.references()<CR>
+    nmap <silent><buffer> gs <cmd>lua vim.lsp.buf.implementation()<CR>
+    nnoremap <silent> <leader>rn <cmd>lua vim.lsp.buf.rename()<CR>
     let b:idxmode = 1
     let g:idxmode = 0
     echo "LSP mode"

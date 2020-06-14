@@ -56,13 +56,6 @@
   "Set of light themes to choose from.")
 
 ;; Eager loading
-
-(define-derived-mode tsx-mode web-mode "TSX mode")
-(add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-mode))
-(after! flycheck
-  (flycheck-add-mode 'javascript-eslint 'tsx-mode)
-  (add-hook! '(tsx-mode-local-vars-hook js2-mode-local-vars-hook typescript-mode-local-vars-hook) (lambda () (flycheck-add-next-checker 'lsp 'javascript-eslint))))
-
 (setq-default tab-width 2
               standard-indent 2
               evil-respect-visual-line-mode t)
@@ -88,7 +81,7 @@
     ((js2-jsx-indent-line . standard-indent)))
   (smart-tabs-add-language-support ts typescript-mode-hook
     ((typescript-indent-line . standard-indent)))
-  (smart-tabs-add-language-support tsx tsx-mode-hook
+  (smart-tabs-add-language-support tsx typescript-tsx-mode-hook
     ((typescript-tsx-indent-line . standard-indent)))
   (smart-tabs-add-language-support py python-mode-hook
     ((python-indent-line-function . standard-indent)))
@@ -236,6 +229,10 @@
   :defer t
   :hook (python-mode . importmagic-mode)
   :config
+  (setq lsp-python-ms-dir
+        (expand-file-name "~/Applications/python-language-server/output/bin/Release"))
+  (setq lsp-python-ms-executable
+        (expand-file-name "~/Applications/python-language-server/output/bin/Release/Microsoft.Python.LanguageServer"))
   (after! lsp-python-ms
     (set-lsp-priority! 'mspyls 1))
   (with-eval-after-load 'lsp-ui
@@ -255,11 +252,11 @@
   (setq ivy-posframe-display-functions-alist '((counsel-M-x . nil)
                                                (swiper . nil)
                                                (t . ivy-posframe-display-at-frame-center))
-        ivy-posframe-height-alist '((t . 12))
+        ivy-posframe-height-alist '((t . 10))
         ivy-posframe-parameters '((internal-border-width . 6))
         ivy-posframe-width 100))
 
-(after! (:any js rjsx-mode typescript-mode tsx-mode)
+(after! (:any js rjsx-mode typescript-mode typescript-tsx-mode)
   (setq flycheck-javascript-eslint-executable "eslint_d")
   (with-eval-after-load 'lsp-ui
     (flycheck-add-next-checker 'lsp 'javascript-eslint)))
@@ -288,8 +285,8 @@
       (:after typescript-mode
        :map typescript-mode-map
        "f" 'eslintd-fix)
-      (:after tsx-mode
-       :map tsx-mode-map
+      (:after typescript-tsx-mode
+       :map typescript-tsx-mode-map
        "f" 'eslintd-fix))
 
 ;; Utility functions and keymaps
@@ -407,15 +404,3 @@
     (funcall 'load-theme (nth (random (length dark-themes)) dark-themes) t))
   (setq font-lock-comment-face '(font-lock-comment-face :slant italic))
   (princ custom-enabled-themes))
-
-(defadvice! doom--load-theme-a (orig-fn theme &optional no-confirm no-enable)
-  :around #'load-theme
-  (with-temp-buffer
-    (unless no-enable
-      (mapc #'disable-theme custom-enabled-themes))
-    (when (funcall orig-fn theme no-confirm no-enable)
-      (unless no-enable
-        (setq doom-theme theme
-              doom-init-theme-p t)
-        (run-hooks 'doom-load-theme-hook))
-      t)))

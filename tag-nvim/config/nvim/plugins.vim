@@ -8,7 +8,14 @@ Plug 'fedorenchik/gtags.vim'
 Plug 'honza/vim-snippets'
 Plug 'junegunn/vim-easy-align'
 Plug 'mhinz/vim-grepper', {'on': 'Grepper'}
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'neovim/nvim-lsp'
+Plug 'haorenW1025/completion-nvim'
+Plug 'dense-analysis/ale'
+Plug 'SirVer/ultisnips'
+Plug 'hrsh7th/vim-vsnip-integ'
+Plug 'hrsh7th/vim-vsnip'
+Plug 'sbdchd/neoformat'
+" Plug 'nvim-treesitter/nvim-treesitter'
 Plug 'roryokane/detectindent'
 Plug 'sheerun/vim-polyglot'
 Plug 'tpope/vim-fugitive', {'on': ['Git','G','GPush']}
@@ -27,6 +34,7 @@ Plug 'mitsuhiko/vim-jinja', {'for': ['html','htmldjango']}
 Plug 'tweekmonster/django-plus.vim', {'for': ['python','html','htmldjango']}
 Plug 'wmvanvliet/jupyter-vim', {'for': 'python'}
 Plug 'tpope/vim-dadbod'
+Plug 'kristijanhusak/vim-dadbod-completion'
 " Textobjects
 Plug 'kana/vim-operator-user'
 Plug 'kana/vim-textobj-user'
@@ -76,5 +84,22 @@ omap ig <Plug>(textobj-entire-i)
 " Jupyter
 let g:jupyter_mapkeys = 0
 nmap <buffer><silent> gR <Plug>JupyterRunTextObj
-vmap <buffer><silent> gR <Plug>JupyterRunVisual
+vmap <buffer><silent> gR <Plug>JupyterRunVisual			
+
+" Ultisnips
+let g:UltiSnipsEditSplit="vertical"
+let g:ultisnips_python_style="google"
+let g:UltiSnipsExpandTrigger="<nop>"
+let g:UltiSnipsJumpForwardTrigger="<nop>"
+let g:UltiSnipsJumpBackwardTrigger="<nop>"
+
+let g:ulti_expand_or_jump_res = 0
+function! UltiSnipFunc()
+	call UltiSnips#ExpandSnippetOrJump()
+	return g:ulti_expand_or_jump_res
+endfunction
+
+
+
+
 

@@ -46,6 +46,8 @@ let g:python3_host_prog = "/usr/bin/python3"
 
 set splitbelow splitright
 set confirm
+set smarttab
+set shiftround
 set termguicolors
 set mouse=a
 set cscopeprg=cscope
@@ -57,11 +59,11 @@ set noshowmode
 set undofile
 set nrformats-=octal
 set clipboard=unnamedplus
-set completeopt=menuone,preview
 set signcolumn=yes
 set updatetime=200
 set inccommand=nosplit
 set scrolloff=10
+set shortmess=actI
 set listchars=tab:>-,trail:-,extends:>,precedes:<,nbsp:%,eol:$
 
 nnoremap <silent> <leader>w :wa!<cr>
@@ -95,12 +97,15 @@ source $VIMRUNTIME/menu.vim
 
 set wildmenu
 set wildmode=full
-set wildignore=*.o,*~,*.pyc
+set wildignore+=*.o,*.obj,.git,*.rbc,*.pyc,__pycache__,node_modules
 set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store
 
 set ruler
 set relativenumber number
-set cmdheight=1
+set cmdheight=2
+set pumheight=10
+set pumwidth=50
+set pumblend=20
 set hidden
 set backspace=indent,eol,start
 set whichwrap+=<,>,h,l
@@ -176,7 +181,7 @@ noremap <leader>tp :tabp<cr>
 noremap <leader>to :tab sp<cr>
 noremap <leader>tc :call helpers#bufcloseCloseIt() <bar> tabclose<cr>
 
-noremap <leader>e :edit <c-r>=expand("%:p:h")<cr>/
+noremap <leader>e :edit <c-r>=fnameescape(expand("%:p:h"))<cr>/
 noremap <leader>cd :cd %:p:h <bar> pwd<cr>
 
 try
@@ -196,7 +201,6 @@ map Y y$
 nnoremap x "_x
 xnoremap <expr> p printf('pgv"%sygv<esc>', v:register)
 
-autocmd custom_commands BufWritePre *.txt,*.js,*.jsx,*.ts,*.tsx,*.py,*.wiki,*.sh,*.coffee,*.c,*.cpp,*.java call helpers#cleanWhitespace()
 autocmd custom_commands BufRead,BufNewFile,VimEnter *.js,*.jsx,*.ts,*.tsx,*.py,*.coffee,*.c,*.cpp,*.java silent call ProgFunc()
 
 xnoremap <Leader>rn :s///g<Left><Left>

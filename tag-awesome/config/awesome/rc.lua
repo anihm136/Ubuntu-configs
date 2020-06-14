@@ -85,7 +85,7 @@ local guieditor    = "code"
 local scrlocker    = "slock"
 
 awful.util.terminal = terminal
-awful.util.tagnames = {"Home |", "Terminals |", "Editors |", "Browsers |", "Email |","Media |","Emacs |","8 |","9 |"}
+awful.util.tagnames = {"HOME", "TERM", "CODE", "BROWSE", "EMAIL","MEDIA","EMACS","8","9"}
 awful.layout.layouts = {
   awful.layout.suit.floating,
   awful.layout.suit.tile,

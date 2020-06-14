@@ -15,12 +15,13 @@ local beautiful = require("beautiful")
 
 local awesome, client, os = awesome, client, os
 local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
+require('pl.stringx').import()
 
 local theme                                     = {}
 theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/mycop"
-theme.wallpaper                                 = theme.dir .. "/wall.png"
-theme.font                                      = "System San Francisco Display Regular 13"
-theme.taglist_font                              = "Heavy Data Nerd Font 13"
+theme.wallpaper                                 = theme.dir .. "/wall.jpg"
+theme.font                                      = "Overpass 13"
+theme.taglist_font                              = "Kimberley Bl 11"
 theme.fg_normal                                 = "#BBBBBB"
 theme.fg_focus                                  = "#78A4FF"
 theme.bg_normal                                 = "#111111"
@@ -98,14 +99,14 @@ local green  = "#8FEB8F"
 
 -- Textclock
 --os.setlocale(os.getenv("LANG")) -- to localize the clock
-local mytextclock = wibox.widget.textclock("<span font='Heavy Data Nerd Font 12'> </span>%I:%M:%S  ",1)
-mytextclock.font = 'Heavy Data Nerd Font 13'
+local mytextclock = wibox.widget.textclock("<span font='Kimberley Bl 11'> </span>%I:%M:%S  ",1)
+mytextclock.font = 'Kimberley Bl 11'
 
 -- Calendar
 theme.cal = lain.widget.cal({
         attach_to = { mytextclock },
         notification_preset = {
-            font = "Noto Mono 9",
+            font = "Overpass Mono 9",
             fg   = theme.fg_normal,
             bg   = theme.bg_normal
         }
@@ -219,7 +220,7 @@ local fsbar = wibox.widget {
     widget           = wibox.widget.progressbar,
 }
 theme.fs = lain.widget.fs {
-    notification_preset = { fg = theme.fg_normal, bg = theme.bg_normal, font = "Misc Tamsyn 10.5" },
+    notification_preset = { fg = theme.fg_normal, bg = theme.bg_normal, font = "Overpass Mono 10.5" },
     settings  = function()
         if fs_now["/"].percentage < 90 then
             fsbar:set_color(theme.fg_normal)
@@ -364,7 +365,13 @@ local mocp, mocp_timer = awful.widget.watch(
         end
 
         -- customize here
-        local wistring = " " .. mocp_now.artist .. " - " .. mocp_now.title .. "   " .. mocp_now.cur_time .. " [" .. mocp_now.tot_time .. "] "
+        local total_length = #mocp_now.artist +#mocp_now.title
+        local percent = 40 /total_length
+
+        local max_artist = math.floor( #mocp_now.artist *percent )
+        local max_title = math.floor( #mocp_now.title *percent )
+
+        local wistring = " " .. mocp_now.artist:shorten(max_artist) .. " - " .. mocp_now.title:shorten(max_title) .. "   " .. mocp_now.cur_time .. " [" .. mocp_now.tot_time .. "] "
         if mocp_now.state == "PAUSE" then
             wistring = " ⏸ " .. wistring
         elseif mocp_now.state == "PLAY" then
@@ -372,15 +379,16 @@ local mocp, mocp_timer = awful.widget.watch(
         elseif mocp_now.state == "STOP" then
             wistring = " ■ " .. wistring
         end
+        widget:set_font("Overpass 9")
         widget:set_text(wistring)
     end
     )
 
 -- Separators
-local first     = wibox.widget.textbox(markup.font("Misc Tamsyn 3", " "))
+local first     = wibox.widget.textbox(markup.font("Overpass Mono 3", " "))
 local spr       = wibox.widget.textbox(' ')
-local small_spr = wibox.widget.textbox(markup.font("Misc Tamsyn 4", " "))
-local bar_spr   = wibox.widget.textbox(markup.font("Misc Tamsyn 3", " ") .. markup.fontfg(theme.font, "#777777", "|") .. markup.font("Misc Tamsyn 5", " "))
+local small_spr = wibox.widget.textbox(markup.font("Overpass Mono 4", " "))
+local bar_spr   = wibox.widget.textbox(markup.font("Overpass Mono 3", " ") .. markup.fontfg(theme.font, "#777777", "|") .. markup.font("Overpass Mono 5", " "))
 
 -- Eminent-like task filtering
 local orig_filter = awful.widget.taglist.filter.all

@@ -15,7 +15,7 @@
   green:      #95ee8f;
   yellow:     #f8c456;
   blue:       #6eaafb;
-  mangenta:   #d886f3;
+  magenta:   #d886f3;
   cyan:       #6cdcf7;
   emphasis:   #50536b;
   text:       #808080;
@@ -26,7 +26,7 @@
   spacing: 0;
   background-color: transparent;
   lines:5;
-  font: "Heavy Data Nerd Font 15";
+  font: "Kimberley Bl 15";
   text-color: @text-alt;
 }
 

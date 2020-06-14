@@ -10,6 +10,7 @@ Plug 'junegunn/vim-easy-align'
 Plug 'mhinz/vim-grepper', {'on': 'Grepper'}
 Plug 'neovim/nvim-lsp'
 Plug 'haorenW1025/completion-nvim'
+Plug 'haorenW1025/diagnostic-nvim'
 Plug 'dense-analysis/ale'
 Plug 'SirVer/ultisnips'
 Plug 'hrsh7th/vim-vsnip-integ'
@@ -98,6 +99,12 @@ function! UltiSnipFunc()
 	call UltiSnips#ExpandSnippetOrJump()
 	return g:ulti_expand_or_jump_res
 endfunction
+
+" ALE
+let g:ale_sign_error = '◉'
+let g:ale_sign_warning = '⚠'
+let g:ale_sign_info = ''
+let g:ale_virtualtext_cursor = 1
 
 
 

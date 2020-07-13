@@ -193,7 +193,7 @@ function! helpers#setColorscheme(...) abort
   let l:dark_themes = {
         \ "space_vim_theme" : "violet",
         \ "spacegray" : "minimalist",
-        \ "neodark" : "neodark",
+        \ "equinusocio_material" : "equinusocio_material",
         \ "new-railscasts" : "base16_railscasts",
         \ "tender" : "tender",
         \ "solarized8_flat" : "solarized_flood",
@@ -216,6 +216,8 @@ function! helpers#setColorscheme(...) abort
     let g:spacegray_low_contrast = 1
     let g:solarized_italics = 0
     let g:solarized_extra_hi_groups = 1
+    let g:equinusocio_material_style = 'darker'
+    let g:equinusocio_material_hide_vertsplit = 1
     silent exec "set background=" . l:color
     let l:dct = select[(l:color == 'dark' ? 0 : 1)]
     let l:themeIndex = str2nr(matchstr(reltimestr(reltime()), '\v\.@<=\d+')[1:]) % len(keys(l:dct))

@@ -65,6 +65,7 @@ set inccommand=nosplit
 set scrolloff=10
 set shortmess=actI
 set listchars=tab:>-,trail:-,extends:>,precedes:<,nbsp:%,eol:$
+set fillchars+=vert:│
 
 nnoremap <silent> <leader>w :wa!<cr>
 nnoremap <silent> <leader>W execute 'silent! write !sudo tee "%" >/dev/null' <bar> edit!
@@ -84,6 +85,7 @@ autocmd custom_commands FileType help,plugins,fugitive nnoremap <silent><buffer>
 autocmd custom_commands FileType qf nnoremap <silent> <C-n> :cn<cr> | nnoremap <silent> <C-p> :cp<cr> | nnoremap <silent> q :call helpers#closeQf()<cr>
 autocmd custom_commands BufWritePost init.vim,plugins.vim,genconfig.vim nested silent source %
 autocmd custom_commands BufReadPost,BufNewFile * DetectIndent
+autocmd custom_commands TextYankPost *  silent! lua require'vim.highlight'.on_yank()
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""

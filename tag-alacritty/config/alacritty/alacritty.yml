@@ -549,3 +549,7 @@ key_bindings:
   - { key: Key6,      mods: Alt|Shift, chars: "\x1b^"                       } # Alt + ^
   - { key: Backslash, mods: Alt,       chars: "\x1b\\"                      } # Alt + \
   - { key: Backslash, mods: Alt|Shift, chars: "\x1b|"                       } # Alt + |
+  - { key: PageUp,    mods: Shift, action: ScrollPageUp,   mode: ~Alt       }
+  - { key: PageDown,  mods: Shift, action: ScrollPageDown, mode: ~Alt       }
+  - { key: Home,      mods: Shift, action: ScrollToTop,    mode: ~Alt       }
+  - { key: End,       mods: Shift, action: ScrollToBottom, mode: ~Alt       }

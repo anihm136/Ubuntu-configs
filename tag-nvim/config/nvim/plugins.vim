@@ -1,3 +1,5 @@
+let g:polyglot_disabled = ['mathematica']
+
 call plug#begin('~/.config/nvim/plugged')
 Plug 'airblade/vim-gitgutter'
 Plug 'airblade/vim-rooter'
@@ -10,7 +12,7 @@ Plug 'junegunn/vim-easy-align'
 Plug 'mhinz/vim-grepper', {'on': 'Grepper'}
 Plug 'neovim/nvim-lsp'
 Plug 'haorenW1025/completion-nvim'
-Plug 'haorenW1025/diagnostic-nvim'
+" Plug 'haorenW1025/diagnostic-nvim'
 Plug 'dense-analysis/ale'
 Plug 'SirVer/ultisnips'
 Plug 'hrsh7th/vim-vsnip-integ'
@@ -61,7 +63,7 @@ Plug 'machakann/vim-swap'
 " Themes
 Plug 'liuchengxu/space-vim-theme'
 Plug 'anihm136/vim-monokai-pro'
-Plug 'KeitaNakamura/neodark.vim'
+Plug 'chuling/equinusocio-material.vim'
 Plug 'carakan/new-railscasts-theme'
 Plug 'jacoborus/tender.vim'
 Plug 'morhetz/gruvbox'

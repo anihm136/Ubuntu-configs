@@ -79,13 +79,13 @@ local chosen_theme = themes[11]
 local modkey       = "Mod4"
 local altkey       = "Mod1"
 local terminal     = "alacritty"
-local editor       = os.getenv("EDITOR") or "vim"
+local editor       = os.getenv("EDITOR") or "nvim"
 local browser      = "firefox"
 local guieditor    = "code"
 local scrlocker    = "slock"
 
 awful.util.terminal = terminal
-awful.util.tagnames = {"HOME", "TERM", "CODE", "BROWSE", "EMAIL","MEDIA","EMACS","8","9"}
+awful.util.tagnames = {"WS1", "WS2", "WS3", "WWW", "SOCIAL","MEDIA","EMACS","READ","9"}
 awful.layout.layouts = {
   awful.layout.suit.floating,
   awful.layout.suit.tile,
@@ -602,7 +602,7 @@ awful.rules.rules = {
 client.connect_signal("manage", function (c)
   -- Set the windows at the slave,
   -- i.e. put it at the end of others instead of setting it master.
-  -- if not awesome.startup then awful.client.setslave(c) end
+  if not awesome.startup then awful.client.setslave(c) end
 
   if awesome.startup and
     not c.size_hints.user_position

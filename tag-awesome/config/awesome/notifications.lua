@@ -64,12 +64,6 @@ naughty.config.presets.warn = naughty.config.presets.critical
 -- Error Handling
 -- ===================================================================
 
-naughty.notify(
-    {
-        preset = naughty.config.presets.critical,
-        text = gears.filesystem.get_configuration_dir()
-    }
-)
 if awesome.startup_errors then
     naughty.notify(
         {

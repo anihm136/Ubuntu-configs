@@ -22,7 +22,8 @@ end
 
 local function get_icon()
    if icon_raw ~= nil then
-      return gcolor.recolor_image(icon_raw, beautiful.fg_normal)
+      -- return gcolor.recolor_image(icon_raw, beautiful.fg_normal)
+      return icon_raw
    else
       return nil
    end

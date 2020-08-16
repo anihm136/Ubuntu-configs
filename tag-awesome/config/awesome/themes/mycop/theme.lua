@@ -10,7 +10,6 @@ local lain  = require("lain")
 local awful = require("awful")
 local wibox = require("wibox")
 local dpi   = require("beautiful.xresources").apply_dpi
--- local net_widgets   = require("net_widgets")
 local beautiful = require("beautiful")
 
 local awesome, client, os = awesome, client, os
@@ -24,16 +23,16 @@ theme.font                                      = "Overpass 13"
 theme.taglist_font                              = "Kimberley Bl 11"
 theme.fg_normal                                 = "#BBBBBB"
 theme.fg_focus                                  = "#78A4FF"
-theme.bg_normal                                 = "#111111"
-theme.bg_focus                                  = "#111111"
+theme.bg_normal                                 = "#222222"
+theme.bg_focus                                  = "#222222"
 theme.fg_urgent                                 = "#000000"
 theme.bg_urgent                                 = "#FFFFFF"
 theme.border_width                              = dpi(1)
 theme.border_normal                             = "#111111"
 theme.border_focus                              = "#93B6FF"
 theme.taglist_fg_focus                          = "#FFFFFF"
-theme.taglist_bg_focus                          = "#111111"
-theme.taglist_bg_normal                         = "#111111"
+theme.taglist_bg_focus                          = "#222222"
+theme.taglist_bg_normal                         = "#222222"
 theme.titlebar_bg_normal                        = "#191919"
 theme.titlebar_bg_focus                         = "#262626"
 theme.menu_height                               = dpi(20)
@@ -111,100 +110,6 @@ theme.cal = lain.widget.cal({
             bg   = theme.bg_normal
         }
     })
-
--- Mail IMAP check
---[[ commented because it needs to be set before use
-theme.mail = lain.widget.imap({
-    timeout  = 180,
-    server   = "server",
-    mail     = "mail",
-    password = "keyring get mail",
-    settings = function()
-        mail  = ""
-        count = ""
-
-        if mailcount > 0 then
-            mail = "<span font='Misc Tamsyn 5'> </span>Mail "
-            count = mailcount .. " "
-        end
-
-        widget:set_markup(markup(blue, mail) .. count)
-    end
-})
---]]
-
--- MPD
---local mpdicon = wibox.widget.imagebox()
---theme.mpd = lain.widget.mpd({
---    settings = function()
---        if mpd_now.state == "play" then
---            title = mpd_now.title
---            artist  = " " .. mpd_now.artist  .. markup("#777777", " <span font='Misc Tamsyn 2'> </span>|<span font='Misc Tamsyn 5'> </span>")
---            mpdicon:set_image(theme.play)
---        elseif mpd_now.state == "pause" then
---            title = "mpd "
---            artist  = "paused" .. markup("#777777", " |<span font='Misc Tamsyn 5'> </span>")
---            mpdicon:set_image(theme.pause)
---        else
---            title  = ""
---            artist = ""
---            mpdicon._private.image = nil
---            mpdicon:emit_signal("widget::redraw_needed")
---            mpdicon:emit_signal("widget::layout_changed")
---        end
---
---        widget:set_markup(markup.font(theme.font, markup(blue, title) .. artist))
---    end
---})
---
--- Battery
---local baticon = wibox.widget.imagebox(theme.bat)
---local batbar = wibox.widget {
---    forced_height    = dpi(1),
---    forced_width     = dpi(59),
---    color            = theme.fg_normal,
---    background_color = theme.bg_normal,
---    margins          = 1,
---    paddings         = 1,
---    ticks            = true,
---    ticks_size       = dpi(6),
---    widget           = wibox.widget.progressbar,
---}
---local batupd = lain.widget.bat({
---    settings = function()
---        if (not bat_now.status) or bat_now.status == "N/A" or type(bat_now.perc) ~= "number" then return end
---
---        if bat_now.status == "Charging" then
---            baticon:set_image(theme.ac)
---            if bat_now.perc >= 98 then
---                batbar:set_color(green)
---            elseif bat_now.perc > 50 then
---                batbar:set_color(theme.fg_normal)
---            elseif bat_now.perc > 15 then
---                batbar:set_color(theme.fg_normal)
---            else
---                batbar:set_color(red)
---            end
---        else
---            if bat_now.perc >= 98 then
---                batbar:set_color(green)
---            elseif bat_now.perc > 50 then
---                batbar:set_color(theme.fg_normal)
---                baticon:set_image(theme.bat)
---            elseif bat_now.perc > 15 then
---                batbar:set_color(theme.fg_normal)
---                baticon:set_image(theme.bat_low)
---            else
---                batbar:set_color(red)
---                baticon:set_image(theme.bat_no)
---            end
---        end
---        batbar:set_value(bat_now.perc / 100)
---    end
---})
---local batbg = wibox.container.background(batbar, "#474747", gears.shape.rectangle)
---local batwidget = wibox.container.margin(batbg, dpi(2), dpi(7), dpi(4), dpi(4))
-
 -- /home fs
 -- --[[ commented because it needs Gio/Glib >= 2.54
 local fsicon = wibox.widget.imagebox(theme.disk)
@@ -282,20 +187,6 @@ theme.volume.bar:buttons(my_table.join (
     ))
 local volumebg = wibox.container.background(theme.volume.bar, "#474747", gears.shape.rectangle)
 local volumewidget = wibox.container.margin(volumebg, dpi(2), dpi(7), dpi(4), dpi(4))
-
--- Weather
-theme.weather = lain.widget.weather({
-        city_id = 1277333, -- placeholder (London)
-    })
-
---WIFI Widgets
--- net_wireless = net_widgets.wireless({interface="wlx503eaab1ecf9",onclick="~/Scripts/./wifi_script.sh"})
---net_wireless:buttons(awful.util.table.join(awful.button({}, 1, function () awful.spawn(terminal) end)
--- net_internet = net_widgets.internet({indent = 0, timeout = 1})
---net_wired = net_widgets.indicator({
---    interfaces  = {"enp27s0"},
---    timeout     = 3
---})
 
 -- Cmus widget
 -- local cmus, cmus_timer = awful.widget.watch(
@@ -401,9 +292,6 @@ awful.widget.taglist.filter.all = function (t, args)
 end
 
 function theme.at_screen_connect(s)
-    -- Quake application
-    s.quake = lain.util.quake({ app = "xfce4-terminal" })
-
     -- If wallpaper is a function, call it with the screen
     local wallpaper = theme.wallpaper
     if type(wallpaper) == "function" then
@@ -452,14 +340,8 @@ function theme.at_screen_connect(s)
             { -- Right widgets
                 layout = wibox.layout.fixed.horizontal,
                 wibox.widget.systray(),
-                -- net_wireless,
                 bar_spr,
                 mocp,
-                --theme.mail.widget,
-                --            mpdicon,
-                --            theme.mpd.widget,
-                --            baticon,
-                --            batwidget,
                 bar_spr,
                 fsicon,
                 fswidget,

@@ -87,7 +87,8 @@
 
        :checkers
        syntax              ; tasing you for every semicolon you forget
-       spell             ; tasing you for misspelling mispelling
+       (spell
+        +aspell)             ; tasing you for misspelling mispelling
        ;;grammar           ; tasing grammar mistake every you make
 
        :tools
@@ -154,7 +155,8 @@
        ;;ocaml             ; an objective camel
        (org
         +pandoc
-        +dragngrop
+        +dragndrop
+        +pretty
         +roam)               ; organize your plain life in plain text
        ;;perl              ; write code no one else can comprehend
        ;;php               ; perl's insecure younger brother

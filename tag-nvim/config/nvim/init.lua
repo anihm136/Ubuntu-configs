@@ -39,6 +39,12 @@ lsp.bashls.setup{
 lsp.pyls_ms.setup{
 	cmd = { "dotnet", "exec", "/home/anirudh/Applications/python-language-server/output/bin/Release/Microsoft.Python.LanguageServer.dll" };
 	on_attach = on_attach;
+	root_dir = function(fname)
+		local filename = lsp.util.path.is_absolute(fname) and fname
+		or lsp.util.path.join(vim.loop.cwd(), fname)
+		local root_pattern = lsp.util.root_pattern('setup.py', 'setup.cfg', 'requirements.txt', 'mypy.ini', '.pylintrc', '.flake8rc', '.git', '.gitignore')
+		return root_pattern(filename) or lsp.util.path.dirname(filename)
+	end;
 }
 
 lsp.clangd.setup{

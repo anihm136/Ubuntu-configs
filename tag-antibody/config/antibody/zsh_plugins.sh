@@ -38,7 +38,7 @@ fpath+=( /home/anirudh/.local/share/antibody/https-COLON--SLASH--SLASH-github.co
 source /home/anirudh/.local/share/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-robbyrussell-SLASH-oh-my-zsh/plugins/z/z.plugin.zsh
 fpath+=( /home/anirudh/.local/share/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-robbyrussell-SLASH-oh-my-zsh/plugins/z )
 fpath+=( /home/anirudh/.local/share/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-robbyrussell-SLASH-oh-my-zsh/plugins/cpanm )
-fpath+=( /home/anirudh/.local/share/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-robbyrussell-SLASH-oh-my-zsh/plugins/pip/_pip )
+fpath+=( /home/anirudh/.local/share/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-robbyrussell-SLASH-oh-my-zsh/plugins/pip )
 fpath+=( /home/anirudh/.local/share/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-robbyrussell-SLASH-oh-my-zsh/plugins/ripgrep )
 fpath+=( /home/anirudh/.local/share/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-robbyrussell-SLASH-oh-my-zsh/plugins/cargo )
 source /home/anirudh/.local/share/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-zdharma-SLASH-fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh

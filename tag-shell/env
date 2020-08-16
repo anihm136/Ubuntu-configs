@@ -25,7 +25,6 @@ export PATH
 if [ -d "$HOME/.local/bin" ] ; then
 		PATH="$HOME/.local/bin:$PATH"
 fi
-export fpath=($fpath /home/anirudh/.local/share/zsh/completions)
 
 # Settings
 export QT_QPA_PLATFORMTHEME=qt5ct

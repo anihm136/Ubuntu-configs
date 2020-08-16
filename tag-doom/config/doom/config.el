@@ -58,7 +58,11 @@
 ;; Eager loading
 (setq-default tab-width 2
               standard-indent 2
-              evil-respect-visual-line-mode t)
+              evil-respect-visual-line-mode t
+              org-download-image-dir "./images"
+              ispell-dictionary "en-custom"
+              ispell-personal-dictionary (expand-file-name ".ispell_personal" doom-private-dir)
+              )
 
 (use-package! evil-escape
   :config
@@ -91,7 +95,6 @@
 
 (use-package! org
   :defer t
-  :init
   :config
   (defun ani/org-archive-done-tasks ()
     (interactive)
@@ -256,6 +259,22 @@
         ivy-posframe-parameters '((internal-border-width . 6))
         ivy-posframe-width 100))
 
+(after! org-download
+  (setq
+   org-download-method 'directory
+   org-download-heading-lvl 'nil
+   org-download-timestamp "%Y%m%d-%H%M%S_"
+   org-download-link-format "[[file:%s]]\n"
+   org-download-link-format-function
+   (lambda (filename)
+     (format (concat (unless (image-type-from-file-name filename)
+                       (concat (+org-attach-icon-for filename)
+                               " "))
+                     org-download-link-format)
+             (org-link-escape (file-relative-name filename))))
+   org-image-actual-width 400
+   org-download-screenshot-method "xclip -selection clipboard -t image/png -o > %s"))
+
 (after! (:any js rjsx-mode typescript-mode typescript-tsx-mode)
   (setq flycheck-javascript-eslint-executable "eslint_d")
   (with-eval-after-load 'lsp-ui
@@ -266,6 +285,10 @@
 
 (after! (rjsx-mode js2-mode)
   (setq js-indent-level standard-indent))
+
+(after! flyspell
+  (setq flyspell-lazy-idle-seconds 3
+        flyspell-lazy-window-idle-seconds 10))
 
 (use-package! org-wild-notifier
   :config

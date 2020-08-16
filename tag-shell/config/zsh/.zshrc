@@ -16,8 +16,10 @@ HISTFILE="$XDG_CACHE_HOME/zsh/history"
 ZSH_COMPDUMP="$XDG_CACHE_HOME/zsh/.zcompdump"
 
 # Linux antibody file
+autoload -U compaudit compinit
 ZSH="$ANTIBODY_HOME"/https-COLON--SLASH--SLASH-github.com-SLASH-robbyrussell-SLASH-oh-my-zsh
 source "${XDG_CONFIG_HOME:-$HOME/.config}/antibody/zsh_plugins.sh"
+compinit -U
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
@@ -39,6 +41,7 @@ if (command -v perl && command -v cpanm) >/dev/null 2>&1; then
   test -d "$HOME/perl5/lib/perl5" && eval $(perl -I "$HOME/perl5/lib/perl5" -Mlocal::lib)
 fi
 _comp_options+=(globdots)
+setopt extendedglob
 
 zle-keymap-select () {
   VI_KEYMAP=$KEYMAP

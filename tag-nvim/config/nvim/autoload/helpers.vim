@@ -183,6 +183,40 @@ function! helpers#closeQf() abort
   unmap q
 endfunction
 
+function! RemoveItalicFromHighlightCommand(somestring)
+  let cmd=a:somestring
+  " Samples:
+  " cterm=italic
+  " gui=bold,italic
+  " gui=bold,italic,underline
+  " gui=italic,bold,underline
+  " gui=
+  let cmd=substitute(cmd, "italic",    "", "g") " remove italics
+  let cmd=substitute(cmd, ",,",       ",", "g") " when italic occurs in middle of list, delete extraneous comma
+  let cmd=substitute(cmd, ", ",       " ", "g") " when italic at end of list, delete extraneous comma
+  let cmd=substitute(cmd, "gui\= ",   " ", "g") " when italic is only item in list, delete arg to avoid error
+  let cmd=substitute(cmd, "term\= ",  " ", "g") " when italic is only item in list, delete arg to avoid error
+  let cmd=substitute(cmd, "cterm\= ", " ", "g") " when italic is only item in list, delete arg to avoid error
+  return cmd
+endfunction
+
+function! MakeColorChanges()
+  redir @a | silent hi | redir END
+  let @a=substitute(@a, "xxx", "", "g") " The :hi command displays 'xxx' to show what the groups look like
+  let cmdlist = split(@a, "\n")
+  call filter(cmdlist, 'v:val =~ "italic"')
+  call map(cmdlist, 'RemoveItalicFromHighlightCommand(v:val)')
+  for cmd in cmdlist
+    let test = split(cmd, " ")
+    if index(test, "c") != -1 || index(test, "cleared") != -1
+      continue
+    endif
+    let groupname=split(cmd, " ")[0]
+    execute "hi clear ".groupname
+    execute "hi default ".cmd
+  endfor
+endfunction
+
 function! helpers#setColorscheme(...) abort
   if a:0 == 0
     let l:color = 'dark'
@@ -241,6 +275,7 @@ function! helpers#setColorscheme(...) abort
   highlight LineNr ctermbg=NONE guibg=NONE
   highlight SignColumn ctermbg=NONE guibg=NONE
   highlight FoldColumn ctermbg=NONE guibg=NONE
+  call MakeColorChanges()
   highlight Comment gui=italic
 endfunction
 

@@ -21,7 +21,6 @@ require("awful.hotkeys_popup.keys")
 local my_table      = awful.util.table or gears.table -- 4.{0,1} compatibility
 local dpi           = require("beautiful.xresources").apply_dpi
 local debian        = require("debian.menu")
--- local net_widgets   = require("net_widgets")
 -- }}}
 
 -- {{{ Error handling
@@ -81,7 +80,7 @@ local altkey       = "Mod1"
 local terminal     = "alacritty"
 local editor       = os.getenv("EDITOR") or "nvim"
 local browser      = "firefox"
-local guieditor    = "code"
+local guieditor    = "codium"
 local scrlocker    = "slock"
 
 awful.util.terminal = terminal
@@ -418,7 +417,7 @@ awful.key({ modkey }, "v", function () awful.spawn.with_shell("xsel -b | xsel") 
 -- User programs
 awful.key({ modkey, "Shift" }, "s", function () awful.spawn("lxqt-config") end,
   {description = "open settings", group = "launcher"}),
-awful.key({ modkey }, "c", function () awful.spawn("kcalc") end,
+awful.key({ modkey, "Shift" }, "k", function () awful.spawn("kcalc") end,
   {description = "Open calculator", group = "launcher"}),
 
 -- Default

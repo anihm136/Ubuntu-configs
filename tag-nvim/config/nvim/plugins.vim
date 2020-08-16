@@ -107,6 +107,7 @@ let g:ale_sign_error = '◉'
 let g:ale_sign_warning = '⚠'
 let g:ale_sign_info = ''
 let g:ale_virtualtext_cursor = 1
+let g:ale_hover_cursor = 0
 
 
 

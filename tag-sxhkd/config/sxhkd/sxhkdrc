@@ -19,8 +19,14 @@ super + f
 super + Return
   $TERMINAL
 
-super + l
-  lipsum
+super + shift + s
+  $SETTINGS
+
+super + shift + k
+  $CALC
+
+super + d
+  eval $LAUNCHER
 
 XF86AudioNext
   music playnext

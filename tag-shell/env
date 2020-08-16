@@ -46,3 +46,6 @@ export TERMINAL="alacritty"
 export BROWSER="firefox"
 export FILE="pcmanfm-qt"
 export GUIEDITOR="codium"
+export SETTINGS="lxqt-config-session"
+export LAUNCHER='rofi -run-list-command "showaliases" -run-command "/bin/bash -i -c {cmd}" -show run'
+export CALC="kcalc"

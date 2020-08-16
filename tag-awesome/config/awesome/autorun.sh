@@ -28,10 +28,9 @@ if (command -v system-config-printer-applet && ! pgrep applet.py ); then
   system-config-printer-applet &
 fi
 
-run compton --shadow-exclude '!focused'
+run compton --shadow-exclude '!focused' -f --backend glx -D 3
 run blueman-applet
 run nm-applet
 run tilda
-run msm_notifier
 run xautolock
 mocp -S

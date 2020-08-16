@@ -10,7 +10,7 @@ local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
 require("pl.stringx").import()
 
 local theme = {}
-theme.dir = gears.filesystem.get_configuration_dir() .. "theme/"
+theme.dir = gears.filesystem.get_configuration_dir() .. "theme"
 theme.wallpaper = theme.dir .. "/wall.jpg"
 theme.font = "Overpass 13"
 theme.taglist_font = "Kimberley Bl 11"
@@ -80,6 +80,9 @@ theme.cal =
     {
         attach_to = {mytextclock},
         notification_preset = {
+            title = "",
+            icon_size = 32,
+            margin = 5,
             font = "Overpass Mono 9",
             fg = theme.fg_normal,
             bg = theme.bg_normal

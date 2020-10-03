@@ -185,12 +185,6 @@ endfunction
 
 function! RemoveItalicFromHighlightCommand(somestring)
   let cmd=a:somestring
-  " Samples:
-  " cterm=italic
-  " gui=bold,italic
-  " gui=bold,italic,underline
-  " gui=italic,bold,underline
-  " gui=
   let cmd=substitute(cmd, "italic",    "", "g") " remove italics
   let cmd=substitute(cmd, ",,",       ",", "g") " when italic occurs in middle of list, delete extraneous comma
   let cmd=substitute(cmd, ", ",       " ", "g") " when italic at end of list, delete extraneous comma
@@ -205,6 +199,7 @@ function! MakeColorChanges()
   let @a=substitute(@a, "xxx", "", "g") " The :hi command displays 'xxx' to show what the groups look like
   let cmdlist = split(@a, "\n")
   call filter(cmdlist, 'v:val =~ "italic"')
+  call filter(cmdlist, 'v:val !~ "links to"')
   call map(cmdlist, 'RemoveItalicFromHighlightCommand(v:val)')
   for cmd in cmdlist
     let test = split(cmd, " ")
@@ -212,8 +207,13 @@ function! MakeColorChanges()
       continue
     endif
     let groupname=split(cmd, " ")[0]
-    execute "hi clear ".groupname
-    execute "hi default ".cmd
+    try
+      execute "hi clear ".groupname
+      execute "hi default ".cmd
+    catch
+      echo groupname
+      echo cmd
+    endtry
   endfor
 endfunction
 
@@ -224,53 +224,29 @@ function! helpers#setColorscheme(...) abort
     let l:color = a:1
   endif
 
-  let l:dark_themes = {
-        \ "space_vim_theme" : "violet",
-        \ "spacegray" : "minimalist",
-        \ "equinusocio_material" : "equinusocio_material",
-        \ "new-railscasts" : "base16_railscasts",
-        \ "tender" : "tender",
-        \ "solarized8_flat" : "solarized_flood",
-        \ "gruvbox" : "gruvbox",
-        \ "monokai_pro" : "monokai_pro"
-        \ }
+  let l:dark_themes = ["spacegray", "equinusocio_material", "sonokai", "tender", "solarized8_flat", "gruvbox", "gruvbit"]
 
-  let l:light_themes = {
-        \ "space_vim_theme" : "violet",
-        \ "solarized8_flat" : "solarized",
-        \ "gruvbox" : "gruvbox"
-        \ }
+  let l:light_themes = ["solarized8_flat", "gruvbox"]
 
   let l:all_themes = extend(copy(dark_themes), light_themes)
 
   let l:select = [dark_themes, light_themes]
 
   if l:color == 'dark' || l:color == 'light'
-    let g:neodark#background = '#202020'
     let g:spacegray_low_contrast = 1
     let g:solarized_italics = 0
     let g:solarized_extra_hi_groups = 1
     let g:equinusocio_material_style = 'darker'
     let g:equinusocio_material_hide_vertsplit = 1
     silent exec "set background=" . l:color
-    let l:dct = select[(l:color == 'dark' ? 0 : 1)]
-    let l:themeIndex = str2nr(matchstr(reltimestr(reltime()), '\v\.@<=\d+')[1:]) % len(keys(l:dct))
-    let l:colorscheme = keys(dct)[themeIndex]
-    silent exec "colorscheme " . l:colorscheme
+    let l:theme_set = select[(l:color == 'dark' ? 0 : 1)]
+    let l:themeIndex = str2nr(matchstr(reltimestr(reltime()), '\v\.@<=\d+')[1:]) % len(l:theme_set)
+    let l:colorscheme = l:theme_set[l:themeIndex]
+    exec "colorscheme " . l:colorscheme
     echo l:colorscheme
-    try
-      silent exec "AirlineTheme " . l:dct[l:colorscheme]
-    catch
-      let g:airline_theme = l:dct[l:colorscheme]
-    endtry
   else
-    silent exec "colorscheme " . l:color
+    exec "colorscheme " . l:color
     echo l:color
-    try
-      silent exec "AirlineTheme " . l:all_themes[l:color]
-    catch
-      let g:airline_theme = l:all_themes[l:colorscheme]
-    endtry
   endif
   highlight LineNr ctermbg=NONE guibg=NONE
   highlight SignColumn ctermbg=NONE guibg=NONE

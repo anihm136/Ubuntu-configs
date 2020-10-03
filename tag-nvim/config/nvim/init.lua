@@ -1,9 +1,14 @@
 local lsp = require('nvim_lsp')
+local configs = require('nvim_lsp/configs')
+local util = require('nvim_lsp/util')
 -- local treesitter = require'nvim-treesitter.configs'
+require'colorizer'.setup()
 
 if vim.env.SNIPPETS then
 	vim.snippet = require 'snippet'
 end
+
+vim.lsp.set_log_level("debug")
 
 -- treesitter.setup {
 -- 	highlight = {
@@ -24,7 +29,7 @@ local on_attach = function(client, bufnr)
 	vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 end
 
-local servers = {'pyls_ms', 'clangd', 'intelephense', 'tsserver', 'cssls', 'jsonls', 'html', 'bashls'}
+local servers = {'clangd', 'intelephense', 'tsserver', 'cssls', 'jsonls', 'html', 'bashls', 'gopls'}
 for _, lsp_srv in ipairs(servers) do
 	lsp[lsp_srv].setup {
 		on_attach = on_attach,
@@ -35,15 +40,38 @@ lsp.bashls.setup{
 	filetypes = {"sh", "bash", "zsh"}
 }
 
+configs['pyright'] = {
+  default_config = {
+    cmd = {"pyright-langserver", "--stdio"};
+    filetypes = {"python"};
+    root_dir = util.root_pattern(".git", "setup.py",  "setup.cfg", "pyproject.toml", "requirements.txt");
+    settings = {
+      analysis = { autoSearchPaths= true; };
+      pyright = { useLibraryCodeForTypes = true; };
+    };
+    -- The following before_init function can be removed once https://github.com/neovim/neovim/pull/12638 is merged
+    before_init = function(initialize_params)
+            initialize_params['workspaceFolders'] = {{
+                name = 'workspace',
+                uri = initialize_params['rootUri']
+            }}
+    end
+   };
+  docs = {
+    description = [[
+https://github.com/microsoft/pyright
+`pyright`, a static type checker and language server for python
+]];
+  };
+}
 
-lsp.pyls_ms.setup{
-	cmd = { "dotnet", "exec", "/home/anirudh/Applications/python-language-server/output/bin/Release/Microsoft.Python.LanguageServer.dll" };
+lsp.pyright.setup{
 	on_attach = on_attach;
 	root_dir = function(fname)
-		local filename = lsp.util.path.is_absolute(fname) and fname
-		or lsp.util.path.join(vim.loop.cwd(), fname)
-		local root_pattern = lsp.util.root_pattern('setup.py', 'setup.cfg', 'requirements.txt', 'mypy.ini', '.pylintrc', '.flake8rc', '.git', '.gitignore')
-		return root_pattern(filename) or lsp.util.path.dirname(filename)
+		local filename = util.path.is_absolute(fname) and fname
+		or util.path.join(vim.loop.cwd(), fname)
+		local root_pattern = util.root_pattern('setup.py', 'setup.cfg', 'requirements.txt', 'mypy.ini', '.pylintrc', '.flake8rc', '.git', '.gitignore')
+		return root_pattern(filename) or util.path.dirname(filename)
 	end;
 }
 

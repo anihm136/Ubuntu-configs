@@ -24,14 +24,15 @@ ext ()
   if [[ -f $1 ]] || [[ -z $1(#qN) ]] ; then
     local ext_path=$(dirname $1)
     case $1 in
-      *.tar.bz2)   tar -C $ext_path xjf $1   ;;
-      *.tar.gz)    tar -C $ext_path xzf $1   ;;
+      *.tar.bz2)   tar xjf $1 -C $ext_path    ;;
+      *.tar.gz)    tar xzf $1 -C $ext_path    ;;
+      *.tar.xz)    tar xf $1 -C $ext_path   ;;
       *.bz2)       bunzip2 $1            ;;
       *.rar)       unrar x $1 $ext_path      ;;
       *.gz)        gunzip $1             ;;
-      *.tar)       tar -C $ext_path xf $1    ;;
-      *.tbz2)      tar -C $ext_path xjf $1   ;;
-      *.tgz)       tar -C $ext_path xzf $1   ;;
+      *.tar)       tar xf $1 -C $ext_path    ;;
+      *.tbz2)      tar xjf $1 -C $ext_path    ;;
+      *.tgz)       tar xzf $1 -C $ext_path    ;;
       *.zip)       unzip $1 -d $ext_path     ;;
       *.Z)         uncompress $1         ;;
       *.7z)        7z x $1 -o $ext_path      ;;

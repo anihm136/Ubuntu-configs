@@ -10,24 +10,23 @@ Plug 'fedorenchik/gtags.vim'
 Plug 'honza/vim-snippets'
 Plug 'junegunn/vim-easy-align'
 Plug 'mhinz/vim-grepper', {'on': 'Grepper'}
-Plug 'neovim/nvim-lsp'
-Plug 'haorenW1025/completion-nvim'
+Plug 'neovim/nvim-lspconfig'
+Plug 'nvim-lua/completion-nvim'
 " Plug 'haorenW1025/diagnostic-nvim'
 Plug 'dense-analysis/ale'
 Plug 'SirVer/ultisnips'
-Plug 'hrsh7th/vim-vsnip-integ'
-Plug 'hrsh7th/vim-vsnip'
 Plug 'sbdchd/neoformat'
 " Plug 'nvim-treesitter/nvim-treesitter'
 Plug 'roryokane/detectindent'
 Plug 'sheerun/vim-polyglot'
-Plug 'tpope/vim-fugitive', {'on': ['Git','G','GPush']}
+Plug 'tpope/vim-fugitive' , {'on': ['Git','G','GPush']}
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-eunuch'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'thinca/vim-quickrun', {'on': 'QuickRun'}
 Plug 'Shougo/vimproc.vim', {'do' : 'make'}
 Plug 'justinmk/vim-dirvish'
+Plug 'kkoomen/vim-doge'
 " Language-specific
 Plug 'captbaritone/better-indent-support-for-php-with-html', {'for': 'php'}
 Plug 'elzr/vim-json', {'for': 'json'}
@@ -45,11 +44,13 @@ Plug 'kana/vim-textobj-entire'
 Plug 'kana/vim-textobj-indent'
 Plug 'wellle/targets.vim'
 Plug 'chaoren/vim-wordmotion'
-" UI
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
+" " UI
+Plug 'bluz71/vim-moonfly-statusline'
+Plug 'anihm136/moonfly-statusline-themes'
+Plug 'ap/vim-buftabline'
 Plug 'junegunn/goyo.vim', {'on': 'Goyo'}
 Plug 'junegunn/rainbow_parentheses.vim'
+Plug 'norcalli/nvim-colorizer.lua'
 Plug 'ryanoasis/vim-devicons'
 " UX
 Plug 'jiangmiao/auto-pairs'
@@ -61,21 +62,42 @@ Plug 'haya14busa/is.vim'
 Plug 'machakann/vim-sandwich'
 Plug 'machakann/vim-swap'
 " Themes
-Plug 'liuchengxu/space-vim-theme'
-Plug 'anihm136/vim-monokai-pro'
+Plug 'sainnhe/sonokai'
 Plug 'chuling/equinusocio-material.vim'
-Plug 'carakan/new-railscasts-theme'
 Plug 'jacoborus/tender.vim'
-Plug 'morhetz/gruvbox'
+Plug 'gruvbox-community/gruvbox'
+Plug 'habamax/vim-gruvbit'
 Plug 'lifepillar/vim-solarized8'
 Plug 'ajh17/Spacegray.vim'
+" Nvim
+Plug 'anihm136/popup.nvim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-lua/telescope.nvim'
 call plug#end()
 
 runtime macros/matchit.vim
 runtime macros/sandwich/keymap/surround.vim
 
-" Airline
-let g:airline_powerline_fonts = 1
+" Buftabline
+hi! link BufTabLineFill Normal
+hi! link BufTabLineActive Pmenu
+hi! link BufTabLineCurrent PmenuSel
+hi! link BufTabLineHidden Pmenu
+let g:buftabline_indicators = 1
+
+" Moonfly
+let g:moonflyWithALEIndicator = 1
+let g:moonflyWithGitBranchCharacter = 1
+let g:moonflyIgnoreDefaultColors = 1
+
+" Unimpaired
+let g:unimpaired_mapping = {
+			\	"toggles" : 0,
+			\	"excludes" : {
+			\		'nextprevs' : ['f', 'a', 'q', 'l'],
+			\		'keys' : ['>p', '<p', '>P', '<P', '=P', '[P', ']P']
+			\	}
+			\ }
 
 " Textobj-entire
 let g:textobj_entire_no_default_key_mappings = 1

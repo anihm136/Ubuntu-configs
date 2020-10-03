@@ -1,3 +1,7 @@
+if !get(g:, 'loaded_clap', v:false)
+	finish
+endif
+
 let g:clap_disable_run_rooter = v:true
 
 function! MyClapOnEnter() abort
@@ -14,7 +18,12 @@ augroup clapCommands
 augroup END
 let g:clap_provider_grep_opts = '-H --no-heading --vimgrep'
 let g:clap_provider_dotfiles = {
-			\ 'source': ['~/.dotfiles/tag-nvim/config/nvim/plugins.vim', '~/.dotfiles/tag-nvim/config/nvim/init.vim', '~/.dotfiles/tag-nvim/config/nvim/genconfig.vim', '~/.dotfiles/tag-nvim/config/nvim/firevimconfig.vim', '~/.dotfiles/tag-vifm/config/vifm/vifmrc', '~/.zshrc', '~/.profile', '~/.sh_funcs'],
+			\ 'source': map(
+			\							split(globpath(expand('$XDG_CONFIG_HOME').'/nvim', '*.vim'))
+			\						+ split(globpath(expand('$XDG_CONFIG_HOME').'/nvim/after', '**/*.vim'))
+			\						+ ['~/.sh_funcs', '~/.aliases', '~/.config/zsh/.zshrc', '~/.config/zsh/.zaliases', '~/.config/antibody/zsh_plugins.txt', '~/.config/antibody/zsh_plugins.sh']
+			\					, {_,val -> simplify(val)}
+			\						),
 			\ 'sink': 'e',
 			\ }
 

@@ -25,6 +25,9 @@ super + shift + s
 super + shift + k
   $CALC
 
+super + shift + x
+  $LOCKER
+
 super + d
   eval $LAUNCHER
 

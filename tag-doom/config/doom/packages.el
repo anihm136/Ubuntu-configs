@@ -52,10 +52,11 @@
 
 (package! smart-tabs-mode
   :recipe (:host github :repo "dochang/smarttabs" :branch "keep-indent-setting"))
+(package! auto-latex-snippets
+  :recipe (:host github :repo "tecosaur/auto-latex-snippets"))
 (package! org-wild-notifier)
 (package! aggressive-indent)
 (package! importmagic)
 (package! org-projectile)
 (package! ggtags)
 (package! counsel-gtags)
-(package! jupyter)

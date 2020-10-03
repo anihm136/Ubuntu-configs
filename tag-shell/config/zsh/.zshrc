@@ -37,6 +37,7 @@ unset __conda_setup
 # <<< conda initialize <<<
 
 eval "$(pipenv --completion)"
+eval "$(register-python-argcomplete pipx)"
 if (command -v perl && command -v cpanm) >/dev/null 2>&1; then
   test -d "$HOME/perl5/lib/perl5" && eval $(perl -I "$HOME/perl5/lib/perl5" -Mlocal::lib)
 fi

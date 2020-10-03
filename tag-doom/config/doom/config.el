@@ -18,7 +18,8 @@
 ;;
 ;; They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
 ;; font string. You generally only need these two:
-(setq doom-font (font-spec :family "Iosevka Nerd Font Mono" :size 16))
+(setq doom-font (font-spec :family "Iosevka Nerd Font Mono" :size 16)
+      doom-variable-pitch-font (font-spec :family "Overpass" :style "regular" :size 16))
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -49,7 +50,7 @@
 (defconst ani/org-directory "~/Documents/org/"
   "The default directory for org files.")
 
-(defvar dark-themes '(doom-one doom-gruvbox doom-solarized-dark doom-spacegrey doom-monokai-pro doom-sourcerer doom-tomorrow-night)
+(defvar dark-themes '(doom-one doom-gruvbox doom-solarized-dark doom-spacegrey doom-monokai-pro doom-tomorrow-night)
   "Set of dark themes to choose from.")
 
 (defvar light-themes '(doom-gruvbox-light doom-solarized-light)
@@ -60,6 +61,7 @@
               standard-indent 2
               evil-respect-visual-line-mode t
               org-download-image-dir "./images"
+              org-download-heading-lvl 'nil
               ispell-dictionary "en-custom"
               ispell-personal-dictionary (expand-file-name ".ispell_personal" doom-private-dir)
               )
@@ -81,15 +83,9 @@
 
 (use-package! smart-tabs-mode
   :config
-  (smart-tabs-add-language-support jsx rjsx-mode-hook
-    ((js2-jsx-indent-line . standard-indent)))
-  (smart-tabs-add-language-support ts typescript-mode-hook
-    ((typescript-indent-line . standard-indent)))
-  (smart-tabs-add-language-support tsx typescript-tsx-mode-hook
-    ((typescript-tsx-indent-line . standard-indent)))
   (smart-tabs-add-language-support py python-mode-hook
     ((python-indent-line-function . standard-indent)))
-  (smart-tabs-insinuate 'c 'c++ 'java 'javascript 'jsx 'ts 'tsx 'py))
+  (smart-tabs-insinuate 'c 'c++ 'py))
 
 ;; Deferred loading
 
@@ -99,9 +95,7 @@
   (defun ani/org-archive-done-tasks ()
     (interactive)
     (org-map-entries 'org-archive-subtree "/DONE" 'file)
-    (org-map-entries 'org-archive-subtree "/\[X\]" 'file))
-  (map! :map org-mode-map
-        :n "C-c A" 'ani/org-archive-done-tasks)
+    (org-map-entries 'org-archive-subtree "/CANCEL" 'file))
   (setq org-default-notes-file (concat org-directory "inbox.org")
         org-refile-use-outline-path 'file
         org-outline-path-complete-in-steps nil
@@ -111,12 +105,13 @@
         org-log-done 'time
         org-log-into-drawer t
         org-log-state-notes-insert-after-drawers nil
+        org-export-preserve-breaks t
         org-todo-keywords
         '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
-          (sequence "WAITING(w)" "|" "[X](x@)"))
+          (sequence "WAITING(w)" "|" "CANCEL(x@)"))
         org-todo-keyword-faces
         (quote (("NEXT" :foreground "orange" :weight bold)
-                ("[X]" :foreground "red" :weight bold)))
+                ("WAITING" :foreground "orange" :weight bold)))
         org-capture-templates
         '(("t" "Todo" entry (file+headline org-default-notes-file "Tasks")
            "* TODO %? %^G\n %i\n")
@@ -135,50 +130,48 @@
   :defer t
   :config
   (setq org-agenda-files (directory-files-recursively org-directory "\.org$")
-        org-columns-default-format "%40ITEM(Task) %Effort(EE){:} %CLOCKSUM(Time Spent) %SCHEDULED(Scheduled) %DEADLINE(Deadline)"))
+        org-columns-default-format "%40ITEM(Task) %Effort(EE){:} %CLOCKSUM(Time Spent) %SCHEDULED(Scheduled) %DEADLINE(Deadline)"
+        org-agenda-skip-scheduled-if-done t
+        org-agenda-skip-deadline-if-done t)
+  (setq org-agenda-custom-commands `((" " "Agenda"
+                                      ((agenda ""
+                                               ((org-agenda-overriding-header "Weekly Agenda")
+                                                (org-agenda-span 'week)
+                                                (org-deadline-warning-days 365)))
+                                       (todo "TODO"
+                                             ((org-agenda-overriding-header "To Refile")
+                                              (org-agenda-files (list (concat org-directory "inbox.org")))))
+                                       (todo "NEXT"
+                                             ((org-agenda-overriding-header "In Progress")
+                                              (org-agenda-files (append (list (concat org-directory "someday.org")
+                                                                              (concat org-directory "projects.org")
+                                                                              (concat org-directory "tasks.org")
+                                                                              (concat org-directory "inbox.org")))
+                                                                )))
+                                       (todo "TODO"
+                                             ((org-agenda-overriding-header "Projects")
+                                              (org-agenda-files (append (list (concat org-directory "projects.org"))))
+                                              ))
+                                       (todo "TODO"
+                                             ((org-agenda-overriding-header "Tasks")
+                                              (org-agenda-files (list (concat org-directory "tasks.org")))
+                                              (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))))))))
 
-(use-package org-projectile
+  (setq org-refile-targets '((nil :maxlevel . 3)
+                             (org-agenda-files :maxlevel . 3))))
+
+
+(use-package! org-projectile
   :after org
   :config
-  (defun org-projectile-get-project-todo-file (project-path)
-    (concat
-     (file-name-as-directory project-path) (concat
-                                            (file-name-base (directory-file-name project-path))
-                                            "_plan.org")))
   (progn
-    (org-projectile-per-project)
-    (setq org-projectile-capture-template "* TODO %?")
+    (setq
+     org-projectile-capture-template "* TODO %?"
+     org-projectile-projects-file (concat org-directory "projects.org"))
     (add-to-list 'org-capture-templates
                  (org-projectile-project-todo-entry
                   :capture-character "p"))
-    (setq org-link-elisp-confirm-function nil)
-    (setq org-agenda-custom-commands `((" " "Agenda"
-                                        ((agenda ""
-                                                 ((org-agenda-span 'week)
-                                                  (org-deadline-warning-days 365)))
-                                         (todo "TODO"
-                                               ((org-agenda-overriding-header "To Refile")
-                                                (org-agenda-files (list (concat org-directory "inbox.org")))))
-                                         (todo "NEXT"
-                                               ((org-agenda-overriding-header "In Progress")
-                                                (org-agenda-files (append (list (concat org-directory "someday.org")
-                                                                                (concat org-directory "projects.org")
-                                                                                (concat org-directory "next.org")
-                                                                                (concat org-directory "inbox.org"))
-                                                                          (org-projectile-todo-files)))
-                                                ))
-                                         (todo "TODO"
-                                               ((org-agenda-overriding-header "Projects")
-                                                (org-agenda-files (append (list (concat org-directory "projects.org"))
-                                                                          (org-projectile-todo-files)))
-                                                ))
-                                         (todo "TODO"
-                                               ((org-agenda-overriding-header "One-off Tasks")
-                                                (org-agenda-files (list (concat org-directory "next.org")))
-                                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))))))))
-    (setq org-agenda-files (nconc org-agenda-files (org-projectile-todo-files)))
-    (setq org-refile-targets '((nil :maxlevel . 3)
-                               (org-agenda-files :maxlevel . 3)))))
+    (setq org-link-elisp-confirm-function nil)))
 
 (use-package! org-protocol
   :defer t
@@ -223,33 +216,12 @@
 (use-package! counsel-gtags
   :init
   (map! :leader :prefix "c" (:prefix ("g" . "gtags")
-                             :desc "Goto definition" "d" 'counsel-gtags-find-definition
-                             :desc "Find symbol" "s" 'counsel-gtags-dwim
-                             :desc "Goto reference" "r" 'counsel-gtags-find-reference))
+                                     :desc "Goto definition" "d" 'counsel-gtags-find-definition
+                                     :desc "Find symbol" "s" 'counsel-gtags-dwim
+                                     :desc "Goto reference" "r" 'counsel-gtags-find-reference))
   :commands (counsel-gtags-dwim counsel-gtags-find-definition counsel-gtags-find-reference))
 
-(use-package! python
-  :defer t
-  :hook (python-mode . importmagic-mode)
-  :config
-  (setq lsp-python-ms-dir
-        (expand-file-name "~/Applications/python-language-server/output/bin/Release"))
-  (setq lsp-python-ms-executable
-        (expand-file-name "~/Applications/python-language-server/output/bin/Release/Microsoft.Python.LanguageServer"))
-  (after! lsp-python-ms
-    (set-lsp-priority! 'mspyls 1))
-  (with-eval-after-load 'lsp-ui
-    (flycheck-add-next-checker 'lsp 'python-flake8)))
-
-(use-package! jupyter
-  :defer t
-  :after python
-  :commands (jupyter-run-repl jupyter-connect-repl)
-  :config
-  (map! :map python-mode-map
-        :leader :prefix "c" :desc "Send to kernel" "s" 'jupyter-eval-line-or-region))
-
-(use-package ivy-posframe
+(use-package! ivy-posframe
   :defer t
   :config
   (setq ivy-posframe-display-functions-alist '((counsel-M-x . nil)
@@ -259,10 +231,10 @@
         ivy-posframe-parameters '((internal-border-width . 6))
         ivy-posframe-width 100))
 
-(after! org-download
+(use-package! org-download
+  :config
   (setq
    org-download-method 'directory
-   org-download-heading-lvl 'nil
    org-download-timestamp "%Y%m%d-%H%M%S_"
    org-download-link-format "[[file:%s]]\n"
    org-download-link-format-function
@@ -272,45 +244,112 @@
                                " "))
                      org-download-link-format)
              (org-link-escape (file-relative-name filename))))
-   org-image-actual-width 400
-   org-download-screenshot-method "xclip -selection clipboard -t image/png -o > %s"))
+   org-image-actual-width 400))
 
-(after! (:any js rjsx-mode typescript-mode typescript-tsx-mode)
-  (setq flycheck-javascript-eslint-executable "eslint_d")
-  (with-eval-after-load 'lsp-ui
-    (flycheck-add-next-checker 'lsp 'javascript-eslint)))
+(after! org-archive
+  (defun org-archive-subtree-hierarchical--line-content-as-string ()
+    "Returns the content of the current line as a string"
+    (save-excursion
+      (beginning-of-line)
+      (buffer-substring-no-properties
+       (line-beginning-position) (line-end-position))))
 
-(after! typescript-mode
-  (setq typescript-indent-level standard-indent))
+  (defun org-archive-subtree-hierarchical--org-child-list ()
+    "This function returns all children of a heading as a list. "
+    (interactive)
+    (save-excursion
+      ;; this only works with org-version > 8.0, since in previous
+      ;; org-mode versions the function (org-outline-level) returns
+      ;; gargabe when the point is not on a heading.
+      (if (= (org-outline-level) 0)
+          (outline-next-visible-heading 1)
+        (org-goto-first-child))
+      (let ((child-list (list (org-archive-subtree-hierarchical--line-content-as-string))))
+        (while (org-goto-sibling)
+          (setq child-list (cons (org-archive-subtree-hierarchical--line-content-as-string) child-list)))
+        child-list)))
 
-(after! (rjsx-mode js2-mode)
-  (setq js-indent-level standard-indent))
+  (defun org-archive-subtree-hierarchical--org-struct-subtree ()
+    "This function returns the tree structure in which a subtree
+belongs as a list."
+    (interactive)
+    (let ((archive-tree nil))
+      (save-excursion
+        (while (org-up-heading-safe)
+          (let ((heading
+                 (buffer-substring-no-properties
+                  (line-beginning-position) (line-end-position))))
+            (if (eq archive-tree nil)
+                (setq archive-tree (list heading))
+              (setq archive-tree (cons heading archive-tree))))))
+      archive-tree))
 
-(after! flyspell
-  (setq flyspell-lazy-idle-seconds 3
-        flyspell-lazy-window-idle-seconds 10))
+  (defun org-archive-subtree-hierarchical ()
+    "This function archives a subtree hierarchical"
+    (interactive)
+    (let ((org-tree (org-archive-subtree-hierarchical--org-struct-subtree))
+          (this-buffer (current-buffer))
+          (file (abbreviate-file-name
+                 (or (buffer-file-name (buffer-base-buffer))
+                     (error "No file associated to buffer")))))
+      (save-excursion
+        (setq location (org-get-local-archive-location)
+              afile (org-extract-archive-file location)
+              heading (org-extract-archive-heading location)
+              infile-p (equal file (abbreviate-file-name (or afile ""))))
+        (unless afile
+          (error "Invalid `org-archive-location'"))
+        (if (> (length afile) 0)
+            (setq newfile-p (not (file-exists-p afile))
+                  visiting (find-buffer-visiting afile)
+                  buffer (or visiting (find-file-noselect afile)))
+          (setq buffer (current-buffer)))
+        (unless buffer
+          (error "Cannot access file \"%s\"" afile))
+        (org-cut-subtree)
+        (set-buffer buffer)
+        (org-mode)
+        (goto-char (point-min))
+        (while (not (equal org-tree nil))
+          (let ((child-list (org-archive-subtree-hierarchical--org-child-list)))
+            (if (member (car org-tree) child-list)
+                (progn
+                  (search-forward (car org-tree) nil t)
+                  (setq org-tree (cdr org-tree)))
+              (progn
+                (goto-char (point-max))
+                (newline)
+                (org-insert-struct org-tree)
+                (setq org-tree nil)))))
+        (newline)
+        (org-yank)
+        (when (not (eq this-buffer buffer))
+          (save-buffer))
+        (message "Subtree archived %s"
+                 (concat "in file: " (abbreviate-file-name afile))))))
+
+  (defun org-insert-struct (struct)
+    "TODO"
+    (interactive)
+    (when struct
+      (insert (car struct))
+      (newline)
+      (org-insert-struct (cdr struct))))
+
+  (defun org-archive-subtree ()
+    (org-archive-subtree-hierarchical)
+    ))
 
 (use-package! org-wild-notifier
   :config
+  (setq org-wild-notifier-alert-time '(60 30 15 5))
   (org-wild-notifier-mode))
+
+(after! latex-mode (auto-latex-snippets-mode t))
 
 (add-hook! 'prog-mode-hook (lambda ()(modify-syntax-entry ?_ "w")))
 
 (add-hook! 'after-init-hook '+ani/my-init-func)
-
-(map! :localleader
-      (:after rjsx-mode
-       :map rjsx-mode-map
-       "f" 'eslintd-fix)
-      (:after js2-mode
-       :map js2-mode-map
-       "f" 'eslintd-fix)
-      (:after typescript-mode
-       :map typescript-mode-map
-       "f" 'eslintd-fix)
-      (:after typescript-tsx-mode
-       :map typescript-tsx-mode-map
-       "f" 'eslintd-fix))
 
 ;; Utility functions and keymaps
 
@@ -401,11 +440,11 @@
         alert-default-style 'libnotify)
   (map! :nv "C-a" 'evil-numbers/inc-at-pt
         :nv "C-S-x" 'evil-numbers/dec-at-pt
-        :nv "M-j" 'drag-stuff-down
-        :nv "M-k" 'drag-stuff-up
         :v "g C-a" 'evil-numbers/inc-at-pt-incremental
         :v "g C-S-x" 'evil-numbers/dec-at-pt-incremental
-        :v "R" 'evil-multiedit-match-all
+        :nv "M-j" 'drag-stuff-down
+        :nv "M-k" 'drag-stuff-up
+        :v "o" "$"
         :desc "Transpose function argument to the right"
         :n "g>" '(lambda () (interactive) (transpose-args-direction t))
         :desc "Transpose function argument to the left"

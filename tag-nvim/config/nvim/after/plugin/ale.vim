@@ -1,3 +1,7 @@
+if !get(g:, 'loaded_ale', v:false)
+	finish
+endif
+
 nmap <silent> [e <Plug>(ale_previous_wrap)
 nmap <silent> ]e <Plug>(ale_next_wrap)
 let g:ale_linters_explicit = 1
@@ -6,14 +10,6 @@ highlight clear ALEWarningSign
 let g:ale_echo_msg_error_str = 'E'
 let g:ale_echo_msg_warning_str = 'W'
 let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
-
-call ale#linter#Define('python', {
-\   'name': 'mspyls',
-\   'lsp': 'stdio',
-\   'executable': "dotnet",
-\   'command': "dotnet exec /home/anirudh/Applications/python-language-server/output/bin/Release/Microsoft.Python.LanguageServer.dll",
-\   'project_root': function('ale#python#FindProjectRoot'),
-\})
 
 call ale#linter#Define('css', {
 \   'name': 'cssls',
@@ -34,16 +30,17 @@ call ale#linter#Define('json', {
 let g:ale_linters = {
 			\ "c": ['clangd', 'clang'],
 			\ "cpp": ['clangd', 'clang'],
+			\ "python" : ["pyright", "pylint", "flake8"],
 			\ "css": ['cssls'],
 			\ "javascript" : ['eslint', 'tsserver'],
 			\ "typescript" : ['eslint', 'tsserver'],
 			\ "typescriptreact" : ['eslint', 'tsserver'],
 			\ "json" : ['jsonls'],
-			\ "python" : ["pylint", "flake8", "mspyls"],
 			\ "php" : ["php"],
 			\ "sh" : ["shell", "language_server"],
 			\ "zsh" : ["shell", "language_server"],
-			\ "vim" : ["ale_custom_linting_rules"]
+			\ "vim" : ["ale_custom_linting_rules"],
+			\ "text" : ["proselint"]
 			\}
 let g:ale_fixers = {
 			\   '*': ['remove_trailing_lines', 'trim_whitespace'],

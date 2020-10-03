@@ -16,8 +16,12 @@ export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
 typeset -U PATH path
 path=("$path[@]" "$JAVA_HOME/bin")
 path=("$path[@]" "$HOME/.cargo/bin")
+path=("$path[@]" "$HOME/go/bin")
 path=("$path[@]" "/opt/lampp/bin")
 path=("$path[@]" "$HOME/Applications/nvim/bin")
+path=("$path[@]" "$HOME/Applications/ffmpeg-4.3.1-amd64-static")
+path=("$path[@]" "$HOME/Applications/alacritty-0.5.0/target/release")
+# path=("$path[@]" "$HOME/Applications/emacs-native-comp/bin")
 path=("$path[@]" "$HOME/.scripts")
 path=("$path[@]" "$XDG_CONFIG_HOME/emacs/bin")
 path=("$path[@]" "/opt/mssql-tools/bin")
@@ -39,6 +43,8 @@ export SUDO_ASKPASS="$HOME/.scripts/dmenupass"
 export PIPENV_VENV_IN_PROJECT=1
 export LC_ALL=en_IN.utf8
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
+export MSSQL_CLI_TELEMETRY_OPTOUT=1
+export CALIBRE_USE_DARK_PALETTE=1
 
 # Default applications
 export EDITOR="nvim"
@@ -49,3 +55,4 @@ export GUIEDITOR="codium"
 export SETTINGS="lxqt-config-session"
 export LAUNCHER='rofi -run-list-command "showaliases" -run-command "/bin/bash -i -c {cmd}" -show run'
 export CALC="kcalc"
+export LOCKER="slock"

@@ -66,25 +66,34 @@ set scrolloff=10
 set shortmess=actI
 set listchars=tab:>-,trail:-,extends:>,precedes:<,nbsp:%,eol:$
 set fillchars+=vert:│
+set formatoptions-=a    " Auto formatting is BAD.
+set formatoptions-=t    " Don't auto format my code. I got linters for that.
+set formatoptions+=c    " In general, I like it when comments respect textwidth
+set formatoptions+=q    " Allow formatting comments w/ gq
+set formatoptions-=o    " O and o, don't continue comments
+set formatoptions+=r    " But do continue when pressing enter.
+set formatoptions+=n    " Indent past the formatlistpat, not underneath it.
+set formatoptions+=j    " Auto-remove comments if possible.
+set formatoptions-=2    " I'm not in gradeschool anymore
+set cursorline
 
-nnoremap <silent> <leader>w :wa!<cr>
-nnoremap <silent> <leader>W execute 'silent! write !sudo tee "%" >/dev/null' <bar> edit!
+nnoremap <silent> <leader>fs :wa!<cr>
+" nnoremap <silent> <leader>Fs exe 'silent! write !sudo tee % >/dev/null | edit!'
 vnoremap <silent> y ygv<Esc>
 inoremap <silent> fd <Esc>
 inoremap <silent> <C-v> <C-r>+
-nnoremap <silent><leader>r :set wrap!<cr>
+nnoremap <silent> <leader>r :set wrap!<cr>
 
 augroup custom_commands
 	autocmd!
 augroup END
 
 autocmd custom_commands VimResized * wincmd =
-autocmd custom_commands FileType * set fo-=c fo-=r fo-=o
-autocmd custom_commands FocusGained,BufEnter * :checktime
+autocmd custom_commands FocusGained,BufEnter * checktime
 autocmd custom_commands FileType help,plugins,fugitive nnoremap <silent><buffer> q :q<cr>
 autocmd custom_commands FileType qf nnoremap <silent> <C-n> :cn<cr> | nnoremap <silent> <C-p> :cp<cr> | nnoremap <silent> q :call helpers#closeQf()<cr>
 autocmd custom_commands BufWritePost init.vim,plugins.vim,genconfig.vim nested silent source %
-autocmd custom_commands BufReadPost,BufNewFile * DetectIndent
+autocmd custom_commands BufReadPost,BufNewFile * :DetectIndent
 autocmd custom_commands TextYankPost *  silent! lua require'vim.highlight'.on_yank()
 
 
@@ -175,14 +184,6 @@ vnoremap <S-Down> <Down>
 noremap <silent><leader>bd :call helpers#bufcloseCloseIt()<cr>
 noremap <leader>ba :bufdo bd<cr>
 
-noremap <silent><leader>l :bnext<cr>
-noremap <silent><leader>h :bprevious<cr>
-
-noremap <leader>tn :tabnew<cr>
-noremap <leader>tp :tabp<cr>
-noremap <leader>to :tab sp<cr>
-noremap <leader>tc :call helpers#bufcloseCloseIt() <bar> tabclose<cr>
-
 noremap <leader>e :edit <c-r>=fnameescape(expand("%:p:h"))<cr>/
 noremap <leader>cd :cd %:p:h <bar> pwd<cr>
 
@@ -198,18 +199,15 @@ autocmd custom_commands BufReadPost * if line("'\"") > 1 && line("'\"") <= line(
 " => Editing mappings
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-map 0 ^
 map Y y$
 nnoremap x "_x
 xnoremap <expr> p printf('pgv"%sygv<esc>', v:register)
+vnoremap o $
 
-autocmd custom_commands BufRead,BufNewFile,VimEnter *.js,*.jsx,*.ts,*.tsx,*.py,*.coffee,*.c,*.cpp,*.java silent call ProgFunc()
+autocmd custom_commands BufRead,BufNewFile,VimEnter *.js,*.jsx,*.ts,*.tsx,*.py,*.coffee,*.c,*.cpp,*.java,*.go,*.lua silent call ProgFunc()
 
 xnoremap <Leader>rn :s///g<Left><Left>
 xnoremap <Leader>rc :s///gc<Left><Left><Left>
-
-nnoremap <silent> rn :let @/='\<'.expand('<cword>').'\>'<CR>cgn
-xnoremap <silent> rn "sy:let @/=@s<CR>cgn
 
 nnoremap <F2>
 			\ :let @s='\<'.expand('<cword>').'\>'<CR>
@@ -228,11 +226,6 @@ xmap <F2>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 noremap <leader>ss :setlocal spell!<cr>
-
-map <leader>sn ]s
-map <leader>sp [s
-map <leader>sa zg
-map <leader>s? z=
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Misc

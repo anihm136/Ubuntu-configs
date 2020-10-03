@@ -53,7 +53,7 @@ function rules.create(clientkeys, clientbuttons)
             properties = {screen = 1, tag = awful.util.tagnames[3]}
         },
         {
-            rule_any = {class = {"Thunderbird", "Station"}},
+            rule_any = {class = {"Thunderbird", "Station", "Ferdi"}},
             properties = {screen = 1, tag = awful.util.tagnames[5]}
         },
         {

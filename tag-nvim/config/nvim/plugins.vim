@@ -2,6 +2,7 @@ let g:polyglot_disabled = ['mathematica']
 
 call plug#begin('~/.config/nvim/plugged')
 Plug 'airblade/vim-gitgutter'
+Plug 'airblade/vim-rooter'
 Plug 'tyru/caw.vim'
 Plug 'anihm136/context_filetype.vim'
 Plug 'anihm136/vim-unimpaired'
@@ -131,8 +132,3 @@ let g:ale_sign_warning = '⚠'
 let g:ale_sign_info = ''
 let g:ale_virtualtext_cursor = 1
 let g:ale_hover_cursor = 0
-
-
-
-
-

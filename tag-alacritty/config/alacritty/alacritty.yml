@@ -551,3 +551,5 @@ key_bindings:
   - { key: PageDown,  mods: Shift, action: ScrollPageDown, mode: ~Alt       }
   - { key: Home,      mods: Shift, action: ScrollToTop,    mode: ~Alt       }
   - { key: End,       mods: Shift, action: ScrollToBottom, mode: ~Alt       }
+  - { key: Return,   mods: Shift,   chars: "\x1b[13;2u" }
+  - { key: Return,   mods: Control, chars: "\x1b[13;5u" }

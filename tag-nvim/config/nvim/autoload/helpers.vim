@@ -76,6 +76,14 @@ fun! helpers#djangoFt() abort
 endfunction
 
 fun! helpers#navMap(mode) abort
+  silent! nunmap <buffer> gd
+  silent! nunmap <buffer> gD
+  silent! nunmap <buffer> 1gd
+  silent! nunmap <buffer> gr
+  silent! nunmap <buffer> <leader>rn
+  silent! nunmap <buffer> <leader>ca
+  silent! nunmap <buffer> g0
+  silent! nunmap <buffer> gW
   if a:mode == 1
     nnoremap <silent><buffer> gd <cmd>lua vim.lsp.buf.definition()<CR>
     nnoremap <silent><buffer> gD <cmd>lua vim.lsp.buf.implementation()<CR>
@@ -98,14 +106,17 @@ fun! helpers#navMap(mode) abort
     nnoremap <silent><buffer> g0 :Gtags -f %<cr>
     nnoremap <silent><buffer> <Leader>rn :%s///g<Left><Left>
     nnoremap <silent><buffer> <Leader>rc :%s///gc<Left><Left><Left>
+  else
+    nnoremap <silent><buffer> <Leader>rn :%s///g<Left><Left>
+    nnoremap <silent><buffer> <Leader>rc :%s///gc<Left><Left><Left>
   endif
 endfunction
 
 fun! helpers#toggleTags() abort
-  let l:op = confirm("Choose completion/navigation method:", "&LSP\n&Cscope\nC&tags", 1)
+  let l:op = confirm("Choose completion/navigation method:", "&LSP\n&Cscope\nC&tags\n&Skip", 4)
+  call helpers#navMap(l:op)
 
   if l:op == 1
-    call helpers#navMap(l:op)
     return 1
   elseif l:op == 2
     silent exe 'cs kill -1'
@@ -130,10 +141,9 @@ fun! helpers#toggleTags() abort
       return -1
     else
       silent exe 'cs add cscope.out'
-      call helpers#navMap(l:op)
       return 2
     endif
-  else
+  elseif l:op == 3
     if !filereadable("GTAGS")
       redraw
       let l:op2 = confirm('Gtags file not found. Create?', "&yes\n&skip", 2)
@@ -150,7 +160,6 @@ fun! helpers#toggleTags() abort
     if exists("l:skip")
       return -1
     else
-      call helpers#navMap(l:op)
       return 3
     endif
   endif
@@ -174,14 +183,45 @@ function! helpers#toggleFileExplorer() abort
   endif
 endfunction
 
+function! s:IsQfWindow(nmbr)
+  if getwinvar(a:nmbr, "&filetype") == "qf"
+    return getbufvar(winbufnr(a:nmbr), "qf_isLoc") == 1 ? 0 : 1
+  endif
+  return 0
+endfunction
+
+" returns bool: Is quickfix window open?
+function! s:IsQfWindowOpen() abort
+  for winnum in range(1, winnr('$'))
+    if s:IsQfWindow(winnum)
+      return 1
+    endif
+  endfor
+  return 0
+endfunction
+
+function! helpers#mapQf() abort
+  let b:qf_isLoc = !empty(getloclist(0))
+  if s:IsQfWindowOpen()
+    nnoremap <silent> <C-n> :cnext<cr>
+    nnoremap <silent> <C-p> :cprevious<cr>
+    nnoremap <silent> q :call helpers#closeQf()<cr>
+  else
+    nnoremap <silent> <C-n> :lnext<cr>
+    nnoremap <silent> <C-p> :lprevious<cr>
+    nnoremap <silent> q :call helpers#closeQf()<cr>
+  endif
+endfunction
+
 function! helpers#closeQf() abort
   silent exe "ccl"
+  silent exe "lcl"
   unmap <C-n>
   unmap <C-p>
   unmap q
 endfunction
 
-function! RemoveItalicFromHighlightCommand(somestring)
+function! s:RemoveItalicFromHighlightCommand(somestring)
   let cmd=a:somestring
   let cmd=substitute(cmd, "italic",    "", "g") " remove italics
   let cmd=substitute(cmd, ",,",       ",", "g") " when italic occurs in middle of list, delete extraneous comma
@@ -192,13 +232,15 @@ function! RemoveItalicFromHighlightCommand(somestring)
   return cmd
 endfunction
 
-function! MakeColorChanges()
+let s:sid = expand('<SID>')
+function! s:MakeColorChanges()
   redir @a | silent hi | redir END
   let @a=substitute(@a, "xxx", "", "g") " The :hi command displays 'xxx' to show what the groups look like
   let cmdlist = split(@a, "\n")
   call filter(cmdlist, 'v:val =~ "italic"')
   call filter(cmdlist, 'v:val !~ "links to"')
-  call map(cmdlist, 'RemoveItalicFromHighlightCommand(v:val)')
+  let l:fun = s:sid . 'RemoveItalicFromHighlightCommand(v:val)' 
+  call map(cmdlist, l:fun)
   for cmd in cmdlist
     let test = split(cmd, " ")
     if index(test, "c") != -1 || index(test, "cleared") != -1
@@ -249,6 +291,6 @@ function! helpers#setColorscheme(...) abort
   highlight LineNr ctermbg=NONE guibg=NONE
   highlight SignColumn ctermbg=NONE guibg=NONE
   highlight FoldColumn ctermbg=NONE guibg=NONE
-  call MakeColorChanges()
+  call s:MakeColorChanges()
   highlight Comment gui=italic
 endfunction

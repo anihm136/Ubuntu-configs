@@ -4,6 +4,7 @@ endif
 
 nmap <silent> [e <Plug>(ale_previous_wrap)
 nmap <silent> ]e <Plug>(ale_next_wrap)
+nmap <silent> <leader>ce <cmd>lopen<cr>
 let g:ale_linters_explicit = 1
 highlight clear ALEErrorSign
 highlight clear ALEWarningSign

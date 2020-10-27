@@ -71,7 +71,7 @@ autocmd custom_commands VimResized * wincmd =
 autocmd custom_commands FocusGained,BufEnter * checktime
 autocmd custom_commands FileType * set fo=lcqnrj
 autocmd custom_commands FileType help,plugins,fugitive nnoremap <silent><buffer> q :q<cr>
-autocmd custom_commands FileType qf nnoremap <silent> <C-n> :cn<cr> | nnoremap <silent> <C-p> :cp<cr> | nnoremap <silent> q :call helpers#closeQf()<cr>
+autocmd custom_commands FileType qf call helpers#mapQf()
 autocmd custom_commands BufWritePost init.vim,plugins.vim,genconfig.vim nested silent source %
 autocmd custom_commands BufReadPost,BufNewFile * :DetectIndent
 autocmd custom_commands TextYankPost *  silent! lua require'vim.highlight'.on_yank()
@@ -123,7 +123,8 @@ set diffopt&
 syntax enable
 
 command! -nargs=? -complete=customlist,CompleteColors SetColorscheme call helpers#setColorscheme(<f-args>)
-nnoremap <silent><F12> :SetColorscheme<cr>
+nnoremap <silent><F12> :SetColorscheme dark<cr>
+nnoremap <silent><F24> :SetColorscheme light<cr>
 silent exec "SetColorscheme"
 
 set encoding=utf8
@@ -184,7 +185,9 @@ nnoremap x "_x
 xnoremap <expr> p printf('pgv"%sygv<esc>', v:register)
 vnoremap o $
 
-autocmd custom_commands BufRead,BufNewFile,VimEnter *.js,*.jsx,*.ts,*.tsx,*.py,*.coffee,*.c,*.cpp,*.java,*.go,*.lua silent call ProgFunc()
+autocmd custom_commands BufRead,BufNewFile,VimEnter *.js,*.jsx,*.ts,*.tsx,*.py,*.c,*.cpp,*.go let g:nav_mode = 1
+autocmd custom_commands BufRead,BufNewFile,VimEnter *.java,*.lua let g:nav_mode = 1
+autocmd custom_commands BufRead,BufNewFile,VimEnter *.js,*.jsx,*.ts,*.tsx,*.py,*.c,*.cpp,*.java,*.go,*.lua silent call ProgFunc()
 
 xnoremap <Leader>rn :s///g<Left><Left>
 xnoremap <Leader>rc :s///gc<Left><Left><Left>
@@ -227,7 +230,7 @@ endfunction
 
 function! ProgFunc() abort
 	silent exec "RainbowParentheses"
-	if get(g:, "nav_mode", -1) == -1
+	if !get(g:, "nav_mode")
 		let g:nav_mode = helpers#toggleTags()
 	else
 		call helpers#navMap(g:nav_mode)

@@ -35,6 +35,7 @@ alias gcm='git checkout master'
 alias gcd='git checkout develop'
 alias gcmsg='git commit -m'
 alias gco='git checkout'
+alias gsw='git switch'
 alias gcount='git shortlog -sn'
 
 alias gf='git fetch'
@@ -89,7 +90,7 @@ compdef _git ggu=git-checkout
 
 alias gl='git pull'
 alias glg='git log --stat'
-alias glgg='git log --graph'
+alias glgg='git log --graph --pretty=format:"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset" --abbrev-commit --date=relative'
 alias glo='git log --oneline --decorate'
 alias gm='git merge'
 alias gmom='git merge origin/master'

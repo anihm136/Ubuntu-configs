@@ -15,7 +15,7 @@ function! helpers#bufcloseCloseIt() abort
   if buflisted(l:currentBufNum)
     execute("bdelete! ".l:currentBufNum)
   endif
-  silent redrawtabline 
+  silent redrawtabline
 endfunction
 
 function! s:CmdLine(str) abort
@@ -75,89 +75,87 @@ fun! helpers#djangoFt() abort
   endif
 endfunction
 
-fun! helpers#toggleTags() abort
-  if !exists("b:idxmode")
-    if exists("g:idxmode")
-      let b:idxmode = g:idxmode
-    else
-      let b:idxmode = 0
-      let g:idxmode = 0
-    endif
-  endif
-  if b:idxmode == 0
+fun! helpers#navMap(mode) abort
+  if a:mode == 1
     nnoremap <silent><buffer> gd <cmd>lua vim.lsp.buf.definition()<CR>
-    nnoremap <silent><buffer> gD <cmd>lua vim.lsp.buf.references()<CR>
-    nmap <silent><buffer> gs <cmd>lua vim.lsp.buf.implementation()<CR>
-    nnoremap <silent> <leader>rn <cmd>lua vim.lsp.buf.rename()<CR>
-    let b:idxmode = 1
-    let g:idxmode = 0
-    echo "LSP mode"
-  elseif b:idxmode == 1
+    nnoremap <silent><buffer> gD <cmd>lua vim.lsp.buf.implementation()<CR>
+    nnoremap <silent><buffer> 1gd <cmd>lua vim.lsp.buf.type_definition()<CR>
+    nnoremap <silent><buffer> gr <cmd>lua vim.lsp.buf.references()<CR>
+    nnoremap <silent><buffer> <leader>rn <cmd>lua vim.lsp.buf.rename()<CR>
+    nnoremap <silent><buffer> <leader>ca <cmd>lua vim.lsp.buf.code_action()<CR>
+    nnoremap <silent><buffer> g0 <cmd>lua vim.lsp.buf.document_symbol()<CR>
+    nnoremap <silent><buffer> gW <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
+  elseif a:mode == 2
+    nnoremap <silent><buffer><expr> gd ':cs find g ' . expand('<cword>') . '<cr>'
+    nnoremap <silent><buffer><expr> gD ':cs find c ' . expand('<cword>') . '<cr>'
+    nnoremap <silent><buffer><expr> gs ':cs find s ' . expand('<cword>') . '<cr>'
+    nnoremap <silent><buffer> <Leader>rn :%s///g<Left><Left>
+    nnoremap <silent><buffer> <Leader>rc :%s///gc<Left><Left><Left>
+  elseif a:mode == 3
+    nnoremap <silent><buffer> gd :Gtags<cr>
+    nnoremap <silent><buffer> gD :GtagsCursor<cr>
+    nnoremap <silent><buffer> gs :Gtags -g<cr>
+    nnoremap <silent><buffer> g0 :Gtags -f %<cr>
+    nnoremap <silent><buffer> <Leader>rn :%s///g<Left><Left>
+    nnoremap <silent><buffer> <Leader>rc :%s///gc<Left><Left><Left>
+  endif
+endfunction
+
+fun! helpers#toggleTags() abort
+  let l:op = confirm("Choose completion/navigation method:", "&LSP\n&Cscope\nC&tags", 1)
+
+  if l:op == 1
+    call helpers#navMap(l:op)
+    return 1
+  elseif l:op == 2
     silent exe 'cs kill -1'
     if !filereadable("cscope.out")
-      call inputsave()
-      let l:op = input('Cscope file not found. Create?([p]ycscope|[c]scope|[n]one) ')
-      call inputrestore()
       redraw
-      if op == "c"
+      let l:op2 = confirm("Cscope file not found. Create?", "&pycscope\n&cscope\n&skip", 3)
+      if l:op2 == 2
         try
           silent call system("git ls-files > cscope.files && cscope -bcqR && rm -f cscope.files")
         catch
           silent call system("cscope -bcqR")
         endtry
-      elseif op == "p"
+      elseif l:op2 == 1
         try
           silent call system("git ls-files > cscope.files && pycscope -i cscope.files && rm -f cscope.files")
         catch
           silent call system("pycscope -R")
         endtry
-      else
-        let l:skip = 1
       endif
     endif
-    let b:idxmode = 2
-    let g:idxmode = 1
     if exists("l:skip")
-      call helpers#toggleTags()
+      return -1
     else
       silent exe 'cs add cscope.out'
-      nnoremap <silent><buffer><expr> gd ':cs find g ' . expand('<cword>') . '<cr>'
-      nnoremap <silent><buffer><expr> gD ':cs find c ' . expand('<cword>') . '<cr>'
-      nnoremap <silent><buffer><expr> gs ':cs find s ' . expand('<cword>') . '<cr>'
-      nnoremap <silent><buffer> <Leader>rn :%s///g<Left><Left>
-      nnoremap <silent><buffer> <Leader>rc :%s///gc<Left><Left><Left>
-
-      echo "cscope mode"
+      call helpers#navMap(l:op)
+      return 2
     endif
   else
     if !filereadable("GTAGS")
-      call inputsave()
-      let l:op = input('Gtags file not found. Create?([y]es|[n]o) ')
-      call inputrestore()
       redraw
-      if op == "y"
+      let l:op2 = confirm('Gtags file not found. Create?', "&yes\n&skip", 2)
+      if l:op2 == 1
         if match(["c","cpp","java","php"], &filetype) != -1
           silent call system('gtags')
         else
-          silent call system('gtags --gtagslabel=ctags')
+          call system('gtags --gtagslabel=ctags')
         endif
       else
         let l:skip = 1
       endif
     endif
-    let b:idxmode = 0
-    let g:idxmode = 2
     if exists("l:skip")
-      call helpers#toggleTags()
+      return -1
     else
-      nnoremap <silent><buffer> gd :Gtags<cr>
-      nnoremap <silent><buffer> gD :GtagsCursor<cr>
-      nnoremap <silent><buffer> gs :Gtags -g<cr>
-      nnoremap <silent><buffer> <Leader>rn :%s///g<Left><Left>
-      nnoremap <silent><buffer> <Leader>rc :%s///gc<Left><Left><Left>
-      echo "gtags mode"
+      call helpers#navMap(l:op)
+      return 3
     endif
   endif
+
+  return -1
 endfunction
 
 function! helpers#toggleFileExplorer() abort
@@ -254,5 +252,3 @@ function! helpers#setColorscheme(...) abort
   call MakeColorChanges()
   highlight Comment gui=italic
 endfunction
-
-

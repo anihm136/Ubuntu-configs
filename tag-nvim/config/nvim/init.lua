@@ -23,10 +23,19 @@ vim.lsp.set_log_level("debug")
 -- 	},
 -- 	ensure_installed = 'all'
 -- }
+local mapper = function(mode, key, result)
+  vim.api.nvim_buf_set_keymap(0, mode, key, result, {noremap = true, silent = true})
+end
 
 vim.lsp.callbacks["textDocument/publishDiagnostics"] = function() end
 local on_attach = function(client, bufnr)
 	vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+	mapper('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>')
+	mapper('n', 'gD', '<cmd>lua vim.lsp.buf.implementation()<CR>')
+	mapper('n', '1gd', '<cmd>lua vim.lsp.buf.type_definition()<CR>')
+	mapper('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>')
+	mapper('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>')
+	mapper('i', '<c-s>', '<cmd>lua vim.lsp.buf.signature_help()<CR>')
 end
 
 local servers = {'clangd', 'intelephense', 'tsserver', 'cssls', 'jsonls', 'html', 'bashls', 'gopls'}

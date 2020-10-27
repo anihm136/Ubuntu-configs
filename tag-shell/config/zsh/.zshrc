@@ -41,41 +41,41 @@ eval "$(register-python-argcomplete pipx)"
 if (command -v perl && command -v cpanm) >/dev/null 2>&1; then
   test -d "$HOME/perl5/lib/perl5" && eval $(perl -I "$HOME/perl5/lib/perl5" -Mlocal::lib)
 fi
-_comp_options+=(globdots)
+setopt globdots
 setopt extendedglob
 
-zle-keymap-select () {
-  VI_KEYMAP=$KEYMAP
-  zle reset-prompt
-  zle -R
-  if [ $KEYMAP = vicmd ]; then
-    printf "\033[2 q"
-  else
-    printf "\033[6 q"
-  fi
-}
-zle -N zle-keymap-select
-
-zle-line-init () {
-  zle -K viins
-  printf "\033[6 q"
-}
-zle -N zle-line-init
-
-autoload -Uz edit-command-line
-zle -N edit-command-line
-
-bindkey -v
-bindkey -a 'v' edit-command-line
-bindkey '^[[A' up-line-or-search
-bindkey "^[[3~" delete-char
-bindkey '^?' backward-delete-char
-bindkey '^w' backward-kill-word
-bindkey '^a' beginning-of-line
-bindkey '^e' end-of-line
+# zle-keymap-select () {
+#   VI_KEYMAP=$KEYMAP
+#   zle reset-prompt
+#   zle -R
+#   if [ $KEYMAP = vicmd ]; then
+#     printf "\033[2 q"
+#   else
+#     printf "\033[6 q"
+#   fi
+# }
+# zle -N zle-keymap-select
+# 
+# zle-line-init () {
+#   zle -K viins
+#   printf "\033[6 q"
+# }
+# zle -N zle-line-init
+# 
+# autoload -Uz edit-command-line
+# zle -N edit-command-line
+# 
+# bindkey -v
+# bindkey -a 'v' edit-command-line
+# bindkey '^[[A' up-line-or-search
+# bindkey "^[[3~" delete-char
+# bindkey '^?' backward-delete-char
+# bindkey '^w' backward-kill-word
+# bindkey '^a' beginning-of-line
+# bindkey '^e' end-of-line
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-[[ -f $HOME/.sh_funcs ]] && source $HOME/.sh_funcs
+[[ -f $HOME/.sh_funcs.zsh ]] && source $HOME/.sh_funcs.zsh
 [[ -f $HOME/.aliases ]] && source $HOME/.aliases
 [[ -f $ZDOTDIR/.zaliases ]] && source $ZDOTDIR/.zaliases
 

@@ -52,6 +52,3 @@ function! s:show_documentation()
 endfunction
 
 nnoremap <silent> K     :call <SID>show_documentation()<CR>
-nnoremap <silent> g0    <cmd>lua vim.lsp.buf.document_symbol()<CR>
-nnoremap <silent> gW    <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
-nnoremap <silent> <space>ca <cmd>lua vim.lsp.buf.code_action()<CR>

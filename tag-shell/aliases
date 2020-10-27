@@ -20,6 +20,7 @@ alias calc='libreoffice --nologo --calc &!'
 alias impress='libreoffice --nologo --impress &!'
 alias o='mimeopen'
 alias oa='mimeopen -d'
+alias ee="nvim"
 alias vifm='/home/anirudh/.config/vifm/scripts/vifmrun 2>/dev/null'
 alias bt='bluetoothctl'
 alias srv='sudo /opt/lampp/lampp restart'

@@ -5,6 +5,7 @@ local beautiful = require("beautiful")
 local dpi = beautiful.xresources.apply_dpi
 local my_table = gears.table
 local machi = require("layout-machi")
+local hotkeys_popup = require("awful.hotkeys_popup").widget
 
 local modkey = "Mod4"
 local altkey = "Mod1"
@@ -89,6 +90,21 @@ end
 local function raise_client()
     if client.focus then
         client.focus:raise()
+    end
+end
+
+-- Toggle sticky floating window
+local function sticky_float(c)
+    awful.client.floating.toggle()
+    if c.floating then
+        c.ontop=true
+        c.sticky=true
+        c.width=533
+        c.height=300
+        awful.placement.top_right(client.focus)
+    else
+        c.ontop=false
+        c.sticky=false
     end
 end
 
@@ -188,6 +204,8 @@ keys.globalkeys =
     awful.key({modkey, "Shift"}, "r", awesome.restart, {description = "reload awesome", group = "awesome"}),
     -- Quit Awesome
     awful.key({modkey, "Shift"}, "e", awesome.quit, {description = "quit awesome", group = "awesome"}),
+    -- Show help
+    awful.key({modkey}, 's', hotkeys_popup.show_help, {description = 'show help', group = 'awesome'}),
     -- =========================================
     -- CLIENT FOCUSING
     -- =========================================
@@ -292,7 +310,7 @@ keys.globalkeys =
                 end
             end
         end,
-        {description = "toggle wibox", group = "awesome"}
+        {description = "toggle top wibar", group = "awesome"}
     ),
     -- =========================================
     -- CLIENT RESIZING
@@ -590,6 +608,12 @@ keys.clientkeys =
         "space",
         awful.client.floating.toggle,
         {description = "toggle floating", group = "client"}
+    ),
+    awful.key(
+        {modkey, altkey},
+        "space",
+        sticky_float,
+        {description = "toggle sticky floating", group = "client"}
     ),
     awful.key(
         {modkey, "Shift"},

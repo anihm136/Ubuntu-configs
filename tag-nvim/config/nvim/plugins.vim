@@ -2,7 +2,6 @@ let g:polyglot_disabled = ['mathematica']
 
 call plug#begin('~/.config/nvim/plugged')
 Plug 'airblade/vim-gitgutter'
-Plug 'airblade/vim-rooter'
 Plug 'tyru/caw.vim'
 Plug 'anihm136/context_filetype.vim'
 Plug 'anihm136/vim-unimpaired'
@@ -19,7 +18,7 @@ Plug 'sbdchd/neoformat'
 " Plug 'nvim-treesitter/nvim-treesitter'
 Plug 'roryokane/detectindent'
 Plug 'sheerun/vim-polyglot'
-Plug 'tpope/vim-fugitive' , {'on': ['Git','G','GPush']}
+Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-eunuch'
 Plug 'christoomey/vim-tmux-navigator'
@@ -51,7 +50,9 @@ Plug 'ap/vim-buftabline'
 Plug 'junegunn/goyo.vim', {'on': 'Goyo'}
 Plug 'junegunn/rainbow_parentheses.vim'
 Plug 'norcalli/nvim-colorizer.lua'
+Plug 'tjdevries/cyclist.vim'
 Plug 'ryanoasis/vim-devicons'
+Plug 'mhinz/vim-startify'
 " UX
 Plug 'jiangmiao/auto-pairs'
 Plug 'liuchengxu/vim-clap'

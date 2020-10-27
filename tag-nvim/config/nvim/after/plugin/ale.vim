@@ -32,6 +32,7 @@ let g:ale_linters = {
 			\ "cpp": ['clangd', 'clang'],
 			\ "python" : ["pyright", "pylint", "flake8"],
 			\ "css": ['cssls'],
+			\ "go": ['gopls'],
 			\ "javascript" : ['eslint', 'tsserver'],
 			\ "typescript" : ['eslint', 'tsserver'],
 			\ "typescriptreact" : ['eslint', 'tsserver'],

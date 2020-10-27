@@ -59,7 +59,6 @@
 ;; Eager loading
 (setq-default tab-width 2
               standard-indent 2
-              evil-respect-visual-line-mode t
               org-download-image-dir "./images"
               org-download-heading-lvl 'nil
               ispell-dictionary "en-custom"
@@ -92,10 +91,6 @@
 (use-package! org
   :defer t
   :config
-  (defun ani/org-archive-done-tasks ()
-    (interactive)
-    (org-map-entries 'org-archive-subtree "/DONE" 'file)
-    (org-map-entries 'org-archive-subtree "/CANCEL" 'file))
   (setq org-default-notes-file (concat org-directory "inbox.org")
         org-refile-use-outline-path 'file
         org-outline-path-complete-in-steps nil
@@ -108,10 +103,11 @@
         org-export-preserve-breaks t
         org-todo-keywords
         '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
-          (sequence "WAITING(w)" "|" "CANCEL(x@)"))
+          (sequence "WAITING(w@)" "DEFERRED(f)" "|" "CANCEL(x@)"))
         org-todo-keyword-faces
-        (quote (("NEXT" :foreground "orange" :weight bold)
-                ("WAITING" :foreground "orange" :weight bold)))
+        (quote (("NEXT" . org-level-7)
+                ("WAITING" . org-level-7)
+                ("DEFERRED" . org-level-7)))
         org-capture-templates
         '(("t" "Todo" entry (file+headline org-default-notes-file "Tasks")
            "* TODO %? %^G\n %i\n")
@@ -138,15 +134,15 @@
                                                ((org-agenda-overriding-header "Weekly Agenda")
                                                 (org-agenda-span 'week)
                                                 (org-deadline-warning-days 365)))
-                                       (todo "TODO"
-                                             ((org-agenda-overriding-header "To Refile")
-                                              (org-agenda-files (list (concat org-directory "inbox.org")))))
+                                       (tags-todo "CATEGORY=\"refile\""
+                                                  ((org-agenda-overriding-header "To Refile")
+                                                   (org-agenda-files (list (concat org-directory "inbox.org")))))
                                        (todo "NEXT"
                                              ((org-agenda-overriding-header "In Progress")
-                                              (org-agenda-files (append (list (concat org-directory "someday.org")
-                                                                              (concat org-directory "projects.org")
-                                                                              (concat org-directory "tasks.org")
-                                                                              (concat org-directory "inbox.org")))
+                                              (org-agenda-files (append (list
+                                                                         (concat org-directory "projects.org")
+                                                                         (concat org-directory "tasks.org")
+                                                                         (concat org-directory "inbox.org")))
                                                                 )))
                                        (todo "TODO"
                                              ((org-agenda-overriding-header "Projects")
@@ -213,12 +209,36 @@
                             company-preview-if-just-one-frontend
                             company-echo-metadata-frontend)))
 
+(use-package auto-activating-snippets
+  :hook (LaTeX-mode . auto-activating-snippets-mode)
+  :hook (org-mode . auto-activating-snippets-mode)
+  :config
+  (aas-set-snippets 'org-mode
+                    "**" (lambda () (interactive)
+                           (yas-expand-snippet "*$0*"))
+                    "$$" (lambda () (interactive)
+                           (yas-expand-snippet "\$$0\$"))
+                    "//" (lambda () (interactive)
+                           (yas-expand-snippet "/$0/"))))
+
+(use-package! latex-auto-activating-snippets
+  :after latex ; auctex's LaTeX package
+  :config ; do whatever here
+  (aas-set-snippets 'latex-mode
+                    ;; set condition!
+                    :cond #'texmathp ; expand only while in math
+                    "supp" "\\supp"
+                    "On" "O(n)"
+                    "O1" "O(1)"
+                    "Olog" "O(\\log n)"
+                    "Olon" "O(n \\log n)"))
+
 (use-package! counsel-gtags
   :init
   (map! :leader :prefix "c" (:prefix ("g" . "gtags")
-                                     :desc "Goto definition" "d" 'counsel-gtags-find-definition
-                                     :desc "Find symbol" "s" 'counsel-gtags-dwim
-                                     :desc "Goto reference" "r" 'counsel-gtags-find-reference))
+                             :desc "Goto definition" "d" 'counsel-gtags-find-definition
+                             :desc "Find symbol" "s" 'counsel-gtags-dwim
+                             :desc "Goto reference" "r" 'counsel-gtags-find-reference))
   :commands (counsel-gtags-dwim counsel-gtags-find-definition counsel-gtags-find-reference))
 
 (use-package! ivy-posframe
@@ -247,98 +267,20 @@
    org-image-actual-width 400))
 
 (after! org-archive
-  (defun org-archive-subtree-hierarchical--line-content-as-string ()
-    "Returns the content of the current line as a string"
-    (save-excursion
-      (beginning-of-line)
-      (buffer-substring-no-properties
-       (line-beginning-position) (line-end-position))))
-
-  (defun org-archive-subtree-hierarchical--org-child-list ()
-    "This function returns all children of a heading as a list. "
+  (defun ani/org-archive-done-tasks ()
     (interactive)
-    (save-excursion
-      ;; this only works with org-version > 8.0, since in previous
-      ;; org-mode versions the function (org-outline-level) returns
-      ;; gargabe when the point is not on a heading.
-      (if (= (org-outline-level) 0)
-          (outline-next-visible-heading 1)
-        (org-goto-first-child))
-      (let ((child-list (list (org-archive-subtree-hierarchical--line-content-as-string))))
-        (while (org-goto-sibling)
-          (setq child-list (cons (org-archive-subtree-hierarchical--line-content-as-string) child-list)))
-        child-list)))
-
-  (defun org-archive-subtree-hierarchical--org-struct-subtree ()
-    "This function returns the tree structure in which a subtree
-belongs as a list."
-    (interactive)
-    (let ((archive-tree nil))
-      (save-excursion
-        (while (org-up-heading-safe)
-          (let ((heading
-                 (buffer-substring-no-properties
-                  (line-beginning-position) (line-end-position))))
-            (if (eq archive-tree nil)
-                (setq archive-tree (list heading))
-              (setq archive-tree (cons heading archive-tree))))))
-      archive-tree))
-
-  (defun org-archive-subtree-hierarchical ()
-    "This function archives a subtree hierarchical"
-    (interactive)
-    (let ((org-tree (org-archive-subtree-hierarchical--org-struct-subtree))
-          (this-buffer (current-buffer))
-          (file (abbreviate-file-name
-                 (or (buffer-file-name (buffer-base-buffer))
-                     (error "No file associated to buffer")))))
-      (save-excursion
-        (setq location (org-get-local-archive-location)
-              afile (org-extract-archive-file location)
-              heading (org-extract-archive-heading location)
-              infile-p (equal file (abbreviate-file-name (or afile ""))))
-        (unless afile
-          (error "Invalid `org-archive-location'"))
-        (if (> (length afile) 0)
-            (setq newfile-p (not (file-exists-p afile))
-                  visiting (find-buffer-visiting afile)
-                  buffer (or visiting (find-file-noselect afile)))
-          (setq buffer (current-buffer)))
-        (unless buffer
-          (error "Cannot access file \"%s\"" afile))
-        (org-cut-subtree)
-        (set-buffer buffer)
-        (org-mode)
-        (goto-char (point-min))
-        (while (not (equal org-tree nil))
-          (let ((child-list (org-archive-subtree-hierarchical--org-child-list)))
-            (if (member (car org-tree) child-list)
-                (progn
-                  (search-forward (car org-tree) nil t)
-                  (setq org-tree (cdr org-tree)))
-              (progn
-                (goto-char (point-max))
-                (newline)
-                (org-insert-struct org-tree)
-                (setq org-tree nil)))))
-        (newline)
-        (org-yank)
-        (when (not (eq this-buffer buffer))
-          (save-buffer))
-        (message "Subtree archived %s"
-                 (concat "in file: " (abbreviate-file-name afile))))))
-
-  (defun org-insert-struct (struct)
-    "TODO"
-    (interactive)
-    (when struct
-      (insert (car struct))
-      (newline)
-      (org-insert-struct (cdr struct))))
-
-  (defun org-archive-subtree ()
-    (org-archive-subtree-hierarchical)
-    ))
+    (org-map-entries 'org-archive-subtree "/DONE" 'file)
+    (org-map-entries 'org-archive-subtree "/CANCEL" 'file))
+  (defadvice org-archive-subtree (around my-org-archive-subtree activate)
+    (let ((org-archive-location
+           (if (save-excursion (org-back-to-heading)
+                               (> (org-outline-level) 1))
+               (concat (car (split-string org-archive-location "::"))
+                       "::* "
+                       (car (org-get-outline-path)))
+             org-archive-location)))
+      ad-do-it))
+  )
 
 (use-package! org-wild-notifier
   :config
@@ -465,4 +407,4 @@ belongs as a list."
       (funcall 'load-theme (nth (random (length light-themes)) light-themes) t)
     (funcall 'load-theme (nth (random (length dark-themes)) dark-themes) t))
   (setq font-lock-comment-face '(font-lock-comment-face :slant italic))
-  (princ custom-enabled-themes))
+  (princ (cdr custom-enabled-themes)))

@@ -3,7 +3,6 @@ local lain = require("lain")
 local awful = require("awful")
 local wibox = require("wibox")
 local dpi = require("beautiful.xresources").apply_dpi
-local beautiful = require("beautiful")
 
 local awesome, client, os = awesome, client, os
 local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
@@ -28,6 +27,9 @@ theme.taglist_bg_focus = "#222222"
 theme.taglist_bg_normal = "#222222"
 theme.titlebar_bg_normal = "#191919"
 theme.titlebar_bg_focus = "#262626"
+theme.tooltip_bg = "#222222"
+theme.tooltip_fg = "#BBBBBB"
+theme.tooltip_font = "Overpass 8"
 theme.menu_height = dpi(20)
 theme.menu_width = dpi(250)
 theme.tasklist_disable_icon = true
@@ -73,6 +75,7 @@ local green = "#8FEB8F"
 -- Textclock
 local mytextclock = wibox.widget.textclock("<span> %I:%M:%S </span>", 1)
 mytextclock.font = "Kimberley Bl 11"
+mytextclock.forced_width = 70
 
 -- Calendar
 theme.cal =
@@ -146,7 +149,9 @@ theme.volume =
         unmute = theme.fg_normal
     }
 }
-theme.volume.tooltip.wibox.fg = theme.fg_normal
+theme.volume.tooltip.fg = theme.tooltip_fg
+theme.volume.tooltip.bg = theme.tooltip_bg
+theme.volume.tooltip.font = theme.tooltip_font
 
 theme.volume.bar:buttons(
     my_table.join(
@@ -275,6 +280,8 @@ local mocp, mocp_timer =
         local max_artist = math.floor(#mocp_now.artist * percent)
         local max_title = math.floor(#mocp_now.title * percent)
 
+        local info_string = " " .. mocp_now.artist .. " - " .. mocp_now.title
+
         local wistring =
             " " ..
             mocp_now.artist:shorten(max_artist) ..
@@ -289,6 +296,21 @@ local mocp, mocp_timer =
         end
         widget:set_font("Overpass 9")
         widget:set_text(wistring)
+        widget.info_string = info_string
+    end
+)
+local music_tooltip = awful.tooltip { 
+    bg=theme.tooltip_bg,
+    fg=theme.tooltip_fg,
+    font=theme.tooltip_font
+}
+
+music_tooltip:add_to_object(mocp)
+
+mocp:connect_signal(
+    "mouse::enter",
+    function()
+        music_tooltip.text = mocp.info_string
     end
 )
 

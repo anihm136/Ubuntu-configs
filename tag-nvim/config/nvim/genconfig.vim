@@ -22,17 +22,6 @@ let g:mapleader = "\<Space>"
 nmap <silent> <leader>g :Goyo<cr>
 
 " Dirvish
-command! -nargs=? -complete=dir Explore Dirvish <args>
-command! -nargs=? -complete=dir Sexplore belowright split | silent Dirvish <args>
-command! -nargs=? -complete=dir Vexplore leftabove 30vsplit | silent Dirvish <args>
-augroup dirVish
-	autocmd!
-	autocmd FileType dirvish nnoremap <silent><buffer> p ddO<Esc>:let @"=substitute(@", '\n', '', 'g')<CR>:r ! find "<C-R>"" -maxdepth 1 -print0 \| xargs -0 ls -Fd<CR>:silent! keeppatterns %s/\/\//\//g<CR>:silent! keeppatterns %s/[^a-zA-Z0-9\/]$//g<CR>:silent! keeppatterns g/^$/d<CR>:noh<CR>
-	autocmd FileType dirvish nnoremap <buffer> + :edit %
-	autocmd FileType dirvish nmap <buffer><silent> q gq
-	autocmd FileType dirvish nnoremap <buffer> <BS> -
-augroup END
-nnoremap <silent> <Leader>0 :call helpers#toggleFileExplorer()<cr>
 
 " DB
 nnoremap <buffer> <leader>sd :DB b:db =<Space>
@@ -64,17 +53,7 @@ set updatetime=200
 set inccommand=nosplit
 set scrolloff=10
 set shortmess=actI
-set listchars=tab:>-,trail:-,extends:>,precedes:<,nbsp:%,eol:$
 set fillchars+=vert:│
-set formatoptions-=a    " Auto formatting is BAD.
-set formatoptions-=t    " Don't auto format my code. I got linters for that.
-set formatoptions+=c    " In general, I like it when comments respect textwidth
-set formatoptions+=q    " Allow formatting comments w/ gq
-set formatoptions-=o    " O and o, don't continue comments
-set formatoptions+=r    " But do continue when pressing enter.
-set formatoptions+=n    " Indent past the formatlistpat, not underneath it.
-set formatoptions+=j    " Auto-remove comments if possible.
-set formatoptions-=2    " I'm not in gradeschool anymore
 set cursorline
 
 nnoremap <silent> <leader>fs :wa!<cr>
@@ -90,6 +69,7 @@ augroup END
 
 autocmd custom_commands VimResized * wincmd =
 autocmd custom_commands FocusGained,BufEnter * checktime
+autocmd custom_commands FileType * set fo=lcqnrj
 autocmd custom_commands FileType help,plugins,fugitive nnoremap <silent><buffer> q :q<cr>
 autocmd custom_commands FileType qf nnoremap <silent> <C-n> :cn<cr> | nnoremap <silent> <C-p> :cp<cr> | nnoremap <silent> q :call helpers#closeQf()<cr>
 autocmd custom_commands BufWritePost init.vim,plugins.vim,genconfig.vim nested silent source %
@@ -247,7 +227,9 @@ endfunction
 
 function! ProgFunc() abort
 	silent exec "RainbowParentheses"
-	if !exists("b:idxmode")
-		call helpers#toggleTags()
+	if get(g:, "nav_mode", -1) == -1
+		let g:nav_mode = helpers#toggleTags()
+	else
+		call helpers#navMap(g:nav_mode)
 	endif
 endfunction

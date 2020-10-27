@@ -1,19 +1,41 @@
 [user]
 	email = anihm136@gmail.com
 	name = Anirudh H M
+
 [color]
 	ui = auto
 	uix = auto
+
 [core]
-	pager = bat -p
+	pager = delta
+
 [github]
 	user = anihm136@gmail.com
+
 # define command which will be used when "nvim" is set as a merge tool
 [mergetool "nvim"]
   cmd = nvim -f -c \"Gdiffsplit!\" \"$MERGED\"
+
 # set "nvim" as tool for merging
 [merge]
   tool = nvim
+
 # automatically launch merge tool without displaying a prompt
 [mergetool]
   prompt = false
+
+[interactive]
+	diffFilter = delta --color-only
+
+[delta]
+	line-numbers = true
+	syntax-theme = Monokai Extended
+	side-by-side = true
+
+	file-modified-label = modified:
+
+[pull]
+	rebase = true
+
+[rebase]
+	autoStash = true

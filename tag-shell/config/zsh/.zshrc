@@ -14,12 +14,24 @@ HISTSIZE=1000
 SAVEHIST=1000
 HISTFILE="$XDG_CACHE_HOME/zsh/history"
 ZSH_COMPDUMP="$XDG_CACHE_HOME/zsh/.zcompdump"
+DISABLE_MAGIC_FUNCTIONS="true"
 
 # Linux antibody file
 autoload -U compaudit compinit
 ZSH="$ANTIBODY_HOME"/https-COLON--SLASH--SLASH-github.com-SLASH-robbyrussell-SLASH-oh-my-zsh
 source "${XDG_CONFIG_HOME:-$HOME/.config}/antibody/zsh_plugins.sh"
 compinit -U
+
+# Interactive shell options
+export forgit_log=glog
+export forgit_diff=gdiff
+export forgit_add=ga
+export forgit_reset_head=grh
+export forgit_ignore=gignore
+export forgit_restore=gcheck
+export forgit_clean=gclean
+export forgit_stash_show=gss
+export forgit_cherry_pick=gcp
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
@@ -43,6 +55,13 @@ if (command -v perl && command -v cpanm) >/dev/null 2>&1; then
 fi
 setopt globdots
 setopt extendedglob
+unalias z 2> /dev/null
+
+catch_signal_usr1() {
+  trap catch_signal_usr1 USR1
+  nvim -c "SLoad reload"
+}
+trap catch_signal_usr1 USR1
 
 # zle-keymap-select () {
 #   VI_KEYMAP=$KEYMAP

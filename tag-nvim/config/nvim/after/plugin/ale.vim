@@ -11,34 +11,10 @@ highlight clear ALEWarningSign
 let g:ale_echo_msg_error_str = 'E'
 let g:ale_echo_msg_warning_str = 'W'
 let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
-
-call ale#linter#Define('css', {
-\   'name': 'cssls',
-\   'lsp': 'stdio',
-\   'executable': "css-languageserver",
-\   'command': "css-languageserver --stdio",
-\   'project_root': fnameescape(expand('%:p:h')),
-\})
-
-call ale#linter#Define('json', {
-\   'name': 'jsonls',
-\   'lsp': 'stdio',
-\   'executable': "vscode-json-languageserver",
-\   'command': "vscode-json-languageserver --stdio",
-\   'project_root': fnameescape(expand('%:p:h')),
-\})
+let g:ale_javascript_eslint_executable = 'eslint_d'
+let g:ale_typescript_eslint_executable = 'eslint_d'
 
 let g:ale_linters = {
-			\ "c": ['clangd', 'clang'],
-			\ "cpp": ['clangd', 'clang'],
-			\ "python" : ["pyright", "pylint", "flake8"],
-			\ "css": ['cssls'],
-			\ "go": ['gopls'],
-			\ "javascript" : ['eslint', 'tsserver'],
-			\ "typescript" : ['eslint', 'tsserver'],
-			\ "typescriptreact" : ['eslint', 'tsserver'],
-			\ "json" : ['jsonls'],
-			\ "php" : ["php"],
 			\ "sh" : ["shell", "language_server"],
 			\ "zsh" : ["shell", "language_server"],
 			\ "vim" : ["ale_custom_linting_rules"],

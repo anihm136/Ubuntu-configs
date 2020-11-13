@@ -21,7 +21,6 @@ path=("$path[@]" "/opt/lampp/bin")
 path=("$path[@]" "$HOME/Applications/nvim/bin")
 path=("$path[@]" "$HOME/Applications/ffmpeg-4.3.1-amd64-static")
 path=("$path[@]" "$HOME/Applications/alacritty-0.5.0/target/release")
-# path=("$path[@]" "$HOME/Applications/emacs-native-comp/bin")
 path=("$path[@]" "$HOME/.scripts")
 path=("$path[@]" "$XDG_CONFIG_HOME/emacs/bin")
 path=("$path[@]" "/opt/mssql-tools/bin")
@@ -35,7 +34,6 @@ export QT_QPA_PLATFORMTHEME=qt5ct
 export FZF_DEFAULT_OPTS="--height 40% --reverse"
 export FZF_CTRL_T_OPTS="--preview '(bat --style=numbers --color=always {} || cat {}) 2> /dev/null | head -500' --preview-window right:60% --select-1"
 export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:hidden:wrap --bind '?:toggle-preview'"
-export FZF_ALT_C_COMMAND="fda"
 export FZF_DEFAULT_COMMAND="fdfind --type f --hidden --follow --exclude .git --exclude node_modules --exclude .venv --exclude .ccls-cache"
 export FZF_CTRL_T_COMMAND="fdfind --hidden --follow --exclude .git --exclude node_modules --exclude .venv --exclude .ccls-cache"
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"

@@ -50,3 +50,5 @@ fpath+=( /home/anirudh/.local/share/antibody/https-COLON--SLASH--SLASH-github.co
 source /home/anirudh/.local/share/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-romkatv-SLASH-powerlevel10k/powerlevel10k.zsh-theme
 source /home/anirudh/.local/share/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-romkatv-SLASH-powerlevel10k/powerlevel9k.zsh-theme
 fpath+=( /home/anirudh/.local/share/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-romkatv-SLASH-powerlevel10k )
+source /home/anirudh/.local/share/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-wfxr-SLASH-forgit/forgit.plugin.zsh
+fpath+=( /home/anirudh/.local/share/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-wfxr-SLASH-forgit )

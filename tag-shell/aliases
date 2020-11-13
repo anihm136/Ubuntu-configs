@@ -10,7 +10,7 @@ alias Adds='sudo snap install'
 alias Rem='sudo apt remove'
 alias Rems='sudo snap remove'
 alias joplin='~/Applications/Joplin*.AppImage 2>/dev/null &!'
-alias ferdi='~/Applications/ferdi-5.6.0-beta.2/ferdi'
+alias ferdi='~/Applications/ferdi-5.6.0-nightly.11/ferdi'
 alias kden='~/Applications/kdenlive*.appimage 2>/dev/null &!'
 alias marktext='~/Applications/Marktext*.AppImage 2>/dev/null &!'
 alias postman='~/Applications/Postman/Postman 2>/dev/null &!'
@@ -28,6 +28,8 @@ alias armsim='wine /home/anirudh/.wine/drive_c/users/anirudh/Local\ Settings/App
 alias rmf='rm -rf'
 alias mng='python manage.py'
 alias cenvc='conda create --yes -n'
+alias bgd='bg; disown'
+alias tmuxn='direnv exec / tmux new-session'
 
 # Common aliases
 alias l='ls -lFh'     

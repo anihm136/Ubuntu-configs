@@ -73,8 +73,10 @@ autocmd custom_commands FileType * set fo=lcqnrj
 autocmd custom_commands FileType help,plugins,fugitive nnoremap <silent><buffer> q :q<cr>
 autocmd custom_commands FileType qf call helpers#mapQf()
 autocmd custom_commands BufWritePost init.vim,plugins.vim,genconfig.vim nested silent source %
-autocmd custom_commands BufReadPost,BufNewFile * :DetectIndent
+autocmd custom_commands BufReadPost,BufNewFile * DetectIndent
 autocmd custom_commands TextYankPost *  silent! lua require'vim.highlight'.on_yank()
+
+command -nargs=0 Reload call helpers#vim_reload()
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -162,11 +164,11 @@ map <Up> gk
 vnoremap <S-Up> <Up>
 vnoremap <S-Down> <Down>
 
-noremap <silent><leader>bd :call helpers#bufcloseCloseIt()<cr>
-noremap <leader>ba :bufdo bd<cr>
+nnoremap <silent><leader>bd :call helpers#bufcloseCloseIt()<cr>
+nnoremap <silent><leader>wd :call helpers#bufcloseCloseIt() \| q<cr>
 
-noremap <leader>e :edit <c-r>=fnameescape(expand("%:p:h"))<cr>/
-noremap <leader>cd :cd %:p:h <bar> pwd<cr>
+nnoremap <leader>e :edit <c-r>=fnameescape(expand("%:p:h"))<cr>/
+nnoremap <leader>pd :cd %:p:h <bar> pwd<cr>
 
 try
 	set switchbuf=useopen,usetab
@@ -186,9 +188,11 @@ xnoremap <expr> p printf('pgv"%sygv<esc>', v:register)
 vnoremap o $
 
 autocmd custom_commands BufRead,BufNewFile,VimEnter *.js,*.jsx,*.ts,*.tsx,*.py,*.c,*.cpp,*.go let g:nav_mode = 1
-autocmd custom_commands BufRead,BufNewFile,VimEnter *.java,*.lua let g:nav_mode = 1
+autocmd custom_commands BufRead,BufNewFile,VimEnter *.java,*.lua let g:nav_mode = -1
 autocmd custom_commands BufRead,BufNewFile,VimEnter *.js,*.jsx,*.ts,*.tsx,*.py,*.c,*.cpp,*.java,*.go,*.lua silent call ProgFunc()
 
+nnoremap <silent> <Leader>rn :%s///g<Left><Left>
+nnoremap <silent> <Leader>rc :%s///gc<Left><Left><Left>
 xnoremap <Leader>rn :s///g<Left><Left>
 xnoremap <Leader>rc :s///gc<Left><Left><Left>
 
@@ -205,17 +209,32 @@ xmap <F2>
 			\<Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Text objects
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+function! VisualNumber()
+	call search('\d\([^0-9\.]\|$\)', 'cW')
+	normal v
+	call search('\(^\|[^0-9\.]\d\)', 'becW')
+endfunction
+xnoremap <silent> in :<C-u>call VisualNumber()<CR>
+onoremap <silent> in :<C-u>normal vin<CR>
+
+xnoremap <silent> ig :<C-u>let z = @/\|1;/^./kz<CR>G??<CR>:let @/ = z<CR>V'z
+onoremap <silent> ig :<C-u>normal vig<CR>
+xnoremap <silent> ag GoggV
+onoremap <silent> ag :<C-u>normal vag<CR>
+
+xnoremap <silent> il g_o^
+onoremap <silent> il :<C-u>normal vil<CR>
+xnoremap <silent> al $o0
+onoremap <silent> al :<C-u>normal val<CR>
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Spell checking
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 noremap <leader>ss :setlocal spell!<cr>
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Misc
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-noremap <leader>q :e ~/buffer<cr>
-noremap <leader>x :e ~/buffer.md<cr>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Helper functions

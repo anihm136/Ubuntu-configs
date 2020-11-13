@@ -76,39 +76,30 @@ fun! helpers#djangoFt() abort
 endfunction
 
 fun! helpers#navMap(mode) abort
-  silent! nunmap <buffer> gd
-  silent! nunmap <buffer> gD
-  silent! nunmap <buffer> 1gd
-  silent! nunmap <buffer> gr
-  silent! nunmap <buffer> <leader>rn
+  silent! nunmap <buffer> <leader>cd
+  silent! nunmap <buffer> <leader>cD
+  silent! nunmap <buffer> <leader>cr
+  silent! nunmap <buffer> <leader>cn
   silent! nunmap <buffer> <leader>ca
   silent! nunmap <buffer> g0
   silent! nunmap <buffer> gW
   if a:mode == 1
-    nnoremap <silent><buffer> gd <cmd>lua vim.lsp.buf.definition()<CR>
-    nnoremap <silent><buffer> gD <cmd>lua vim.lsp.buf.implementation()<CR>
-    nnoremap <silent><buffer> 1gd <cmd>lua vim.lsp.buf.type_definition()<CR>
-    nnoremap <silent><buffer> gr <cmd>lua vim.lsp.buf.references()<CR>
-    nnoremap <silent><buffer> <leader>rn <cmd>lua vim.lsp.buf.rename()<CR>
+    nnoremap <silent><buffer> <leader>cd <cmd>lua vim.lsp.buf.definition()<CR>
+    nnoremap <silent><buffer> <leader>cD <cmd>lua vim.lsp.buf.implementation()<CR>
+    nnoremap <silent><buffer> <leader>cr <cmd>lua vim.lsp.buf.references()<CR>
+    nnoremap <silent><buffer> <leader>cn <cmd>lua LspRenameFloat()<CR>
     nnoremap <silent><buffer> <leader>ca <cmd>lua vim.lsp.buf.code_action()<CR>
     nnoremap <silent><buffer> g0 <cmd>lua vim.lsp.buf.document_symbol()<CR>
     nnoremap <silent><buffer> gW <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
   elseif a:mode == 2
-    nnoremap <silent><buffer><expr> gd ':cs find g ' . expand('<cword>') . '<cr>'
-    nnoremap <silent><buffer><expr> gD ':cs find c ' . expand('<cword>') . '<cr>'
-    nnoremap <silent><buffer><expr> gs ':cs find s ' . expand('<cword>') . '<cr>'
-    nnoremap <silent><buffer> <Leader>rn :%s///g<Left><Left>
-    nnoremap <silent><buffer> <Leader>rc :%s///gc<Left><Left><Left>
+    nnoremap <silent><buffer><expr> <leader>cd ':cs find g ' . expand('<cword>') . '<cr>'
+    nnoremap <silent><buffer><expr> <leader>cD ':cs find c ' . expand('<cword>') . '<cr>'
+    nnoremap <silent><buffer><expr> <leader>cs ':cs find s ' . expand('<cword>') . '<cr>'
   elseif a:mode == 3
-    nnoremap <silent><buffer> gd :Gtags<cr>
-    nnoremap <silent><buffer> gD :GtagsCursor<cr>
-    nnoremap <silent><buffer> gs :Gtags -g<cr>
+    nnoremap <silent><buffer> <leader>cd :Gtags<cr>
+    nnoremap <silent><buffer> <leader>cD :GtagsCursor<cr>
+    nnoremap <silent><buffer> <leader>cs :Gtags -g<cr>
     nnoremap <silent><buffer> g0 :Gtags -f %<cr>
-    nnoremap <silent><buffer> <Leader>rn :%s///g<Left><Left>
-    nnoremap <silent><buffer> <Leader>rc :%s///gc<Left><Left><Left>
-  else
-    nnoremap <silent><buffer> <Leader>rn :%s///g<Left><Left>
-    nnoremap <silent><buffer> <Leader>rc :%s///gc<Left><Left><Left>
   endif
 endfunction
 
@@ -278,6 +269,8 @@ function! helpers#setColorscheme(...) abort
     let g:solarized_extra_hi_groups = 1
     let g:equinusocio_material_style = 'darker'
     let g:equinusocio_material_hide_vertsplit = 1
+    let g:sonokai_sign_column_background = 'none'
+    let g:sonokai_diagnostic_line_highlight = 1
     silent exec "set background=" . l:color
     let l:theme_set = select[(l:color == 'dark' ? 0 : 1)]
     let l:themeIndex = str2nr(matchstr(reltimestr(reltime()), '\v\.@<=\d+')[1:]) % len(l:theme_set)
@@ -294,3 +287,10 @@ function! helpers#setColorscheme(...) abort
   call s:MakeColorChanges()
   highlight Comment gui=italic
 endfunction
+
+function! helpers#vim_reload() abort
+    silent! update
+    SSave! reload
+    call system('kill -USR1 $(ps -p $(ps -p $$ -o ppid=) -o ppid=)')
+    qa!
+endfu

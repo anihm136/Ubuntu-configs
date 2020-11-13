@@ -16,8 +16,8 @@ cf() {
 }
 
 #
-# # ex - archive extractor
-# # usage: ex <file>
+# # ext - archive extractor
+# # usage: ext <file>
 ext ()
 {
   if [[ -f $1 ]] || [[ -z $1(#qN) ]] ; then
@@ -43,18 +43,43 @@ ext ()
 }
 
 fif() {
-  if [ ! "$#" -gt 0 ]; then echo "Need a string to search for!"; return 1; fi
-  rg --files-with-matches --no-messages "$1" | fzf --preview "bat --style=numbers --color=always {} 2> /dev/null | rg --colors 'match:bg:yellow' --ignore-case --pretty --context 10 '$1' || rg --ignore-case --pretty --context 10 '$1' {}" --preview-window right:60%:wrap
+  if [ ! "$#" -gt 0 ]; then
+    echo "Need a string to search for!"
+    return 1
+  fi
+  IFS=$'\n' out=("$(rg --files-with-matches --no-messages "$1" | fzf --preview "highlight -O ansi -l {} 2> /dev/null | rg --colors 'match:bg:yellow' --ignore-case --pretty --context 10 '$1' || rg --ignore-case --pretty --context 10 '$1' {}" --expect='ctrl-e' --header='edit:ctrl-e')")
+  key=$(head -1 <<< "$out")
+  file=$(head -2 <<< "$out" | tail -1)
+  if [ -n "$file" ]; then
+    [ "$key" = ctrl-e ] && ${EDITOR:-nvim} "$file"
+  fi
 }
 
 e() {
   if [[ -n "$@" ]]; then
     nvim $@
   else
-    local files="$(fzf -m)"
+    local FZF_PREVIEW_CMD='bat --color=always --plain --line-range :$FZF_PREVIEW_LINES {}'
+    local IFS=$'\n'
+    local files=()
+    files=(
+      "$(fzf \
+            --query="$1" \
+            --multi \
+            --preview="${FZF_PREVIEW_CMD}" \
+            --preview-window='right:hidden:wrap' \
+            --bind=ctrl-v:toggle-preview \
+            --bind=ctrl-x:toggle-sort \
+            --header='(view:ctrl-v) (sort:ctrl-x)'
+      )"
+    ) || return
     local args=("${(f)files}")
-    [ -n "$args" ] && nvim ${args[@]}
+    ${EDITOR:-nvim} ${args[@]}
   fi
+}
+
+z() {
+  cd "$(_z -l "$*" 2>&1 | fzf --select-1 +s --tac --query "${*##-* }" | sed 's/^\S* *//')"
 }
 
 mcp() {
@@ -112,4 +137,24 @@ mmv() {
 
 dlm() {
   youtube-dl -f ${2:-"m4a"} $1 --add-metadata
+}
+
+codi() {
+  local syntax="${1:-python}"
+  shift
+  nvim -c \
+    "let g:startify_disable_at_vimenter = 1 |\
+    set bt=nofile ls=0 noru nonu nornu |\
+    hi ColorColumn ctermbg=NONE |\
+    hi VertSplit ctermbg=NONE |\
+    hi NonText ctermfg=0 |\
+    Codi $syntax" "$@"
+}
+
+tm() {
+  local session=$(tmux ls -F '#S' | fzf --header='Select session to attach to'
+)
+  if [[ -n $session ]]; then
+    tmux attach -t $session
+  fi
 }

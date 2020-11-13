@@ -44,11 +44,18 @@ let g:completion_chain_complete_list = {
 			\}
 
 function! s:show_documentation()
-	if (index(['vim','help'], &filetype) >= 0)
-		execute 'h '.expand('<cword>')
-	else
-		execute 'lua vim.lsp.buf.hover()'
+	if (index(['vim','help', 'lua'], &filetype) >= 0)
+		try
+			execute 'h '.expand('<cword>')
+			return
+		catch
+		endtry
 	endif
+	try
+		execute 'lua vim.lsp.buf.hover()'
+	catch
+		echoerr "No help available for " . expand('<cword>')
+	endtry
 endfunction
 
-nnoremap <silent> K     :call <SID>show_documentation()<CR>
+nnoremap <silent> K <cmd>call <SID>show_documentation()<CR>

@@ -1,3 +1,15 @@
+let g:neoformat_c_clangformat = {
+            \ 'exe': 'clang-format',
+            \ 'args': ['--style=file'],
+            \ 'stdin': 1
+            \ }
+
+let g:neoformat_cpp_clangformat = {
+            \ 'exe': 'clang-format',
+            \ 'args': ['--style=file'],
+            \ 'stdin': 1
+            \ }
+
 let g:neoformat_run_all_formatters = 1
 let g:neoformat_enabled_python = ['black', 'isort']
 let g:neoformat_enabled_javascript = ['prettier']

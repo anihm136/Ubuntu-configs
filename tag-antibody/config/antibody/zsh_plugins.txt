@@ -17,3 +17,4 @@ zdharma/fast-syntax-highlighting
 esc/conda-zsh-completion
 zsh-users/zsh-completions
 romkatv/powerlevel10k
+wfxr/forgit

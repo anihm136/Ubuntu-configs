@@ -158,3 +158,5 @@ tm() {
     tmux attach -t $session
   fi
 }
+
+direnv() { asdf exec direnv "$@"; }

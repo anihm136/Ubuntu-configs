@@ -11,15 +11,11 @@
 "
 "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-let g:mapleader = "\<Space>"
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Plugin mappings
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Goyo
-nmap <silent> <leader>g :Goyo<cr>
+nmap <silent> <leader>gy :Goyo<cr>
 
 " Dirvish
 
@@ -51,33 +47,36 @@ set clipboard=unnamedplus
 set signcolumn=yes
 set updatetime=200
 set inccommand=nosplit
-set scrolloff=10
+set scrolloff=3
 set shortmess=actI
 set fillchars+=vert:│
+set listchars=eol:↲,tab:»\ ,trail:𝁢,extends:…,precedes:…,conceal:┊
+set list
 set cursorline
 
+
 nnoremap <silent> <leader>fs :wa!<cr>
-" nnoremap <silent> <leader>Fs exe 'silent! write !sudo tee % >/dev/null | edit!'
-vnoremap <silent> y ygv<Esc>
+xnoremap <silent> y ygv<Esc>
 inoremap <silent> fd <Esc>
 inoremap <silent> <C-v> <C-r>+
-nnoremap <silent> <leader>r :set wrap!<cr>
+nnoremap <silent> <leader>tw :set wrap!<cr>
+nnoremap gx :<C-u>!$BROWSER <C-r><C-f><cr>
 
 augroup custom_commands
 	autocmd!
 augroup END
 
+autocmd custom_commands FileType * set formatoptions=lcqnrj
 autocmd custom_commands VimResized * wincmd =
 autocmd custom_commands FocusGained,BufEnter * checktime
-autocmd custom_commands FileType * set fo=lcqnrj
 autocmd custom_commands FileType help,plugins,fugitive nnoremap <silent><buffer> q :q<cr>
 autocmd custom_commands FileType qf call helpers#mapQf()
 autocmd custom_commands BufWritePost init.vim,plugins.vim,genconfig.vim nested silent source %
 autocmd custom_commands BufReadPost,BufNewFile * DetectIndent
 autocmd custom_commands TextYankPost *  silent! lua require'vim.highlight'.on_yank()
+autocmd custom_commands FileType html,jinja,htmldjango,php nnoremap <silent><buffer> <F7> :call helpers#toggleFt()<cr>
 
 command -nargs=0 Reload call helpers#vim_reload()
-
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
@@ -85,15 +84,12 @@ command -nargs=0 Reload call helpers#vim_reload()
 
 let $LANG='en'
 set langmenu=en
-source $VIMRUNTIME/delmenu.vim
-source $VIMRUNTIME/menu.vim
 
 set wildmenu
 set wildmode=full
 set wildignore+=*.o,*.obj,.git,*.rbc,*.pyc,__pycache__,node_modules
 set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store
 
-set ruler
 set relativenumber number
 set cmdheight=2
 set pumheight=10
@@ -115,8 +111,8 @@ set noerrorbells
 set novisualbell
 set tm=500
 set diffopt&
-				\ diffopt+=vertical
-				\ diffopt+=hiddenoff
+			\ diffopt+=vertical
+			\ diffopt+=hiddenoff
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Colors and Fonts
@@ -150,7 +146,6 @@ set tw=500
 set autoindent
 set nowrap
 
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Moving around, tabs, windows and buffers
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -182,29 +177,33 @@ autocmd custom_commands BufReadPost * if line("'\"") > 1 && line("'\"") <= line(
 " => Editing mappings
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-map Y y$
+nnoremap Y y$
 nnoremap x "_x
 xnoremap <expr> p printf('pgv"%sygv<esc>', v:register)
 vnoremap o $
+
+nnoremap B :<C-u>call helpers#breakLine()<CR>
 
 autocmd custom_commands BufRead,BufNewFile,VimEnter *.js,*.jsx,*.ts,*.tsx,*.py,*.c,*.cpp,*.go let g:nav_mode = 1
 autocmd custom_commands BufRead,BufNewFile,VimEnter *.java,*.lua let g:nav_mode = -1
 autocmd custom_commands BufRead,BufNewFile,VimEnter *.js,*.jsx,*.ts,*.tsx,*.py,*.c,*.cpp,*.java,*.go,*.lua silent call ProgFunc()
 
-nnoremap <silent> <Leader>rn :%s///g<Left><Left>
-nnoremap <silent> <Leader>rc :%s///gc<Left><Left><Left>
+nnoremap <silent> <Leader>rn *:%s///g<Left><Left>
+nnoremap <silent> <Leader>rc *:%s///gc<Left><Left><Left>
 xnoremap <Leader>rn :s///g<Left><Left>
 xnoremap <Leader>rc :s///gc<Left><Left><Left>
 
+" \ :exe "Grep " . expand('<cword>')<CR>
 nnoremap <F2>
 			\ :let @s='\<'.expand('<cword>').'\>'<CR>
 			\ :Grepper -cword -noprompt<CR>
 			\ :cfdo %s/<C-r>s//g \| update
 			\<Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left>
 
-xmap <F2>
+xnoremap <F2>
 			\ "sy
-			\ gvgr
+			\ :Grepper -noprompt -query <C-r>s<CR>
+			\ :let @s='\<'.@s.'\>'<CR>
 			\ :cfdo %s/<C-r>s//g \| update
 			\<Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left>
 
@@ -234,7 +233,6 @@ onoremap <silent> al :<C-u>normal val<CR>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 noremap <leader>ss :setlocal spell!<cr>
-
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Helper functions

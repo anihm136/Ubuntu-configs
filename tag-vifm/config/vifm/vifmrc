@@ -36,12 +36,8 @@ map tkd :take<space>
 nnoremap s :shell<cr>
 nnoremap w :view<cr>
 vnoremap w :view<cr>gv
-nnoremap yd :!echo %d | xsel %i<cr>
-nnoremap yf :!echo %c:p | xsel %i<cr>
-nnoremap I cw<c-a>
-nnoremap J cW<c-u>
-nnoremap cc cw<c-u>
-nnoremap A cw
+nnoremap yd :!echo %d | xsel -b %i<cr>
+nnoremap yf :!echo %c:p | xsel -b %i<cr>
 nnoremap ,w :set wrap!<cr>
 nmap <space> tj
 nmap q ZZ

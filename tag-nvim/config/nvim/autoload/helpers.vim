@@ -18,34 +18,6 @@ function! helpers#bufcloseCloseIt() abort
   silent redrawtabline
 endfunction
 
-function! s:CmdLine(str) abort
-  call feedkeys(":" . a:str)
-endfunction
-
-function! helpers#cleanWhitespace() abort
-  let l = line(".")
-  let c = col(".")
-  keepp %s/\s\+$//e
-  call cursor(l, c)
-endfun
-
-function! helpers#visualSelection(direction, extra_filter) range abort
-  let l:saved_reg = @"
-  execute "normal! vgvy"
-
-  let l:pattern = escape(@", "\\/.*'$^~[]")
-  let l:pattern = substitute(l:pattern, "\n$", "", "")
-
-  if a:direction == 'gv'
-    call CmdLine("Ack '" . l:pattern . "' " )
-  elseif a:direction == 'replace'
-    call CmdLine("%s" . '/'. l:pattern . '/')
-  endif
-
-  let @/ = l:pattern
-  let @" = l:saved_reg
-endfunction
-
 fun! helpers#toggleFt() abort
   if exists("b:is_php")
     if &filetype == 'php'
@@ -174,79 +146,11 @@ function! helpers#toggleFileExplorer() abort
   endif
 endfunction
 
-function! s:IsQfWindow(nmbr)
-  if getwinvar(a:nmbr, "&filetype") == "qf"
-    return getbufvar(winbufnr(a:nmbr), "qf_isLoc") == 1 ? 0 : 1
-  endif
-  return 0
-endfunction
-
-" returns bool: Is quickfix window open?
-function! s:IsQfWindowOpen() abort
-  for winnum in range(1, winnr('$'))
-    if s:IsQfWindow(winnum)
-      return 1
-    endif
-  endfor
-  return 0
-endfunction
-
 function! helpers#mapQf() abort
   let b:qf_isLoc = !empty(getloclist(0))
-  if s:IsQfWindowOpen()
-    nnoremap <silent> <C-n> :cnext<cr>
-    nnoremap <silent> <C-p> :cprevious<cr>
-    nnoremap <silent> q :call helpers#closeQf()<cr>
-  else
-    nnoremap <silent> <C-n> :lnext<cr>
-    nnoremap <silent> <C-p> :lprevious<cr>
-    nnoremap <silent> q :call helpers#closeQf()<cr>
-  endif
+  lua helpers.mapQf()
 endfunction
 
-function! helpers#closeQf() abort
-  silent exe "ccl"
-  silent exe "lcl"
-  unmap <C-n>
-  unmap <C-p>
-  unmap q
-endfunction
-
-function! s:RemoveItalicFromHighlightCommand(somestring)
-  let cmd=a:somestring
-  let cmd=substitute(cmd, "italic",    "", "g") " remove italics
-  let cmd=substitute(cmd, ",,",       ",", "g") " when italic occurs in middle of list, delete extraneous comma
-  let cmd=substitute(cmd, ", ",       " ", "g") " when italic at end of list, delete extraneous comma
-  let cmd=substitute(cmd, "gui\= ",   " ", "g") " when italic is only item in list, delete arg to avoid error
-  let cmd=substitute(cmd, "term\= ",  " ", "g") " when italic is only item in list, delete arg to avoid error
-  let cmd=substitute(cmd, "cterm\= ", " ", "g") " when italic is only item in list, delete arg to avoid error
-  return cmd
-endfunction
-
-let s:sid = expand('<SID>')
-function! s:MakeColorChanges()
-  redir @a | silent hi | redir END
-  let @a=substitute(@a, "xxx", "", "g") " The :hi command displays 'xxx' to show what the groups look like
-  let cmdlist = split(@a, "\n")
-  call filter(cmdlist, 'v:val =~ "italic"')
-  call filter(cmdlist, 'v:val !~ "links to"')
-  let l:fun = s:sid . 'RemoveItalicFromHighlightCommand(v:val)' 
-  call map(cmdlist, l:fun)
-  for cmd in cmdlist
-    let test = split(cmd, " ")
-    if index(test, "c") != -1 || index(test, "cleared") != -1
-      continue
-    endif
-    let groupname=split(cmd, " ")[0]
-    try
-      execute "hi clear ".groupname
-      execute "hi default ".cmd
-    catch
-      echo groupname
-      echo cmd
-    endtry
-  endfor
-endfunction
 
 function! helpers#setColorscheme(...) abort
   if a:0 == 0
@@ -255,9 +159,9 @@ function! helpers#setColorscheme(...) abort
     let l:color = a:1
   endif
 
-  let l:dark_themes = ["spacegray", "equinusocio_material", "sonokai", "tender", "solarized8_flat", "gruvbox", "gruvbit"]
+  let l:dark_themes = ["spacegray", "tender", "gruvbit", "equinusocio_material", "solarized8_flat", "despacio", "dogrun", "happy_hacking"]
 
-  let l:light_themes = ["solarized8_flat", "gruvbox"]
+  let l:light_themes = ["solarized8_flat", "tempus_totus", "tempus_day"]
 
   let l:all_themes = extend(copy(dark_themes), light_themes)
 
@@ -269,8 +173,7 @@ function! helpers#setColorscheme(...) abort
     let g:solarized_extra_hi_groups = 1
     let g:equinusocio_material_style = 'darker'
     let g:equinusocio_material_hide_vertsplit = 1
-    let g:sonokai_sign_column_background = 'none'
-    let g:sonokai_diagnostic_line_highlight = 1
+    let g:despacio_Twilight = 1
     silent exec "set background=" . l:color
     let l:theme_set = select[(l:color == 'dark' ? 0 : 1)]
     let l:themeIndex = str2nr(matchstr(reltimestr(reltime()), '\v\.@<=\d+')[1:]) % len(l:theme_set)
@@ -284,7 +187,7 @@ function! helpers#setColorscheme(...) abort
   highlight LineNr ctermbg=NONE guibg=NONE
   highlight SignColumn ctermbg=NONE guibg=NONE
   highlight FoldColumn ctermbg=NONE guibg=NONE
-  call s:MakeColorChanges()
+  lua helpers.makeColorChanges()
   highlight Comment gui=italic
 endfunction
 
@@ -293,4 +196,9 @@ function! helpers#vim_reload() abort
     SSave! reload
     call system('kill -USR1 $(ps -p $(ps -p $$ -o ppid=) -o ppid=)')
     qa!
-endfu
+endfunction
+
+function! helpers#breakLine() abort
+  s/^\(\s*\)\(.\{-}\)\(\s*\)\(\%#\)\(\s*\)\(.*\)/\1\2\r\1\4\6
+  call histdel("/", -1)
+endfunction

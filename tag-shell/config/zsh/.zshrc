@@ -16,22 +16,23 @@ HISTFILE="$XDG_CACHE_HOME/zsh/history"
 ZSH_COMPDUMP="$XDG_CACHE_HOME/zsh/.zcompdump"
 DISABLE_MAGIC_FUNCTIONS="true"
 
+# Interactive shell options
+forgit_log=glog
+forgit_diff=gdiff
+forgit_add=ga
+forgit_reset_head=grh
+forgit_ignore=gignore
+forgit_restore=gcheck
+forgit_clean=gclean
+forgit_stash_show=gss
+forgit_cherry_pick=gcp
+
 # Linux antibody file
-autoload -U compaudit compinit
+autoload -U compaudit compinit bashcompinit
 ZSH="$ANTIBODY_HOME"/https-COLON--SLASH--SLASH-github.com-SLASH-robbyrussell-SLASH-oh-my-zsh
 source "${XDG_CONFIG_HOME:-$HOME/.config}/antibody/zsh_plugins.sh"
 compinit -U
-
-# Interactive shell options
-export forgit_log=glog
-export forgit_diff=gdiff
-export forgit_add=ga
-export forgit_reset_head=grh
-export forgit_ignore=gignore
-export forgit_restore=gcheck
-export forgit_clean=gclean
-export forgit_stash_show=gss
-export forgit_cherry_pick=gcp
+bashcompinit
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
@@ -48,14 +49,21 @@ fi
 unset __conda_setup
 # <<< conda initialize <<<
 
+setopt globdots
+setopt extendedglob
+unalias z 2> /dev/null
+
+[[ -f ${ASDF_DIR:-$HOME/.asdf}/asdf.sh ]] && source ${ASDF_DIR:-$HOME/.asdf}/asdf.sh
+[[ -f $HOME/.sh_funcs.zsh ]] && source $HOME/.sh_funcs.zsh
+[[ -f $HOME/.aliases ]] && source $HOME/.aliases
+[[ -f $ZDOTDIR/.zaliases ]] && source $ZDOTDIR/.zaliases
+
+eval "$(asdf exec direnv hook zsh)"
 eval "$(pipenv --completion)"
 eval "$(register-python-argcomplete pipx)"
 if (command -v perl && command -v cpanm) >/dev/null 2>&1; then
   test -d "$HOME/perl5/lib/perl5" && eval $(perl -I "$HOME/perl5/lib/perl5" -Mlocal::lib)
 fi
-setopt globdots
-setopt extendedglob
-unalias z 2> /dev/null
 
 catch_signal_usr1() {
   trap catch_signal_usr1 USR1
@@ -63,40 +71,7 @@ catch_signal_usr1() {
 }
 trap catch_signal_usr1 USR1
 
-# zle-keymap-select () {
-#   VI_KEYMAP=$KEYMAP
-#   zle reset-prompt
-#   zle -R
-#   if [ $KEYMAP = vicmd ]; then
-#     printf "\033[2 q"
-#   else
-#     printf "\033[6 q"
-#   fi
-# }
-# zle -N zle-keymap-select
-# 
-# zle-line-init () {
-#   zle -K viins
-#   printf "\033[6 q"
-# }
-# zle -N zle-line-init
-# 
-# autoload -Uz edit-command-line
-# zle -N edit-command-line
-# 
-# bindkey -v
-# bindkey -a 'v' edit-command-line
-# bindkey '^[[A' up-line-or-search
-# bindkey "^[[3~" delete-char
-# bindkey '^?' backward-delete-char
-# bindkey '^w' backward-kill-word
-# bindkey '^a' beginning-of-line
-# bindkey '^e' end-of-line
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-[[ -f $HOME/.sh_funcs.zsh ]] && source $HOME/.sh_funcs.zsh
-[[ -f $HOME/.aliases ]] && source $HOME/.aliases
-[[ -f $ZDOTDIR/.zaliases ]] && source $ZDOTDIR/.zaliases
-
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

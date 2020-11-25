@@ -1,3 +1,5 @@
+source "$(asdf direnv hook asdf)"
+
 use_conda() {
   CONDA_SH=$HOME/miniconda3/etc/profile.d/conda.sh
   source "$CONDA_SH"

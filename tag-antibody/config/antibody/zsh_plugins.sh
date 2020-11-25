@@ -26,9 +26,6 @@ source /home/anirudh/.local/share/antibody/https-COLON--SLASH--SLASH-github.com-
 fpath+=( /home/anirudh/.local/share/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-robbyrussell-SLASH-oh-my-zsh/plugins/npm )
 source /home/anirudh/.local/share/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-robbyrussell-SLASH-oh-my-zsh/plugins/yarn/yarn.plugin.zsh
 fpath+=( /home/anirudh/.local/share/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-robbyrussell-SLASH-oh-my-zsh/plugins/yarn )
-source /home/anirudh/.local/share/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-robbyrussell-SLASH-oh-my-zsh/plugins/direnv/direnv.plugin.zsh
-fpath+=( /home/anirudh/.local/share/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-robbyrussell-SLASH-oh-my-zsh/plugins/direnv )
-
 source /home/anirudh/.local/share/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-robbyrussell-SLASH-oh-my-zsh/plugins/django/django.plugin.zsh
 fpath+=( /home/anirudh/.local/share/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-robbyrussell-SLASH-oh-my-zsh/plugins/django )
 source /home/anirudh/.local/share/antibody/https-COLON--SLASH--SLASH-github.com-SLASH-robbyrussell-SLASH-oh-my-zsh/plugins/web-search/web-search.plugin.zsh

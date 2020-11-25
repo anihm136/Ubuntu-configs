@@ -4,16 +4,18 @@ let &l:includeexpr = s:sid . 'LuaInclude(v:fname)'
 
 function! s:LuaInclude(fname) abort
 	let module = substitute(a:fname, '\.', '/', 'g')
-	for template in s:GetSearchPath('package.path')
-		let expanded = substitute(template, '?', module, 'g')
-		if filereadable(expanded)
-			return expanded
+	let paths = nvim_list_runtime_paths()
+	for template in paths
+		let template .= '/lua/'
+		let chk1 = template . module . '.lua'
+		let chk2 = template . module . '/init.lua'
+		echo chk1
+		echo chk2
+		if filereadable(chk1)
+			return chk1
+		elseif filereadable(chk2)
+			return chk2
 		endif
 	endfor
 	return a:fname
-endfunction
-
-function! s:GetSearchPath(luavar)
-  let path = printf("%s", execute('lua print(' . a:luavar . ')'))
-  return split(path, ';')
 endfunction

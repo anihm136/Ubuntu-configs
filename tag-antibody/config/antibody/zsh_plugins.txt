@@ -3,7 +3,6 @@ robbyrussell/oh-my-zsh path:lib
 robbyrussell/oh-my-zsh path:plugins/command-not-found
 robbyrussell/oh-my-zsh path:plugins/npm
 robbyrussell/oh-my-zsh path:plugins/yarn
-robbyrussell/oh-my-zsh path:plugins/direnv
 robbyrussell/oh-my-zsh path:plugins/rust
 robbyrussell/oh-my-zsh path:plugins/django
 robbyrussell/oh-my-zsh path:plugins/web-search

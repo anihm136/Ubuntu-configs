@@ -19,7 +19,7 @@
 ;; They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
 ;; font string. You generally only need these two:
 (setq doom-font (font-spec :family "Iosevka Nerd Font Mono" :size 16)
-      doom-variable-pitch-font (font-spec :family "Overpass" :style "regular" :size 16))
+      doom-variable-pitch-font (font-spec :family "Overpass" :weight 'normal :size 16))
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -53,7 +53,7 @@
 (defvar dark-themes '(doom-one doom-gruvbox doom-solarized-dark doom-spacegrey doom-monokai-pro doom-tomorrow-night)
   "Set of dark themes to choose from.")
 
-(defvar light-themes '(doom-gruvbox-light doom-solarized-light)
+(defvar light-themes '(doom-gruvbox-light doom-solarized-light doom-flatwhite)
   "Set of light themes to choose from.")
 
 ;; Eager loading
@@ -64,6 +64,8 @@
               ispell-dictionary "en-custom"
               ispell-personal-dictionary (expand-file-name ".ispell_personal" doom-private-dir)
               )
+
+(custom-set-faces! '(font-lock-comment-face :slant italic))
 
 (use-package! evil-escape
   :config
@@ -119,8 +121,9 @@
         )
   (with-eval-after-load 'flycheck
     (flycheck-add-mode 'proselint 'org-mode))
-  (org-wild-notifier-mode))
-
+  (org-wild-notifier-mode)
+  )
+(add-hook! 'org-mode-hook 'org-fragtog-mode)
 
 (use-package! org-agenda
   :defer t
@@ -396,15 +399,16 @@
         :desc "Paste in insert mode"
         :i "C-v" "C-r +"
         :desc "Set random theme"
-        :n "<f12>" 'ani/set-random-theme))
+        :n "<f12>" 'ani/set-random-theme
+        :n "S-<f12>" (λ! () (ani/set-random-theme 't))
+        ))
 
 
-(defun ani/set-random-theme (&optional color)
-  "Set the theme to a random dark theme. If COLOR is provided (one of dark and light), set a random theme of that COLOR."
+(defun ani/set-random-theme (&optional light)
+  "Set the theme to a random dark theme.
+If LIGHT is non-nil, use a random light theme instead."
   (interactive)
   (random t)
-  (if (string-equal (or color "dark") "light")
-      (funcall 'load-theme (nth (random (length light-themes)) light-themes) t)
-    (funcall 'load-theme (nth (random (length dark-themes)) dark-themes) t))
-  (setq font-lock-comment-face '(font-lock-comment-face :slant italic))
+  (let ((themes (if light light-themes dark-themes)))
+    (load-theme (nth (random (length themes)) themes) t))
   (princ (cdr custom-enabled-themes)))

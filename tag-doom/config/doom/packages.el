@@ -56,6 +56,8 @@
   :recipe (:host github :repo "tecosaur/LaTeX-auto-activating-snippets"))
 (package! auto-activating-snippets
   :recipe (:host github :repo "ymarco/auto-activating-snippets"))
+(package! org-fragtog
+  :recipe (:host github :repo "io12/org-fragtog"))
 (package! org-wild-notifier)
 (package! aggressive-indent)
 (package! importmagic)
